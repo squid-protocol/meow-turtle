@@ -1,0 +1,15 @@
+{
+  "loader": {
+    "feeder_freq_hz": 60,
+    "shaker_freq_hz": 80,
+    "feeder_strength_scale": 1.0,
+    "shaker_strength_scale": 1.0
+  },
+  "distributor": {
+    "belt_mm_per_sec_per_pwm": 0.0217,
+    "belt_min_start_pwm": 15
+  },
+  "gatekeeper": {
+    "sensor_threshold": 200
+  }
+}

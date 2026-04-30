@@ -1,0 +1,22 @@
+{
+  "SCAN_NEW_BUCKET": {
+    "description": "High-speed cataloging, no sorting.",
+    "global": { "target_throughput": "MAX" },
+    "loader": { "flow_rate": 80, "vibration_freq": "HIGH" },
+    "vision": { "model": "identification_v1", "confidence_threshold": 0.95 },
+    "distributor": { "belt_speed": 60, "sorting_enabled": false }
+  },
+  "BUILD_INVENTORY": {
+    "description": "High-speed cataloging, no sorting.",
+    "global": { "target_throughput": "MAX" },
+    "loader": { "flow_rate": 80, "vibration_freq": "HIGH" },
+    "vision": { "model": "identification_v1", "confidence_threshold": 0.95 },
+    "distributor": { "belt_speed": 60, "sorting_enabled": true }
+  },
+  "SEPARATE_ORDER": {
+    "description": "Sort provided part list from a bucket",
+    "global": { "target_throughput": "MAX" },
+    "loader": { "flow_rate": 80, "vibration_freq": "HIGH" },
+    "vision": { "model": "identification_v1", "confidence_threshold": 0.98 },
+    "distributor": { "belt_speed": 60, "sorting_enabled": true }
+  }

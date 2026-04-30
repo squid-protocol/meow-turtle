@@ -1,0 +1,1844 @@
+[2026-01-18 07:31:26] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 07:31:28] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 07:31:29] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 07:31:29] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 07:31:29] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 07:31:29] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 07:31:29] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 07:31:29] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 07:31:29] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 07:31:29] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 07:31:29] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 07:31:29] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 07:31:29] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 07:31:29] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 07:31:29] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 07:31:29] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 07:31:29] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 07:31:29] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 07:31:30] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 07:31:30] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=MISSING,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 07:31:30] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 07:31:30] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 07:31:30] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 07:31:30] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 07:32:08] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 61 Got 68
+[2026-01-18 07:32:19] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 07:32:19] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 07:32:20] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 07:32:20] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 07:32:20] [INFO] [Operator] [Pico 1] RTT: 117.1ms (Avg: 11.7ms) LQI: 87.5%
+[2026-01-18 07:32:20] [INFO] [Operator] [Pico 3] RTT: 118.4ms (Avg: 11.8ms) LQI: 100.0%
+[2026-01-18 07:32:20] [INFO] [Operator] [Pico 2] RTT: 265.4ms (Avg: 26.5ms) LQI: 100.0%
+[2026-01-18 07:32:30] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 07:32:30] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 07:32:31] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 07:32:31] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 07:32:32] [INFO] [Operator] [Pico 1] RTT: 266.7ms (Avg: 37.2ms) LQI: 89.9%
+[2026-01-18 07:32:32] [INFO] [Operator] [Pico 3] RTT: 269.0ms (Avg: 37.6ms) LQI: 100.0%
+[2026-01-18 07:32:32] [INFO] [Operator] [Pico 2] RTT: 265.7ms (Avg: 50.5ms) LQI: 100.0%
+[2026-01-18 07:32:43] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 07:32:43] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 07:32:49] [INFO] [Operator] [Pico 3] RTT: 22.5ms (Avg: 36.1ms) LQI: 100.0%
+[2026-01-18 07:32:58] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 07:32:58] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 07:32:58] [INFO] [Operator] [Pico 1] RTT: 117.4ms (Avg: 45.2ms) LQI: 92.9%
+[2026-01-18 07:32:58] [INFO] [Operator] [Pico 3] RTT: 120.2ms (Avg: 44.5ms) LQI: 100.0%
+[2026-01-18 07:32:58] [INFO] [Operator] [Pico 2] RTT: 267.1ms (Avg: 72.1ms) LQI: 100.0%
+[2026-01-18 07:42:27] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 07:55:40] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 07:55:55] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 07:55:55] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 07:57:20] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 07:57:22] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 07:58:16] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 07:58:16] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 07:58:17] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 07:58:17] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 07:58:17] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 07:58:17] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 07:58:17] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 07:58:17] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 07:58:17] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 07:58:28] [WARNING] [Core0] Fleet Handshake Incomplete - Check Hardware (Picos Offline)
+[2026-01-18 07:58:28] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 07:58:28] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 07:58:28] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 07:58:28] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 07:58:28] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 07:58:28] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 07:58:28] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L2_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 07:58:28] [ERROR] [AlarmManager] [ALARM] PAUSE: L2_UNDERVOLT (V=0.0)
+[2026-01-18 07:58:28] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L3_OFFLINE to PAUSE (Revert to IDLE).
+[2026-01-18 07:58:28] [ERROR] [AlarmManager] [ALARM] PAUSE: L3_OFFLINE (Device Unreachable)
+[2026-01-18 07:58:29] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 07:58:29] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 07:58:40] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L3_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 07:58:40] [ERROR] [AlarmManager] [ALARM] PAUSE: L3_UNDERVOLT (V=0.0)
+[2026-01-18 07:58:41] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 07:59:14] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 07:59:14] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 07:59:19] [INFO] [Operator] [Pico 3] RTT: 173.2ms (Avg: 17.3ms) LQI: 100.0%
+[2026-01-18 07:59:31] [INFO] [Operator] [Pico 3] RTT: 23.4ms (Avg: 17.9ms) LQI: 100.0%
+[2026-01-18 07:59:41] [INFO] [Operator] [Pico 3] RTT: 173.4ms (Avg: 33.5ms) LQI: 100.0%
+[2026-01-18 07:59:44] [INFO] [Operator] [Pico 3] RTT: 174.2ms (Avg: 47.5ms) LQI: 100.0%
+[2026-01-18 07:59:47] [INFO] [Operator] [Pico 3] RTT: 23.6ms (Avg: 45.2ms) LQI: 100.0%
+[2026-01-18 07:59:53] [INFO] [Operator] [Pico 3] RTT: 24.2ms (Avg: 43.1ms) LQI: 100.0%
+[2026-01-18 07:59:54] [INFO] [Operator] [Pico 3] RTT: 23.2ms (Avg: 41.1ms) LQI: 100.0%
+[2026-01-18 08:00:02] [INFO] [Operator] [Pico 3] RTT: 23.2ms (Avg: 39.3ms) LQI: 100.0%
+[2026-01-18 08:00:08] [INFO] [Operator] [Pico 3] RTT: 22.2ms (Avg: 37.6ms) LQI: 100.0%
+[2026-01-18 08:00:17] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 08:00:17] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 08:00:17] [INFO] [Operator] [Pico 2] RTT: 115.1ms (Avg: 11.5ms) LQI: 100.0%
+[2026-01-18 08:00:17] [INFO] [Operator] [Pico 1] RTT: 267.6ms (Avg: 26.8ms) LQI: 100.0%
+[2026-01-18 08:00:17] [INFO] [Operator] [Pico 3] RTT: 120.5ms (Avg: 45.9ms) LQI: 100.0%
+[2026-01-18 08:00:19] [INFO] [Core0] GUI Command: RESET
+[2026-01-18 08:00:19] [INFO] [DigitalTwin] TRANSITION: IDLE -> BOOT
+[2026-01-18 08:00:21] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 184 Got 188
+[2026-01-18 08:00:26] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 08:00:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 191 Got 196
+[2026-01-18 08:00:30] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 199 Got 203
+[2026-01-18 08:00:31] [ERROR] [Operator] [Pico 1] Packet lost (Max Retries) Seq 184
+[2026-01-18 08:00:31] [ERROR] [Operator] [Pico 2] Packet lost (Max Retries) Seq 194
+[2026-01-18 08:00:31] [ERROR] [Operator] [Pico 3] Packet lost (Max Retries) Seq 175
+[2026-01-18 08:00:32] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 194 Got 218
+[2026-01-18 08:00:35] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 175 Got 205
+[2026-01-18 08:00:43] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:00:46] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 08:00:46] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 08:00:46] [INFO] [Operator] [Pico 2] RTT: 115.4ms (Avg: 21.9ms) LQI: 95.3%
+[2026-01-18 08:00:46] [INFO] [Operator] [Pico 1] RTT: 267.0ms (Avg: 50.8ms) LQI: 83.3%
+[2026-01-18 08:00:46] [INFO] [Operator] [Pico 3] RTT: 120.0ms (Avg: 53.3ms) LQI: 94.4%
+[2026-01-18 08:00:48] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:00:48] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:00:51] [INFO] [Operator] [Pico 3] RTT: 25.2ms (Avg: 50.5ms) LQI: 94.7%
+[2026-01-18 08:01:15] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 08:01:15] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 08:01:15] [INFO] [Operator] [Pico 1] RTT: 265.9ms (Avg: 72.3ms) LQI: 86.3%
+[2026-01-18 08:01:15] [INFO] [Operator] [Pico 2] RTT: 115.1ms (Avg: 31.2ms) LQI: 96.1%
+[2026-01-18 08:01:15] [INFO] [Operator] [Pico 3] RTT: 271.9ms (Avg: 72.6ms) LQI: 95.6%
+[2026-01-18 08:05:54] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:05:54] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:05:59] [INFO] [Core0] GUI Command: RESET
+[2026-01-18 08:05:59] [INFO] [DigitalTwin] TRANSITION: DEV -> BOOT
+[2026-01-18 08:06:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 723 Got 727
+[2026-01-18 08:06:07] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 730 Got 738
+[2026-01-18 08:06:11] [ERROR] [Operator] [Pico 1] Packet lost (Max Retries) Seq 723
+[2026-01-18 08:06:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 741 Got 745
+[2026-01-18 08:06:11] [ERROR] [Operator] [Pico 2] Packet lost (Max Retries) Seq 762
+[2026-01-18 08:06:11] [ERROR] [Operator] [Pico 3] Packet lost (Max Retries) Seq 716
+[2026-01-18 08:06:11] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 762 Got 786
+[2026-01-18 08:14:43] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 716 Got 1722
+[2026-01-18 08:15:05] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 08:15:05] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 1727 Got 1763
+[2026-01-18 08:16:09] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1763 Got 1783
+[2026-01-18 08:17:06] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1873 Got 1880
+[2026-01-18 08:17:06] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: IDLE -> GHOST
+[2026-01-18 08:17:08] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1881 Got 1883
+[2026-01-18 08:17:10] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1884 Got 1886
+[2026-01-18 08:17:11] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1887 Got 1889
+[2026-01-18 08:17:13] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1890 Got 1892
+[2026-01-18 08:17:15] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1893 Got 1895
+[2026-01-18 08:17:15] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1896 Got 0
+[2026-01-18 08:17:17] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1 Got 1898
+[2026-01-18 08:17:18] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1899 Got 1901
+[2026-01-18 08:17:20] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1902 Got 1904
+[2026-01-18 08:17:22] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1905 Got 1907
+[2026-01-18 08:17:23] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1908 Got 1910
+[2026-01-18 08:17:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1911 Got 1913
+[2026-01-18 08:17:26] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1914 Got 1916
+[2026-01-18 08:17:28] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1917 Got 1919
+[2026-01-18 08:17:30] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1920 Got 1922
+[2026-01-18 08:17:31] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1923 Got 0
+[2026-01-18 08:17:32] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1 Got 1925
+[2026-01-18 08:17:34] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1926 Got 1928
+[2026-01-18 08:17:35] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1929 Got 1931
+[2026-01-18 08:17:37] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1932 Got 1934
+[2026-01-18 08:17:38] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1935 Got 1937
+[2026-01-18 08:17:40] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1938 Got 1940
+[2026-01-18 08:17:42] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1941 Got 1943
+[2026-01-18 08:17:44] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1944 Got 1946
+[2026-01-18 08:17:45] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1947 Got 1949
+[2026-01-18 08:17:47] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1950 Got 1952
+[2026-01-18 08:17:49] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1953 Got 1955
+[2026-01-18 08:17:50] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1956 Got 1958
+[2026-01-18 08:17:52] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1959 Got 1961
+[2026-01-18 08:17:54] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1962 Got 1964
+[2026-01-18 08:17:55] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1965 Got 1967
+[2026-01-18 08:17:57] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1968 Got 1970
+[2026-01-18 08:17:59] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1971 Got 1973
+[2026-01-18 08:18:00] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1974 Got 1976
+[2026-01-18 08:18:02] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1977 Got 1979
+[2026-01-18 08:18:04] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1980 Got 1982
+[2026-01-18 08:18:05] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1983 Got 1985
+[2026-01-18 08:18:07] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1986 Got 1988
+[2026-01-18 08:18:09] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1989 Got 1991
+[2026-01-18 08:18:10] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1992 Got 1994
+[2026-01-18 08:18:12] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1995 Got 1997
+[2026-01-18 08:18:14] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1998 Got 2000
+[2026-01-18 08:18:15] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2001 Got 2003
+[2026-01-18 08:18:17] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2004 Got 2006
+[2026-01-18 08:18:19] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2007 Got 2009
+[2026-01-18 08:18:21] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2010 Got 2012
+[2026-01-18 08:18:22] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2013 Got 2015
+[2026-01-18 08:18:24] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2016 Got 2018
+[2026-01-18 08:18:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2019 Got 2021
+[2026-01-18 08:18:27] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2022 Got 2024
+[2026-01-18 08:18:29] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2025 Got 2027
+[2026-01-18 08:18:30] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2028 Got 2030
+[2026-01-18 08:18:32] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2031 Got 2033
+[2026-01-18 08:18:33] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2034 Got 2036
+[2026-01-18 08:18:35] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2037 Got 2039
+[2026-01-18 08:18:37] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2040 Got 2042
+[2026-01-18 08:18:38] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2043 Got 2045
+[2026-01-18 08:18:40] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2046 Got 2048
+[2026-01-18 08:18:42] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2049 Got 2051
+[2026-01-18 08:18:43] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2052 Got 2054
+[2026-01-18 08:18:45] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2055 Got 2057
+[2026-01-18 08:18:46] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2058 Got 2060
+[2026-01-18 08:18:48] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2061 Got 2063
+[2026-01-18 08:18:50] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2064 Got 2066
+[2026-01-18 08:18:51] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2067 Got 2069
+[2026-01-18 08:18:53] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2070 Got 2072
+[2026-01-18 08:18:55] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2073 Got 2075
+[2026-01-18 08:18:56] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2076 Got 2078
+[2026-01-18 08:18:58] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2079 Got 2081
+[2026-01-18 08:19:00] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2082 Got 2084
+[2026-01-18 08:19:01] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2085 Got 2087
+[2026-01-18 08:19:03] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2088 Got 2090
+[2026-01-18 08:19:05] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2091 Got 2093
+[2026-01-18 08:19:06] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2094 Got 2096
+[2026-01-18 08:19:08] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2097 Got 2099
+[2026-01-18 08:19:10] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2100 Got 2102
+[2026-01-18 08:19:11] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2103 Got 2105
+[2026-01-18 08:19:13] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2106 Got 2108
+[2026-01-18 08:19:15] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2109 Got 2111
+[2026-01-18 08:19:16] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2112 Got 2114
+[2026-01-18 08:19:18] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2115 Got 2117
+[2026-01-18 08:19:20] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2118 Got 2120
+[2026-01-18 08:19:21] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2121 Got 2123
+[2026-01-18 08:19:23] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2124 Got 2126
+[2026-01-18 08:19:24] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2127 Got 2129
+[2026-01-18 08:19:26] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2130 Got 2132
+[2026-01-18 08:19:28] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2133 Got 2135
+[2026-01-18 08:19:29] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2136 Got 2138
+[2026-01-18 08:19:31] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2139 Got 2141
+[2026-01-18 08:19:32] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2142 Got 1
+[2026-01-18 08:19:33] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2 Got 2144
+[2026-01-18 08:19:35] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2145 Got 2147
+[2026-01-18 08:19:37] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2148 Got 2150
+[2026-01-18 08:19:38] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2151 Got 2153
+[2026-01-18 08:19:40] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2154 Got 2156
+[2026-01-18 08:19:42] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2157 Got 2159
+[2026-01-18 08:19:43] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2160 Got 2162
+[2026-01-18 08:19:45] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2163 Got 2165
+[2026-01-18 08:19:46] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2166 Got 2168
+[2026-01-18 08:19:48] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2169 Got 2171
+[2026-01-18 08:19:50] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2172 Got 2174
+[2026-01-18 08:19:51] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2175 Got 2177
+[2026-01-18 08:19:53] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2178 Got 2180
+[2026-01-18 08:19:55] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2181 Got 2183
+[2026-01-18 08:19:57] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2184 Got 2186
+[2026-01-18 08:19:58] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2187 Got 2189
+[2026-01-18 08:20:00] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2190 Got 2192
+[2026-01-18 08:20:02] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2193 Got 2195
+[2026-01-18 08:20:03] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2196 Got 2198
+[2026-01-18 08:20:05] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2199 Got 2201
+[2026-01-18 08:20:07] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2202 Got 2204
+[2026-01-18 08:20:09] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2205 Got 2207
+[2026-01-18 08:20:10] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2208 Got 2210
+[2026-01-18 08:20:12] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2211 Got 2213
+[2026-01-18 08:20:14] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2214 Got 2216
+[2026-01-18 08:20:14] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2075 Got 0
+[2026-01-18 08:20:14] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 1 Got 2075
+[2026-01-18 08:20:15] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2217 Got 2219
+[2026-01-18 08:20:17] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2220 Got 2222
+[2026-01-18 08:20:19] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2223 Got 2225
+[2026-01-18 08:20:20] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2226 Got 2228
+[2026-01-18 08:20:22] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2229 Got 2231
+[2026-01-18 08:20:24] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2232 Got 2234
+[2026-01-18 08:20:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2235 Got 2237
+[2026-01-18 08:20:27] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2238 Got 2240
+[2026-01-18 08:23:33] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 08:23:35] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 08:23:36] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 08:23:36] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 08:23:36] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 08:23:36] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 08:23:36] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 08:23:36] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 08:23:36] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 08:23:36] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 08:23:36] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 08:23:36] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 08:23:36] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 08:23:36] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 08:23:37] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 08:23:37] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 08:23:37] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 08:23:37] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=1.01,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 08:23:37] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 08:23:37] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 08:23:37] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 08:23:37] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 08:23:51] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:23:51] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:23:56] [INFO] [Operator] [Pico 3] RTT: 21.4ms (Avg: 2.1ms) LQI: 100.0%
+[2026-01-18 08:24:06] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 08:24:06] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 08:24:06] [INFO] [Operator] [Pico 1] RTT: 116.5ms (Avg: 11.7ms) LQI: 100.0%
+[2026-01-18 08:24:06] [INFO] [Operator] [Pico 3] RTT: 119.5ms (Avg: 13.9ms) LQI: 100.0%
+[2026-01-18 08:24:06] [INFO] [Operator] [Pico 2] RTT: 265.5ms (Avg: 26.5ms) LQI: 100.0%
+[2026-01-18 08:24:19] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:24:19] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:24:23] [INFO] [Operator] [Pico 3] RTT: 29.8ms (Avg: 15.5ms) LQI: 100.0%
+[2026-01-18 08:24:44] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 08:24:44] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 08:24:45] [INFO] [Operator] [Pico 1] RTT: 268.2ms (Avg: 37.3ms) LQI: 100.0%
+[2026-01-18 08:24:45] [INFO] [Operator] [Pico 2] RTT: 115.2ms (Avg: 35.4ms) LQI: 100.0%
+[2026-01-18 08:24:45] [INFO] [Operator] [Pico 3] RTT: 271.5ms (Avg: 41.1ms) LQI: 100.0%
+[2026-01-18 08:35:20] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1168 Got 1175
+[2026-01-18 08:35:20] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: IDLE -> GHOST
+[2026-01-18 08:35:22] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1176 Got 1178
+[2026-01-18 08:35:24] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1179 Got 1181
+[2026-01-18 08:35:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1182 Got 1184
+[2026-01-18 08:35:27] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1185 Got 1187
+[2026-01-18 08:35:29] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1188 Got 1190
+[2026-01-18 08:35:30] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1191 Got 1193
+[2026-01-18 08:35:32] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1194 Got 1196
+[2026-01-18 08:35:33] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1197 Got 1199
+[2026-01-18 08:35:35] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1200 Got 1202
+[2026-01-18 08:38:04] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 08:38:06] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 08:38:07] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 08:38:07] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 08:38:07] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 08:38:07] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 08:38:07] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 08:38:07] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 08:38:07] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 08:38:07] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 08:38:07] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 08:38:08] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 08:38:08] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 08:38:08] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 08:38:08] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 08:38:08] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 08:38:08] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 08:38:08] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 08:38:08] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 08:38:08] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=1.01,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 08:38:08] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 08:38:08] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 08:38:08] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 08:38:08] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 08:38:14] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:38:14] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:38:20] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 08:38:21] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 15 Got 25
+[2026-01-18 08:38:24] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 27 Got 31
+[2026-01-18 08:38:28] [ERROR] [Operator] [Pico 3] Packet lost (Max Retries) Seq 15
+[2026-01-18 08:38:29] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 34 Got 41
+[2026-01-18 08:45:10] [INFO] [Operator] [Pico 3] RTT: 22.1ms (Avg: 2.2ms) LQI: 94.6%
+[2026-01-18 08:45:39] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 08:45:39] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 08:45:39] [INFO] [Operator] [Pico 1] RTT: 268.0ms (Avg: 26.8ms) LQI: 100.0%
+[2026-01-18 08:45:40] [INFO] [Operator] [Pico 3] RTT: 268.4ms (Avg: 28.8ms) LQI: 95.0%
+[2026-01-18 08:45:40] [INFO] [Operator] [Pico 2] RTT: 265.2ms (Avg: 26.5ms) LQI: 100.0%
+[2026-01-18 08:45:43] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:45:43] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:45:46] [INFO] [Operator] [Pico 3] RTT: 173.5ms (Avg: 43.3ms) LQI: 95.1%
+[2026-01-18 08:45:47] [INFO] [Operator] [Pico 3] RTT: 21.6ms (Avg: 41.1ms) LQI: 95.1%
+[2026-01-18 08:45:51] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 736 Got 740
+[2026-01-18 08:45:57] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 743 Got 751
+[2026-01-18 08:46:01] [ERROR] [Operator] [Pico 3] Packet lost (Max Retries) Seq 736
+[2026-01-18 08:46:01] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 754 Got 758
+[2026-01-18 08:46:04] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 08:46:04] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 08:46:04] [INFO] [Operator] [Pico 2] RTT: 115.4ms (Avg: 35.4ms) LQI: 100.0%
+[2026-01-18 08:46:04] [INFO] [Operator] [Pico 1] RTT: 117.1ms (Avg: 35.8ms) LQI: 100.0%
+[2026-01-18 08:46:04] [INFO] [Operator] [Pico 3] RTT: 118.7ms (Avg: 48.9ms) LQI: 91.0%
+[2026-01-18 08:46:05] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:46:05] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:46:08] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 08:46:08] [DEBUG] [Core0] [DEV] Pulsing sol5 ON
+[2026-01-18 08:46:08] [INFO] [Operator] [Pico 3] RTT: 20.7ms (Avg: 46.1ms) LQI: 91.1%
+[2026-01-18 08:46:09] [DEBUG] [Core0] [DEV] Pulsing sol5 OFF (Fuse)
+[2026-01-18 08:46:09] [INFO] [Operator] [Pico 3] RTT: 20.6ms (Avg: 43.5ms) LQI: 91.2%
+[2026-01-18 08:46:10] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 08:46:10] [DEBUG] [Core0] [DEV] Pulsing sol5 ON
+[2026-01-18 08:46:10] [INFO] [Operator] [Pico 3] RTT: 21.1ms (Avg: 41.3ms) LQI: 91.2%
+[2026-01-18 08:46:11] [DEBUG] [Core0] [DEV] Pulsing sol5 OFF (Fuse)
+[2026-01-18 08:46:11] [INFO] [Operator] [Pico 3] RTT: 20.7ms (Avg: 39.2ms) LQI: 91.2%
+[2026-01-18 08:46:12] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 08:46:12] [DEBUG] [Core0] [DEV] Pulsing sol5 ON
+[2026-01-18 08:46:12] [INFO] [Operator] [Pico 3] RTT: 24.2ms (Avg: 37.7ms) LQI: 91.2%
+[2026-01-18 08:46:13] [DEBUG] [Core0] [DEV] Pulsing sol5 OFF (Fuse)
+[2026-01-18 08:46:13] [INFO] [Operator] [Pico 3] RTT: 21.3ms (Avg: 36.1ms) LQI: 91.2%
+[2026-01-18 08:46:14] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 08:46:14] [DEBUG] [Core0] [DEV] Pulsing sol5 ON
+[2026-01-18 08:46:14] [INFO] [Operator] [Pico 3] RTT: 21.3ms (Avg: 34.6ms) LQI: 91.3%
+[2026-01-18 08:46:14] [DEBUG] [Core0] [DEV] Pulsing sol5 OFF (Fuse)
+[2026-01-18 08:46:14] [INFO] [Operator] [Pico 3] RTT: 20.4ms (Avg: 33.2ms) LQI: 91.3%
+[2026-01-18 08:46:17] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 08:46:17] [INFO] [Operator] [Pico 1] RTT: 18.7ms (Avg: 34.1ms) LQI: 100.0%
+[2026-01-18 08:47:14] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 08:47:16] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 08:47:16] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 08:47:16] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 08:47:16] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 08:47:16] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 08:47:16] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 08:47:16] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 08:47:16] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 08:47:17] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 08:47:17] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 08:47:17] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 08:47:17] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 08:47:17] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 08:47:17] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 08:47:17] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 08:47:17] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 08:47:17] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 08:47:17] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 08:47:17] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=1.01,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 08:47:17] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 08:47:18] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 08:47:18] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 08:47:18] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 08:47:21] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:47:21] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:47:24] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 08:47:24] [DEBUG] [Core0] [DEV] Pulsing sol3 ON
+[2026-01-18 08:47:24] [INFO] [Operator] [Pico 3] RTT: 25.9ms (Avg: 2.6ms) LQI: 100.0%
+[2026-01-18 08:47:24] [DEBUG] [Core0] [DEV] Pulsing sol3 OFF (Fuse)
+[2026-01-18 08:47:24] [INFO] [Operator] [Pico 3] RTT: 21.3ms (Avg: 4.5ms) LQI: 100.0%
+[2026-01-18 08:48:49] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 08:48:49] [DEBUG] [Core0] [DEV] Pulsing sol3 ON
+[2026-01-18 08:48:49] [INFO] [Operator] [Pico 3] RTT: 21.3ms (Avg: 6.1ms) LQI: 100.0%
+[2026-01-18 08:48:50] [DEBUG] [Core0] [DEV] Pulsing sol3 OFF (Fuse)
+[2026-01-18 08:48:50] [INFO] [Operator] [Pico 3] RTT: 20.5ms (Avg: 7.6ms) LQI: 100.0%
+[2026-01-18 08:49:01] [INFO] [Operator] [Pico 3] RTT: 21.2ms (Avg: 8.9ms) LQI: 100.0%
+[2026-01-18 08:49:21] [INFO] [Core0] GUI Command: FETCH_CONFIG
+[2026-01-18 08:49:21] [INFO] [Core0] [Operator] Requesting Configuration Dump from all Picos...
+[2026-01-18 08:49:21] [INFO] [Operator] [Pico 2] Config Report (0x47) Synced: 7 items.
+[2026-01-18 08:49:21] [INFO] [Operator] [Pico 1] Config Report (0x47) Synced: 7 items.
+[2026-01-18 08:49:22] [INFO] [Operator] [Pico 3] Config Report (0x47) Synced: 7 items.
+[2026-01-18 08:58:37] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 08:58:39] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 08:58:40] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 08:58:40] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 08:58:40] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 08:58:40] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 08:58:40] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 08:58:40] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 08:58:40] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 08:58:40] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 08:58:40] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 08:58:40] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 08:58:40] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 08:58:40] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 08:58:40] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 08:58:40] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 08:58:40] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 08:58:40] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 08:58:40] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 08:58:40] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=MISSING,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 08:58:40] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 08:58:41] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 08:58:41] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 08:58:41] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 08:58:46] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 08:58:46] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 08:58:48] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 08:58:48] [DEBUG] [Core0] [DEV] Pulsing sol8 ON
+[2026-01-18 08:58:48] [INFO] [Operator] [Pico 3] RTT: 20.6ms (Avg: 2.1ms) LQI: 100.0%
+[2026-01-18 08:58:49] [DEBUG] [Core0] [DEV] Pulsing sol8 OFF (Fuse)
+[2026-01-18 08:58:49] [INFO] [Operator] [Pico 3] RTT: 20.4ms (Avg: 3.9ms) LQI: 100.0%
+[2026-01-18 08:58:56] [INFO] [Operator] [Pico 3] RTT: 22.3ms (Avg: 5.7ms) LQI: 100.0%
+[2026-01-18 09:03:43] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38 Got 581
+[2026-01-18 09:03:50] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 09:03:50] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 09:03:51] [INFO] [Operator] [Pico 1] RTT: 117.1ms (Avg: 11.7ms) LQI: 100.0%
+[2026-01-18 09:03:51] [INFO] [Operator] [Pico 3] RTT: 118.6ms (Avg: 17.0ms) LQI: 80.0%
+[2026-01-18 09:03:51] [INFO] [Operator] [Pico 2] RTT: 265.9ms (Avg: 26.6ms) LQI: 100.0%
+[2026-01-18 09:03:52] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 09:03:52] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 09:03:55] [INFO] [Operator] [Pico 3] RTT: 22.8ms (Avg: 17.6ms) LQI: 82.5%
+[2026-01-18 09:10:47] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 615 Got 1397
+[2026-01-18 09:14:18] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 1408 Got 1801
+[2026-01-18 09:19:16] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 1804 Got 2371
+[2026-01-18 09:19:42] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 09:19:42] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 09:19:42] [INFO] [Operator] [Pico 1] RTT: 267.3ms (Avg: 37.3ms) LQI: 100.0%
+[2026-01-18 09:19:42] [INFO] [Operator] [Pico 3] RTT: 120.5ms (Avg: 27.9ms) LQI: 68.5%
+[2026-01-18 09:19:42] [INFO] [Operator] [Pico 2] RTT: 267.0ms (Avg: 50.6ms) LQI: 100.0%
+[2026-01-18 09:19:43] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 09:19:43] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 09:19:46] [INFO] [Operator] [Pico 3] RTT: 173.6ms (Avg: 42.5ms) LQI: 70.1%
+[2026-01-18 09:40:42] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 3019 Got 4708
+[2026-01-18 09:40:53] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 09:40:54] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 09:40:54] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 09:40:54] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 09:40:54] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 09:40:54] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 09:40:54] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 09:40:54] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 09:40:54] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 09:40:54] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2 Got 4000
+[2026-01-18 09:40:54] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4001 Got 2
+[2026-01-18 09:40:55] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4218 Got 2
+[2026-01-18 09:40:55] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 09:40:55] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 09:40:55] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 3 Got 4219
+[2026-01-18 09:40:55] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4220 Got 3
+[2026-01-18 09:40:55] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 09:40:55] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 09:40:55] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 09:40:55] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 09:40:55] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4000 Got 4001
+[2026-01-18 09:40:55] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 09:40:55] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=MISSING,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 09:40:55] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:40:55] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2 Got 4
+[2026-01-18 09:40:55] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4 Got 4220
+[2026-01-18 09:40:55] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 4728 Got 4730
+[2026-01-18 09:40:56] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:40:57] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5 Got 6
+[2026-01-18 09:40:58] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:40:58] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4006 Got 4007
+[2026-01-18 09:40:59] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 10 Got 4226
+[2026-01-18 09:40:59] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4227 Got 10
+[2026-01-18 09:40:59] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:40:59] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:40:59] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:00] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 09:41:00] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 09:41:00] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4225 Got 4228
+[2026-01-18 09:41:00] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 10 Got 11
+[2026-01-18 09:41:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 9 Got 11
+[2026-01-18 09:41:01] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4011 Got 4012
+[2026-01-18 09:41:02] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:02] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 15 Got 16
+[2026-01-18 09:41:03] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:03] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4232 Got 4234
+[2026-01-18 09:41:04] [INFO] [Operator] [Pico 3] RTT: 23.4ms (Avg: 40.6ms) LQI: 87.9%
+[2026-01-18 09:41:08] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:08] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:08] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 4749 Got 4750
+[2026-01-18 09:41:08] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:09] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4022 Got 4024
+[2026-01-18 09:41:09] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:09] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:09] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 26 Got 4244
+[2026-01-18 09:41:09] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4245 Got 28
+[2026-01-18 09:41:10] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 25 Got 27
+[2026-01-18 09:41:10] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:11] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4244 Got 4247
+[2026-01-18 09:41:18] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:18] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 40 Got 41
+[2026-01-18 09:41:19] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:19] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:20] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 42 Got 44
+[2026-01-18 09:41:21] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:22] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:22] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4044 Got 4045
+[2026-01-18 09:41:23] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:23] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 46 Got 50
+[2026-01-18 09:41:41] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4075 Got 4076
+[2026-01-18 09:41:42] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:42] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 79 Got 80
+[2026-01-18 09:41:44] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:44] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4079 Got 4081
+[2026-01-18 09:41:47] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:47] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:48] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 88 Got 90
+[2026-01-18 09:41:49] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4088 Got 91
+[2026-01-18 09:41:49] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 92 Got 4088
+[2026-01-18 09:41:49] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 91 Got 92
+[2026-01-18 09:41:50] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:51] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 94 Got 95
+[2026-01-18 09:41:51] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:52] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 96 Got 97
+[2026-01-18 09:41:59] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:41:59] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4105 Got 109
+[2026-01-18 09:42:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 110 Got 4105
+[2026-01-18 09:42:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 108 Got 110
+[2026-01-18 09:42:19] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:19] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 143 Got 145
+[2026-01-18 09:42:21] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:22] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 144 Got 145
+[2026-01-18 09:42:24] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4369 Got 153
+[2026-01-18 09:42:24] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 154 Got 4369
+[2026-01-18 09:42:25] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 152 Got 155
+[2026-01-18 09:42:27] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:28] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4149 Got 4150
+[2026-01-18 09:42:33] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:33] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 167 Got 169
+[2026-01-18 09:42:39] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:39] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 171 Got 172
+[2026-01-18 09:42:43] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:43] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4399 Got 4401
+[2026-01-18 09:42:51] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:51] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 198 Got 199
+[2026-01-18 09:42:53] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:42:54] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 202 Got 203
+[2026-01-18 09:43:07] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:43:08] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 225 Got 227
+[2026-01-18 09:43:08] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4443 Got 228
+[2026-01-18 09:43:08] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 229 Got 4443
+[2026-01-18 09:43:09] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 228 Got 229
+[2026-01-18 09:43:10] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:43:10] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4216 Got 4217
+[2026-01-18 09:43:14] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 226 Got 227
+[2026-01-18 09:43:17] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:43:17] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4456 Got 4457
+[2026-01-18 09:43:17] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 242 Got 243
+[2026-01-18 09:43:18] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:43:18] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4459 Got 4460
+[2026-01-18 09:43:19] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 245 Got 246
+[2026-01-18 09:43:24] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:43:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 254 Got 256
+[2026-01-18 09:43:40] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:43:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4263 Got 4265
+[2026-01-18 09:44:10] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:44:10] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4311 Got 4312
+[2026-01-18 09:44:20] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:44:20] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 331 Got 332
+[2026-01-18 09:44:21] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:44:22] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4329 Got 4330
+[2026-01-18 09:44:31] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:44:31] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4344 Got 4345
+[2026-01-18 09:44:31] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 349 Got 350
+[2026-01-18 09:44:36] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:44:37] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 374 Got 376
+[2026-01-18 09:44:57] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:44:58] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4386 Got 4387
+[2026-01-18 09:45:25] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:45:25] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:45:25] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:45:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4670 Got 4671
+[2026-01-18 09:45:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 433 Got 436
+[2026-01-18 09:45:47] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 4753 Got 5285
+[2026-01-18 09:45:47] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5286 Got 562
+[2026-01-18 09:45:48] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 27 Got 563
+[2026-01-18 09:45:48] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 563 Got 5286
+[2026-01-18 09:45:58] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 09:45:58] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 09:45:58] [INFO] [Operator] [Pico 2] RTT: 115.5ms (Avg: 57.1ms) LQI: 92.2%
+[2026-01-18 09:45:58] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:45:58] [INFO] [Operator] [Pico 3] RTT: 120.1ms (Avg: 48.5ms) LQI: 82.1%
+[2026-01-18 09:45:58] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:45:59] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 487 Got 489
+[2026-01-18 09:45:59] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4483 Got 4484
+[2026-01-18 09:45:59] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 09:45:59] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 09:46:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 492 Got 488
+[2026-01-18 09:46:00] [INFO] [Operator] [Pico 1] RTT: 116.9ms (Avg: 45.2ms) LQI: 88.4%
+[2026-01-18 09:46:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 489 Got 492
+[2026-01-18 09:46:01] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4730 Got 4731
+[2026-01-18 09:46:02] [INFO] [Operator] [Pico 3] RTT: 172.0ms (Avg: 60.9ms) LQI: 82.3%
+[2026-01-18 09:46:04] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:04] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4492 Got 4493
+[2026-01-18 09:46:05] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:05] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 592 Got 5313
+[2026-01-18 09:46:05] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5314 Got 592
+[2026-01-18 09:46:05] [INFO] [Operator] [Pico 3] RTT: 214.3ms (Avg: 76.2ms) LQI: 80.2%
+[2026-01-18 09:46:05] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 523 Got 524
+[2026-01-18 09:46:05] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5313 Got 5314
+[2026-01-18 09:46:06] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:06] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4494 Got 4496
+[2026-01-18 09:46:06] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:07] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:07] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 500 Got 502
+[2026-01-18 09:46:07] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5316 Got 5317
+[2026-01-18 09:46:10] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:11] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4504 Got 509
+[2026-01-18 09:46:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 510 Got 4504
+[2026-01-18 09:46:12] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 507 Got 510
+[2026-01-18 09:46:24] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:24] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4524 Got 4525
+[2026-01-18 09:46:26] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:27] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4775 Got 560
+[2026-01-18 09:46:27] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 559 Got 561
+[2026-01-18 09:46:28] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 561 Got 4775
+[2026-01-18 09:46:28] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:29] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 536 Got 537
+[2026-01-18 09:46:33] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:34] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4539 Got 4540
+[2026-01-18 09:46:34] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:35] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 546 Got 547
+[2026-01-18 09:46:39] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:39] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4548 Got 4549
+[2026-01-18 09:46:39] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:40] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 581 Got 582
+[2026-01-18 09:46:45] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 563 Got 564
+[2026-01-18 09:46:47] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:48] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4808 Got 4809
+[2026-01-18 09:46:50] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:50] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:51] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4566 Got 4567
+[2026-01-18 09:46:51] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 572 Got 573
+[2026-01-18 09:46:54] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:54] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4573 Got 579
+[2026-01-18 09:46:54] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 580 Got 4573
+[2026-01-18 09:46:55] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 578 Got 580
+[2026-01-18 09:46:56] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:56] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 581 Got 583
+[2026-01-18 09:46:59] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:46:59] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4827 Got 4828
+[2026-01-18 09:46:59] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4829 Got 614
+[2026-01-18 09:47:00] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 614 Got 615
+[2026-01-18 09:47:00] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 615 Got 4829
+[2026-01-18 09:47:02] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:02] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4831 Got 618
+[2026-01-18 09:47:02] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 618 Got 619
+[2026-01-18 09:47:02] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 619 Got 4833
+[2026-01-18 09:47:03] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:03] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4834 Got 621
+[2026-01-18 09:47:04] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 621 Got 622
+[2026-01-18 09:47:04] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 622 Got 4836
+[2026-01-18 09:47:16] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:16] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 613 Got 614
+[2026-01-18 09:47:25] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:26] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 658 Got 659
+[2026-01-18 09:47:28] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5323 Got 5473
+[2026-01-18 09:47:28] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 601 Got 752
+[2026-01-18 09:47:31] [INFO] [Operator] [Pico 3] RTT: 22.0ms (Avg: 70.8ms) LQI: 75.7%
+[2026-01-18 09:47:37] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:37] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:37] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 766 Got 767
+[2026-01-18 09:47:37] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 647 Got 648
+[2026-01-18 09:47:38] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:38] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4641 Got 4643
+[2026-01-18 09:47:43] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:44] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4902 Got 4903
+[2026-01-18 09:47:44] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:45] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:45] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 778 Got 779
+[2026-01-18 09:47:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4653 Got 4654
+[2026-01-18 09:47:46] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:46] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4906 Got 4907
+[2026-01-18 09:47:47] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:47] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:47] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4908 Got 694
+[2026-01-18 09:47:47] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5501 Got 5503
+[2026-01-18 09:47:47] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:47] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 662 Got 664
+[2026-01-18 09:47:47] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:48] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 695 Got 4910
+[2026-01-18 09:47:48] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:49] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:49] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:49] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:49] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4911 Got 4912
+[2026-01-18 09:47:49] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 666 Got 667
+[2026-01-18 09:47:49] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 693 Got 699
+[2026-01-18 09:47:52] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:47:52] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 671 Got 672
+[2026-01-18 09:48:04] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:48:05] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4685 Got 692
+[2026-01-18 09:48:05] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 693 Got 4685
+[2026-01-18 09:48:05] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 691 Got 693
+[2026-01-18 09:48:06] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:48:06] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5532 Got 5534
+[2026-01-18 09:48:06] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5535 Got 813
+[2026-01-18 09:48:07] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 814 Got 5535
+[2026-01-18 09:48:08] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:48:08] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 813 Got 816
+[2026-01-18 09:48:27] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:48:27] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4720 Got 728
+[2026-01-18 09:48:27] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 729 Got 4720
+[2026-01-18 09:48:28] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 727 Got 729
+[2026-01-18 09:49:06] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:49:07] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 790 Got 791
+[2026-01-18 09:49:33] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:49:33] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 870 Got 872
+[2026-01-18 09:49:35] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:49:35] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4827 Got 4828
+[2026-01-18 09:51:16] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:51:16] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 994 Got 996
+[2026-01-18 09:51:18] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:51:19] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4989 Got 4991
+[2026-01-18 09:53:03] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:53:03] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 1163 Got 1165
+[2026-01-18 09:55:03] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:55:04] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 5346 Got 5347
+[2026-01-18 09:55:05] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:55:05] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 1356 Got 1358
+[2026-01-18 09:58:59] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 09:58:59] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 1813 Got 1814
+[2026-01-18 10:02:59] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:02:59] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2104 Got 2106
+[2026-01-18 10:03:27] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:03:28] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2260 Got 2261
+[2026-01-18 10:03:29] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:03:30] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 6476 Got 6478
+[2026-01-18 10:03:31] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:03:32] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 6479 Got 6481
+[2026-01-18 10:03:57] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:03:58] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 6523 Got 6525
+[2026-01-18 10:03:59] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:04:00] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:04:00] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:04:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 6192 Got 6194
+[2026-01-18 10:04:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2201 Got 2203
+[2026-01-18 10:04:13] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:04:13] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2222 Got 2223
+[2026-01-18 10:04:16] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:04:16] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 6219 Got 6220
+[2026-01-18 10:04:18] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 6223 Got 2231
+[2026-01-18 10:04:18] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2232 Got 6223
+[2026-01-18 10:04:19] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2231 Got 2232
+[2026-01-18 10:07:38] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:07:38] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2545 Got 2547
+[2026-01-18 10:11:44] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2936 Got 6927
+[2026-01-18 10:11:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 6928 Got 2936
+[2026-01-18 10:11:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 6927 Got 6928
+[2026-01-18 10:15:24] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 7275 Got 3283
+[2026-01-18 10:15:25] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 3284 Got 7275
+[2026-01-18 10:15:25] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 3283 Got 3284
+[2026-01-18 10:19:37] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:19:37] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 7673 Got 7674
+[2026-01-18 10:21:32] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:21:32] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 3862 Got 3864
+[2026-01-18 10:27:23] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:27:24] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4418 Got 4419
+[2026-01-18 10:27:25] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4421 Got 8412
+[2026-01-18 10:27:25] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8413 Got 4421
+[2026-01-18 10:27:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8412 Got 8413
+[2026-01-18 10:27:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4445 Got 8436
+[2026-01-18 10:27:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8437 Got 4445
+[2026-01-18 10:27:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8436 Got 8437
+[2026-01-18 10:28:20] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 4508 Got 8499
+[2026-01-18 10:28:20] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8500 Got 4508
+[2026-01-18 10:28:20] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8499 Got 8500
+[2026-01-18 10:32:57] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:32:58] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8937 Got 8938
+[2026-01-18 10:37:35] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:37:36] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 5384 Got 5385
+[2026-01-18 10:39:45] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:39:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 9580 Got 9582
+[2026-01-18 10:39:48] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:39:48] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:39:48] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 5594 Got 5595
+[2026-01-18 10:39:48] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 10104 Got 10105
+[2026-01-18 10:39:50] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:39:50] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 9587 Got 9589
+[2026-01-18 10:41:27] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:41:27] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 5750 Got 5751
+[2026-01-18 10:41:28] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 5753 Got 9744
+[2026-01-18 10:41:28] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 9745 Got 5753
+[2026-01-18 10:41:29] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 9744 Got 9745
+[2026-01-18 10:43:43] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:43:43] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 6280 Got 6282
+[2026-01-18 10:44:11] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:44:12] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 6009 Got 10002
+[2026-01-18 10:44:12] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 10003 Got 6011
+[2026-01-18 10:44:12] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 10002 Got 10003
+[2026-01-18 10:53:21] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 10:53:22] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 10870 Got 10871
+[2026-01-18 11:00:15] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:00:16] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 7532 Got 7533
+[2026-01-18 11:00:16] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:00:17] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 11524 Got 11526
+[2026-01-18 11:00:34] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:00:35] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 11553 Got 11555
+[2026-01-18 11:08:26] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:08:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8305 Got 8307
+[2026-01-18 11:11:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8552 Got 12543
+[2026-01-18 11:11:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 12544 Got 8552
+[2026-01-18 11:11:02] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 12543 Got 12544
+[2026-01-18 11:11:10] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8567 Got 12558
+[2026-01-18 11:11:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 12559 Got 8567
+[2026-01-18 11:11:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 12558 Got 12559
+[2026-01-18 11:12:47] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:12:47] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8718 Got 8720
+[2026-01-18 11:14:03] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:14:04] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 8839 Got 8841
+[2026-01-18 11:19:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 9380 Got 13371
+[2026-01-18 11:19:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 13372 Got 9380
+[2026-01-18 11:19:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 13371 Got 13372
+[2026-01-18 11:31:36] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 10502 Got 14493
+[2026-01-18 11:31:36] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 14494 Got 10502
+[2026-01-18 11:31:36] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 14493 Got 14494
+[2026-01-18 11:41:31] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:41:31] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 15432 Got 15433
+[2026-01-18 11:42:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 15520 Got 11528
+[2026-01-18 11:42:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 11529 Got 15520
+[2026-01-18 11:42:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 11528 Got 11529
+[2026-01-18 11:43:19] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:43:19] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 11611 Got 11613
+[2026-01-18 11:48:19] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 16078 Got 12086
+[2026-01-18 11:48:19] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 12087 Got 16078
+[2026-01-18 11:48:20] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 12086 Got 12087
+[2026-01-18 11:49:29] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:49:30] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 12196 Got 12198
+[2026-01-18 11:50:09] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:50:10] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 16251 Got 16253
+[2026-01-18 11:52:30] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 11:52:30] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 12481 Got 12483
+[2026-01-18 12:03:26] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:03:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 13516 Got 13518
+[2026-01-18 12:17:36] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:17:36] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 15658 Got 15659
+[2026-01-18 12:24:37] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:24:38] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 15523 Got 15525
+[2026-01-18 12:28:48] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:28:49] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 15919 Got 15921
+[2026-01-18 12:30:02] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:30:02] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 16035 Got 16037
+[2026-01-18 12:32:28] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:32:28] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 20259 Got 20260
+[2026-01-18 12:32:40] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:32:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 16285 Got 16287
+[2026-01-18 12:38:59] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:39:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 16884 Got 16886
+[2026-01-18 12:45:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 17528 Got 21519
+[2026-01-18 12:45:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 21520 Got 17528
+[2026-01-18 12:45:47] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 21519 Got 21520
+[2026-01-18 12:45:52] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:45:52] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 21528 Got 21529
+[2026-01-18 12:45:58] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:45:58] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 21538 Got 21539
+[2026-01-18 12:45:59] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:45:59] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 17547 Got 17549
+[2026-01-18 12:51:11] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 12:51:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 22033 Got 18042
+[2026-01-18 12:51:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18043 Got 22033
+[2026-01-18 12:51:12] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 22034 Got 18043
+[2026-01-18 12:51:12] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18044 Got 22034
+[2026-01-18 12:51:13] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 22035 Got 18044
+[2026-01-18 12:51:13] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18045 Got 22035
+[2026-01-18 12:51:13] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18040 Got 18045
+[2026-01-18 12:59:08] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 22785 Got 18794
+[2026-01-18 12:59:08] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18795 Got 22785
+[2026-01-18 12:59:08] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18794 Got 18795
+[2026-01-18 12:59:42] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 22839 Got 18848
+[2026-01-18 12:59:42] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18849 Got 22839
+[2026-01-18 12:59:42] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18848 Got 18849
+[2026-01-18 13:00:43] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:00:44] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 18944 Got 18946
+[2026-01-18 13:02:56] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:02:56] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23144 Got 23146
+[2026-01-18 13:05:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23405 Got 19414
+[2026-01-18 13:05:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 19415 Got 23405
+[2026-01-18 13:05:40] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:05:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 19413 Got 19416
+[2026-01-18 13:06:37] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:06:37] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 20553 Got 20555
+[2026-01-18 13:07:01] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:07:01] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 24807 Got 24809
+[2026-01-18 13:11:00] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:11:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 19919 Got 19920
+[2026-01-18 13:11:30] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:11:31] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23958 Got 23959
+[2026-01-18 13:16:15] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 24408 Got 20417
+[2026-01-18 13:16:15] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 20418 Got 24408
+[2026-01-18 13:16:16] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 20417 Got 20418
+[2026-01-18 13:18:42] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:18:43] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:18:43] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 24639 Got 24642
+[2026-01-18 13:19:02] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:19:02] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 20680 Got 20681
+[2026-01-18 13:21:24] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:21:24] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 24895 Got 24896
+[2026-01-18 13:21:52] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:21:52] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 26291 Got 26292
+[2026-01-18 13:26:25] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:26:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 22531 Got 22533
+[2026-01-18 13:31:11] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:31:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 21830 Got 21831
+[2026-01-18 13:33:09] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:33:09] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 26007 Got 26009
+[2026-01-18 13:33:27] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:33:27] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 26036 Got 26037
+[2026-01-18 13:35:13] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:35:14] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 26204 Got 26205
+[2026-01-18 13:36:02] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:36:02] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 22288 Got 22290
+[2026-01-18 13:39:30] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:39:30] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 26609 Got 22619
+[2026-01-18 13:39:30] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 22620 Got 26611
+[2026-01-18 13:39:31] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 22619 Got 22620
+[2026-01-18 13:44:46] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:44:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 27108 Got 23117
+[2026-01-18 13:44:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23118 Got 27109
+[2026-01-18 13:44:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23117 Got 23118
+[2026-01-18 13:46:43] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:46:43] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 24559 Got 24561
+[2026-01-18 13:47:40] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:47:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 27384 Got 23393
+[2026-01-18 13:47:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23394 Got 27385
+[2026-01-18 13:47:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23393 Got 23394
+[2026-01-18 13:51:10] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:51:10] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 25004 Got 25005
+[2026-01-18 13:51:51] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:51:51] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 25073 Got 25074
+[2026-01-18 13:52:00] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:52:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 27794 Got 23804
+[2026-01-18 13:52:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23805 Got 27796
+[2026-01-18 13:52:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23804 Got 23805
+[2026-01-18 13:52:29] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:52:30] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 23849 Got 23850
+[2026-01-18 13:52:34] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:52:35] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 29358 Got 29359
+[2026-01-18 13:53:32] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:53:32] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 27938 Got 27940
+[2026-01-18 13:54:06] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:54:07] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 24001 Got 24003
+[2026-01-18 13:56:40] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 13:56:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28237 Got 28238
+[2026-01-18 13:58:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28435 Got 24443
+[2026-01-18 13:58:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 24444 Got 28435
+[2026-01-18 13:58:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 24443 Got 24444
+[2026-01-18 14:02:09] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:02:10] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 24764 Got 24766
+[2026-01-18 14:04:13] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:04:14] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 26309 Got 26310
+[2026-01-18 14:06:12] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:06:13] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 25148 Got 25150
+[2026-01-18 14:09:47] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:09:48] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 25488 Got 25489
+[2026-01-18 14:12:41] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:12:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 29753 Got 29755
+[2026-01-18 14:16:38] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:16:38] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 30127 Got 30129
+[2026-01-18 14:17:25] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:17:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 30202 Got 30204
+[2026-01-18 14:17:28] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:17:28] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 30206 Got 30208
+[2026-01-18 14:20:08] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:20:08] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 32111 Got 32112
+[2026-01-18 14:20:30] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:20:31] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 26503 Got 26505
+[2026-01-18 14:21:40] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:21:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 26614 Got 26616
+[2026-01-18 14:31:00] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:31:00] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 28983 Got 28984
+[2026-01-18 14:31:01] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:31:01] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 33197 Got 33199
+[2026-01-18 14:35:47] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:35:47] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 27949 Got 27951
+[2026-01-18 14:37:12] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:37:12] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28084 Got 28086
+[2026-01-18 14:39:09] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5596 Got 38614
+[2026-01-18 14:39:09] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 875 Got 33878
+[2026-01-18 14:39:20] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:20] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33895 Got 33896
+[2026-01-18 14:39:24] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:24] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32285 Got 32286
+[2026-01-18 14:39:25] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:25] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:25] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 29823 Got 29825
+[2026-01-18 14:39:26] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38640 Got 38641
+[2026-01-18 14:39:28] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:29] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:30] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33908 Got 33911
+[2026-01-18 14:39:32] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 14:39:32] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:32] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:33] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33915 Got 33916
+[2026-01-18 14:39:33] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33917 Got 38652
+[2026-01-18 14:39:33] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:33] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38651 Got 38653
+[2026-01-18 14:39:33] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 14:39:33] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 14:39:33] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 14:39:33] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 14:39:33] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 14:39:33] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 14:39:33] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38653 Got 33917
+[2026-01-18 14:39:33] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 14:39:33] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 14:39:33] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 2 Got 32300
+[2026-01-18 14:39:33] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32301 Got 2
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 34053 Got 3
+[2026-01-18 14:39:34] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 14:39:34] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 14:39:34] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 14:39:34] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 14:39:34] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 14:39:34] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=MISSING,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32299 Got 32301
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33918 Got 3
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 4 Got 38654
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38655 Got 33918
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38654 Got 38655
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 4 Got 34053
+[2026-01-18 14:39:34] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 3 Got 4
+[2026-01-18 14:39:35] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 2 Got 5
+[2026-01-18 14:39:35] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:35] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:36] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 6 Got 28313
+[2026-01-18 14:39:36] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28314 Got 6
+[2026-01-18 14:39:36] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:37] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:37] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28311 Got 32306
+[2026-01-18 14:39:37] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:37] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 7 Got 8
+[2026-01-18 14:39:37] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 14:39:37] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 14:39:38] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:38] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:38] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32307 Got 28317
+[2026-01-18 14:39:38] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32305 Got 32309
+[2026-01-18 14:39:39] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:39] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:39] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28318 Got 28320
+[2026-01-18 14:39:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32310 Got 32312
+[2026-01-18 14:39:40] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28321 Got 13
+[2026-01-18 14:39:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 14 Got 28321
+[2026-01-18 14:39:40] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 14:39:40] [DEBUG] [Core0] [DEV] Pulsing sol2 ON
+[2026-01-18 14:39:40] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 12 Got 14
+[2026-01-18 14:39:40] [INFO] [Operator] [Pico 3] RTT: 23.0ms (Avg: 66.0ms) LQI: 59.4%
+[2026-01-18 14:39:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 13 Got 32313
+[2026-01-18 14:39:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32314 Got 14
+[2026-01-18 14:39:41] [DEBUG] [Core0] [DEV] Pulsing sol2 OFF (Fuse)
+[2026-01-18 14:39:41] [INFO] [Operator] [Pico 3] RTT: 20.9ms (Avg: 61.5ms) LQI: 59.5%
+[2026-01-18 14:39:41] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:41] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32313 Got 32314
+[2026-01-18 14:39:41] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 34064 Got 34065
+[2026-01-18 14:39:42] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33930 Got 16
+[2026-01-18 14:39:42] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 17 Got 33930
+[2026-01-18 14:39:42] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 15 Got 16
+[2026-01-18 14:39:42] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:42] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 16 Got 18
+[2026-01-18 14:39:42] [INFO] [Operator] [Pico 3] RTT: 175.9ms (Avg: 72.9ms) LQI: 56.9%
+[2026-01-18 14:39:44] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:44] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:44] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 19 Got 21
+[2026-01-18 14:39:44] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:44] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:44] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:44] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28328 Got 32320
+[2026-01-18 14:39:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32321 Got 28328
+[2026-01-18 14:39:45] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33936 Got 38672
+[2026-01-18 14:39:45] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 34070 Got 34071
+[2026-01-18 14:39:45] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 20 Got 23
+[2026-01-18 14:39:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32318 Got 32321
+[2026-01-18 14:39:45] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38673 Got 33936
+[2026-01-18 14:39:46] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:46] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38670 Got 38674
+[2026-01-18 14:39:46] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:46] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:46] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28330 Got 32323
+[2026-01-18 14:39:46] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32324 Got 28331
+[2026-01-18 14:39:47] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 24 Got 26
+[2026-01-18 14:39:47] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:47] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32323 Got 32324
+[2026-01-18 14:39:47] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38675 Got 27
+[2026-01-18 14:39:47] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 28 Got 38677
+[2026-01-18 14:39:48] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 27 Got 33940
+[2026-01-18 14:39:48] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33941 Got 28
+[2026-01-18 14:39:48] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:48] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:48] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33940 Got 33941
+[2026-01-18 14:39:49] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:49] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32325 Got 32327
+[2026-01-18 14:39:49] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 38678 Got 38679
+[2026-01-18 14:39:49] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:49] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 29 Got 31
+[2026-01-18 14:39:50] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 29 Got 28337
+[2026-01-18 14:39:50] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28338 Got 29
+[2026-01-18 14:39:50] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:50] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:51] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:51] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28336 Got 32330
+[2026-01-18 14:39:51] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 33944 Got 33945
+[2026-01-18 14:39:51] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32331 Got 28339
+[2026-01-18 14:39:51] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:52] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:52] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 32 Got 35
+[2026-01-18 14:39:52] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32330 Got 32333
+[2026-01-18 14:39:53] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:55] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:55] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 33 Got 37
+[2026-01-18 14:39:55] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:56] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32337 Got 32339
+[2026-01-18 14:39:56] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:57] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:57] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28346 Got 28348
+[2026-01-18 14:39:57] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 40 Got 41
+[2026-01-18 14:39:58] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:58] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 43 Got 32343
+[2026-01-18 14:39:58] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 29878 Got 29880
+[2026-01-18 14:39:58] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32344 Got 43
+[2026-01-18 14:39:58] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:39:59] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32343 Got 32344
+[2026-01-18 14:39:59] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 44 Got 46
+[2026-01-18 14:40:00] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:00] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32346 Got 32347
+[2026-01-18 14:40:01] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 46 Got 47
+[2026-01-18 14:40:01] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:02] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:02] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:02] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:02] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28355 Got 28357
+[2026-01-18 14:40:02] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32349 Got 32350
+[2026-01-18 14:40:02] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 50 Got 52
+[2026-01-18 14:40:02] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 49 Got 50
+[2026-01-18 14:40:03] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:03] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28358 Got 28359
+[2026-01-18 14:40:04] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:04] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 53 Got 55
+[2026-01-18 14:40:04] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:04] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:05] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 34103 Got 34104
+[2026-01-18 14:40:05] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28361 Got 28362
+[2026-01-18 14:40:06] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28363 Got 55
+[2026-01-18 14:40:06] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 56 Got 28363
+[2026-01-18 14:40:07] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:07] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 55 Got 58
+[2026-01-18 14:40:08] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:08] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 61 Got 62
+[2026-01-18 14:40:09] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:09] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:10] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32360 Got 32362
+[2026-01-18 14:40:10] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 63 Got 65
+[2026-01-18 14:40:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32364 Got 64
+[2026-01-18 14:40:11] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 65 Got 32364
+[2026-01-18 14:40:11] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:12] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 63 Got 66
+[2026-01-18 14:40:13] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:13] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28375 Got 32368
+[2026-01-18 14:40:13] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32369 Got 28375
+[2026-01-18 14:40:14] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32367 Got 32369
+[2026-01-18 14:40:14] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:15] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 68 Got 71
+[2026-01-18 14:40:15] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:16] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 72 Got 73
+[2026-01-18 14:40:18] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:18] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 76 Got 77
+[2026-01-18 14:40:19] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:19] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32376 Got 32378
+[2026-01-18 14:40:20] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:20] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28384 Got 28386
+[2026-01-18 14:40:20] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:20] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32379 Got 32380
+[2026-01-18 14:40:21] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 34130 Got 34131
+[2026-01-18 14:40:22] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:23] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:23] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 83 Got 85
+[2026-01-18 14:40:25] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:25] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:26] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32388 Got 32389
+[2026-01-18 14:40:26] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 91 Got 92
+[2026-01-18 14:40:35] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:35] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 103 Got 104
+[2026-01-18 14:40:36] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28412 Got 106
+[2026-01-18 14:40:36] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:37] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:37] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 106 Got 107
+[2026-01-18 14:40:37] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 107 Got 28413
+[2026-01-18 14:40:37] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:38] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 109 Got 112
+[2026-01-18 14:40:40] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:40] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28417 Got 28418
+[2026-01-18 14:40:41] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:41] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:42] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28420 Got 32414
+[2026-01-18 14:40:42] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:42] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:42] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:42] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 34166 Got 34167
+[2026-01-18 14:40:42] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32415 Got 28422
+[2026-01-18 14:40:42] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 112 Got 117
+[2026-01-18 14:40:43] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:43] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32414 Got 32417
+[2026-01-18 14:40:44] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:44] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28424 Got 28425
+[2026-01-18 14:40:45] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:45] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28426 Got 28427
+[2026-01-18 14:40:47] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:47] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 123 Got 28430
+[2026-01-18 14:40:47] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:48] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28430 Got 28431
+[2026-01-18 14:40:48] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28431 Got 126
+[2026-01-18 14:40:48] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:49] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32423 Got 32426
+[2026-01-18 14:40:50] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:50] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28435 Got 130
+[2026-01-18 14:40:50] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 131 Got 28435
+[2026-01-18 14:40:51] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 128 Got 131
+[2026-01-18 14:40:51] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:51] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:51] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28436 Got 28437
+[2026-01-18 14:40:52] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32430 Got 32431
+[2026-01-18 14:40:52] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 28438 Got 133
+[2026-01-18 14:40:52] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 134 Got 28438
+[2026-01-18 14:40:52] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 133 Got 134
+[2026-01-18 14:40:55] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:55] [WARNING] [Operator] [Pico 2] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 14:40:55] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 32437 Got 139
+[2026-01-18 14:40:55] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 140 Got 32437
+[2026-01-18 14:40:56] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 140 Got 142
+[2026-01-18 14:40:56] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 138 Got 140
+[2026-01-18 15:10:41] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 15:10:44] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 15:10:45] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 15:10:45] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 15:10:45] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 15:10:45] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 15:10:45] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 15:10:45] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 15:10:45] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 15:10:45] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 15:10:45] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 15:10:45] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 15:10:45] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 15:10:45] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 15:10:45] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 15:10:45] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 15:10:45] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 15:10:45] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 15:10:45] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 15:10:45] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=MISSING,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 15:10:46] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 15:10:46] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 15:10:46] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 15:10:46] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 15:10:49] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 15:10:49] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 15:10:50] [ERROR] [nicegui] a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/home/joe/venvs/watcher_venv/lib/python3.11/site-packages/nicegui/events.py", line 442, in handle_event
+    result = cast(Callable[[], Any], handler)()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 418, in <lambda>
+    btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/melek_projects/lego_sorter/watcher/w3/core0 - Commander/v7_rp5/gui.py", line 88, in _bg_task
+    task = asyncio.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/asyncio/tasks.py", line 374, in create_task
+    task = loop.create_task(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1430, in uvloop.loop.Loop.create_task
+TypeError: a coroutine was expected, got None
+[2026-01-18 15:10:50] [DEBUG] [Core0] [DEV] Pulsing sol3 ON
+[2026-01-18 15:10:51] [INFO] [Operator] [Pico 3] RTT: 30.4ms (Avg: 3.0ms) LQI: 100.0%
+[2026-01-18 15:10:51] [DEBUG] [Core0] [DEV] Pulsing sol3 OFF (Fuse)
+[2026-01-18 15:10:51] [INFO] [Operator] [Pico 3] RTT: 21.2ms (Avg: 4.9ms) LQI: 100.0%
+[2026-01-18 15:10:52] [INFO] [Operator] [Pico 3] RTT: 21.9ms (Avg: 6.6ms) LQI: 100.0%
+[2026-01-18 15:29:37] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 21 Got 2168
+[2026-01-18 15:29:51] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 15:29:51] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 15:29:51] [INFO] [Operator] [Pico 2] RTT: 115.5ms (Avg: 11.5ms) LQI: 100.0%
+[2026-01-18 15:29:51] [INFO] [Operator] [Pico 1] RTT: 117.2ms (Avg: 11.7ms) LQI: 100.0%
+[2026-01-18 15:29:51] [INFO] [Operator] [Pico 3] RTT: 119.3ms (Avg: 17.8ms) LQI: 77.3%
+[2026-01-18 15:29:52] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 15:29:52] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 15:29:54] [INFO] [Operator] [Pico 3] RTT: 23.6ms (Avg: 18.4ms) LQI: 80.0%
+[2026-01-18 15:31:39] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 2204 Got 2400
+[2026-01-18 15:32:03] [INFO] [Operator] [Pico 3] RTT: 22.6ms (Avg: 18.8ms) LQI: 78.9%
+[2026-01-18 15:32:05] [INFO] [Operator] [Pico 3] RTT: 23.6ms (Avg: 19.3ms) LQI: 79.6%
+[2026-01-18 15:32:07] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 15:32:07] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 15:32:07] [INFO] [Operator] [Pico 2] RTT: 115.4ms (Avg: 21.9ms) LQI: 100.0%
+[2026-01-18 15:32:07] [INFO] [Operator] [Pico 1] RTT: 117.3ms (Avg: 22.3ms) LQI: 100.0%
+[2026-01-18 15:32:07] [INFO] [Operator] [Pico 3] RTT: 120.0ms (Avg: 29.4ms) LQI: 80.4%
+[2026-01-18 15:32:08] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 15:32:08] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 15:32:10] [INFO] [Operator] [Pico 3] RTT: 22.3ms (Avg: 28.7ms) LQI: 81.3%
+[2026-01-18 15:34:55] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 2459 Got 2770
+[2026-01-18 15:42:51] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 2772 Got 3680
+[2026-01-18 15:43:06] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 15:43:06] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 15:43:06] [INFO] [Operator] [Pico 2] RTT: 115.3ms (Avg: 31.3ms) LQI: 100.0%
+[2026-01-18 15:43:06] [INFO] [Operator] [Pico 1] RTT: 116.2ms (Avg: 31.7ms) LQI: 100.0%
+[2026-01-18 15:43:06] [INFO] [Operator] [Pico 3] RTT: 120.3ms (Avg: 37.8ms) LQI: 71.8%
+[2026-01-18 15:43:07] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 15:43:07] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 15:43:09] [INFO] [Operator] [Pico 3] RTT: 24.0ms (Avg: 36.5ms) LQI: 72.8%
+[2026-01-18 15:45:07] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 3738 Got 3931
+[2026-01-18 15:51:09] [INFO] [Core0] GUI Command: FETCH_CONFIG
+[2026-01-18 15:51:09] [INFO] [Core0] [Operator] Requesting Configuration Dump from all Picos...
+[2026-01-18 15:51:09] [INFO] [Operator] [Pico 2] Config Report (0x47) Synced: 7 items.
+[2026-01-18 15:51:10] [INFO] [Operator] [Pico 1] Config Report (0x47) Synced: 7 items.
+[2026-01-18 15:55:48] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 4005 Got 5148
+[2026-01-18 15:57:13] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 15:57:13] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 15:57:13] [INFO] [Operator] [Pico 1] RTT: 265.5ms (Avg: 55.1ms) LQI: 100.0%
+[2026-01-18 15:57:14] [INFO] [Operator] [Pico 2] RTT: 116.4ms (Avg: 39.8ms) LQI: 100.0%
+[2026-01-18 15:57:14] [INFO] [Operator] [Pico 3] RTT: 269.3ms (Avg: 59.7ms) LQI: 84.5%
+[2026-01-18 15:57:14] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 15:57:14] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 15:57:20] [INFO] [Operator] [Pico 3] RTT: 174.3ms (Avg: 71.2ms) LQI: 84.9%
+[2026-01-18 15:57:27] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 15:57:27] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 15:57:27] [INFO] [Operator] [Pico 1] RTT: 266.6ms (Avg: 76.2ms) LQI: 100.0%
+[2026-01-18 15:57:27] [INFO] [Operator] [Pico 3] RTT: 121.1ms (Avg: 76.2ms) LQI: 85.3%
+[2026-01-18 15:57:27] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 5307 Got 1
+[2026-01-18 15:57:27] [CRITICAL] [Operator] [Pico 3] SAFETY ALARM: FAULT:F_RUN
+[2026-01-18 15:57:27] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm P3_ALARM to PAUSE (Revert to IDLE).
+[2026-01-18 15:57:27] [ERROR] [AlarmManager] [ALARM] PAUSE: P3_ALARM (FAULT:F_RUN)
+[2026-01-18 15:57:27] [CRITICAL] [Telemetry] [Pico 3] [SAFETY] FAULT:F_RUN
+[2026-01-18 15:57:27] [INFO] [Operator] [Pico 2] RTT: 265.6ms (Avg: 62.4ms) LQI: 100.0%
+[2026-01-18 15:57:28] [CRITICAL] [Operator] [Pico 3] SAFETY ALARM: Events not confirmed
+[2026-01-18 15:57:28] [CRITICAL] [Telemetry] [Pico 3] [SAFETY] Events not confirmed
+[2026-01-18 15:57:30] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 3 Got 5307
+[2026-01-18 15:57:30] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: IDLE -> ERROR
+[2026-01-18 16:01:12] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 16:01:14] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 16:01:15] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 16:01:15] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 16:01:15] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 16:01:15] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 16:01:15] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 16:01:15] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 16:01:15] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 16:01:15] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 16:01:15] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> GHOST
+[2026-01-18 16:01:15] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 16:01:15] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 16:01:15] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 16:01:15] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 16:01:15] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 16:01:15] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L3_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 16:01:15] [ERROR] [AlarmManager] [ALARM] PAUSE: L3_UNDERVOLT (V=0.0)
+[2026-01-18 16:01:15] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 16:01:15] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 16:01:16] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 16:01:17] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 2 Got 6
+[2026-01-18 16:01:19] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 7 Got 9
+[2026-01-18 16:01:20] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 10 Got 12
+[2026-01-18 16:01:22] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 13 Got 15
+[2026-01-18 16:01:23] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 16 Got 18
+[2026-01-18 16:01:25] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 19 Got 21
+[2026-01-18 16:01:25] [WARNING] [Core0] Fleet Handshake Incomplete - Check Hardware (Picos Offline)
+[2026-01-18 16:01:25] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 16:01:25] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 16:01:25] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 16:01:27] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 22 Got 24
+[2026-01-18 16:01:28] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 25 Got 27
+[2026-01-18 16:01:30] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 28 Got 30
+[2026-01-18 16:01:32] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 31 Got 33
+[2026-01-18 16:01:33] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 34 Got 36
+[2026-01-18 16:01:35] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 37 Got 39
+[2026-01-18 16:01:36] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 40 Got 42
+[2026-01-18 16:01:38] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 43 Got 45
+[2026-01-18 16:01:40] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 46 Got 48
+[2026-01-18 16:01:41] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 49 Got 51
+[2026-01-18 16:01:43] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 52 Got 54
+[2026-01-18 16:01:45] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 55 Got 57
+[2026-01-18 16:01:45] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:01:45] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:01:46] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 58 Got 60
+[2026-01-18 16:01:48] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 61 Got 63
+[2026-01-18 16:01:50] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 64 Got 66
+[2026-01-18 16:01:51] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 67 Got 69
+[2026-01-18 16:01:53] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 70 Got 72
+[2026-01-18 16:01:54] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 73 Got 75
+[2026-01-18 16:01:56] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 76 Got 78
+[2026-01-18 16:01:58] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 79 Got 81
+[2026-01-18 16:01:59] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 82 Got 84
+[2026-01-18 16:02:01] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 85 Got 87
+[2026-01-18 16:02:03] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 88 Got 90
+[2026-01-18 16:02:04] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 91 Got 93
+[2026-01-18 16:02:06] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 94 Got 96
+[2026-01-18 16:02:08] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 97 Got 99
+[2026-01-18 16:02:09] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 100 Got 102
+[2026-01-18 16:02:11] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 103 Got 105
+[2026-01-18 16:02:12] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 106 Got 108
+[2026-01-18 16:02:14] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 109 Got 111
+[2026-01-18 16:02:16] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 112 Got 114
+[2026-01-18 16:02:17] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 115 Got 117
+[2026-01-18 16:02:19] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 118 Got 120
+[2026-01-18 16:02:24] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 121 Got 129
+[2026-01-18 16:02:24] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: GHOST -> IDLE
+[2026-01-18 16:02:36] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:02:36] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 16:02:36] [INFO] [Operator] [Pico 1] RTT: 265.6ms (Avg: 26.6ms) LQI: 100.0%
+[2026-01-18 16:02:36] [INFO] [Operator] [Pico 2] RTT: 116.0ms (Avg: 11.6ms) LQI: 100.0%
+[2026-01-18 16:02:36] [INFO] [Operator] [Pico 3] RTT: 118.4ms (Avg: 11.8ms) LQI: 0.0%
+[2026-01-18 16:02:38] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:02:38] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:02:43] [INFO] [Operator] [Pico 3] RTT: 174.5ms (Avg: 28.1ms) LQI: 0.0%
+[2026-01-18 16:02:54] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:02:54] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 16:02:54] [INFO] [Operator] [Pico 2] RTT: 115.3ms (Avg: 22.0ms) LQI: 100.0%
+[2026-01-18 16:02:54] [INFO] [Operator] [Pico 1] RTT: 116.9ms (Avg: 35.6ms) LQI: 100.0%
+[2026-01-18 16:02:54] [INFO] [Operator] [Pico 3] RTT: 120.7ms (Avg: 37.4ms) LQI: 0.0%
+[2026-01-18 16:02:54] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 179 Got 1
+[2026-01-18 16:02:54] [CRITICAL] [Operator] [Pico 3] SAFETY ALARM: FAULT:F_RUN
+[2026-01-18 16:02:54] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm P3_ALARM to PAUSE (Revert to IDLE).
+[2026-01-18 16:02:54] [ERROR] [AlarmManager] [ALARM] PAUSE: P3_ALARM (FAULT:F_RUN)
+[2026-01-18 16:02:54] [CRITICAL] [Telemetry] [Pico 3] [SAFETY] FAULT:F_RUN
+[2026-01-18 16:02:55] [CRITICAL] [Operator] [Pico 3] SAFETY ALARM: Events not confirmed
+[2026-01-18 16:02:55] [CRITICAL] [Telemetry] [Pico 3] [SAFETY] Events not confirmed
+[2026-01-18 16:02:57] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 3 Got 179
+[2026-01-18 16:02:58] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: IDLE -> ERROR
+[2026-01-18 16:15:14] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 16:15:15] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 16:15:16] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 16:15:16] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 16:15:16] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 16:15:16] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 16:15:16] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 16:15:16] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 16:15:16] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 16:15:16] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 16:15:16] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 16:15:16] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 16:15:16] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 16:15:16] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 16:15:16] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 16:15:16] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 16:15:17] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 16:15:17] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.01,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 16:15:17] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 16:15:17] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=MISSING,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 16:15:17] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 16:15:17] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 16:15:17] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 16:15:17] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 16:15:20] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:15:20] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:15:23] [INFO] [Operator] [Pico 3] RTT: 21.7ms (Avg: 2.2ms) LQI: 100.0%
+[2026-01-18 16:15:35] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:15:35] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 16:15:36] [INFO] [Operator] [Pico 1] RTT: 266.4ms (Avg: 26.6ms) LQI: 100.0%
+[2026-01-18 16:15:36] [INFO] [Operator] [Pico 2] RTT: 114.9ms (Avg: 11.5ms) LQI: 100.0%
+[2026-01-18 16:15:36] [INFO] [Operator] [Pico 3] RTT: 270.5ms (Avg: 29.0ms) LQI: 100.0%
+[2026-01-18 16:15:54] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:15:54] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:15:56] [INFO] [Operator] [Pico 3] RTT: 23.0ms (Avg: 28.4ms) LQI: 100.0%
+[2026-01-18 16:16:04] [INFO] [Operator] [Pico 3] RTT: 21.7ms (Avg: 27.7ms) LQI: 100.0%
+[2026-01-18 16:19:53] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 118 Got 515
+[2026-01-18 16:20:17] [ERROR] [Operator] [Pico 2] Packet lost (Max Retries) Seq 483
+[2026-01-18 16:20:18] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 483 Got 507
+[2026-01-18 16:20:44] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:20:44] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 16:20:44] [INFO] [Operator] [Pico 1] RTT: 115.6ms (Avg: 35.5ms) LQI: 100.0%
+[2026-01-18 16:20:44] [INFO] [Operator] [Pico 2] RTT: 115.7ms (Avg: 21.9ms) LQI: 98.1%
+[2026-01-18 16:20:45] [INFO] [Operator] [Pico 3] RTT: 295.0ms (Avg: 54.5ms) LQI: 95.0%
+[2026-01-18 16:20:46] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:20:46] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:20:52] [INFO] [Operator] [Pico 3] RTT: 173.8ms (Avg: 66.4ms) LQI: 95.3%
+[2026-01-18 16:21:22] [INFO] [Operator] [Pico 3] RTT: 23.7ms (Avg: 62.1ms) LQI: 96.2%
+[2026-01-18 16:21:27] [INFO] [Operator] [Pico 3] RTT: 30.4ms (Avg: 59.0ms) LQI: 96.3%
+[2026-01-18 16:21:49] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:21:49] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 16:21:49] [INFO] [Operator] [Pico 2] RTT: 115.7ms (Avg: 31.3ms) LQI: 98.4%
+[2026-01-18 16:21:49] [INFO] [Operator] [Pico 1] RTT: 116.6ms (Avg: 43.6ms) LQI: 100.0%
+[2026-01-18 16:21:49] [INFO] [Operator] [Pico 3] RTT: 119.6ms (Avg: 65.0ms) LQI: 96.7%
+[2026-01-18 16:21:53] [INFO] [Core0] GUI Command: RESET
+[2026-01-18 16:21:53] [INFO] [DigitalTwin] TRANSITION: IDLE -> BOOT
+[2026-01-18 16:21:55] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 629 Got 633
+[2026-01-18 16:21:57] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 706 Got 714
+[2026-01-18 16:22:00] [WARNING] [Operator] [Pico 1] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 16:22:00] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 636 Got 642
+[2026-01-18 16:22:02] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 16:22:02] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 717 Got 723
+[2026-01-18 16:22:03] [WARNING] [Operator] [Pico 1] SEQ SKIP: Exp 644 Got 648
+[2026-01-18 16:22:05] [ERROR] [Operator] [Pico 1] Packet lost (Max Retries) Seq 629
+[2026-01-18 16:22:05] [ERROR] [Operator] [Pico 2] Packet lost (Max Retries) Seq 667
+[2026-01-18 16:22:05] [ERROR] [Operator] [Pico 3] Packet lost (Max Retries) Seq 706
+[2026-01-18 16:22:05] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 667 Got 691
+[2026-01-18 16:22:05] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 725 Got 729
+[2026-01-18 16:22:17] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:22:17] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 16:22:17] [INFO] [Operator] [Pico 1] RTT: 116.3ms (Avg: 50.9ms) LQI: 94.7%
+[2026-01-18 16:22:17] [INFO] [Operator] [Pico 2] RTT: 115.1ms (Avg: 39.7ms) LQI: 97.0%
+[2026-01-18 16:22:17] [INFO] [Operator] [Pico 3] RTT: 269.8ms (Avg: 85.5ms) LQI: 86.5%
+[2026-01-18 16:22:27] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:22:27] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:22:30] [INFO] [Operator] [Pico 3] RTT: 22.3ms (Avg: 79.2ms) LQI: 87.3%
+[2026-01-18 16:22:55] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:22:55] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 16:22:55] [INFO] [Operator] [Pico 1] RTT: 116.6ms (Avg: 57.5ms) LQI: 95.1%
+[2026-01-18 16:22:55] [INFO] [Operator] [Pico 2] RTT: 115.7ms (Avg: 47.3ms) LQI: 97.2%
+[2026-01-18 16:22:55] [INFO] [Operator] [Pico 3] RTT: 269.2ms (Avg: 98.2ms) LQI: 88.6%
+[2026-01-18 16:32:20] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 16:32:22] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 16:32:23] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 16:32:23] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 16:32:23] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 16:32:23] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 16:32:23] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 16:32:23] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 16:32:23] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 16:32:23] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 16:32:23] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 16:32:23] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 16:32:23] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 16:32:23] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 16:32:23] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 16:32:23] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 16:32:23] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 16:32:23] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=1.01,CFG=1.00,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 16:32:24] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 16:32:24] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=1.01,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 16:32:24] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 16:32:24] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 16:32:24] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 16:32:24] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 16:32:44] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:32:44] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:32:48] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 39 Got 43
+[2026-01-18 16:32:54] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 16:32:55] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 46 Got 55
+[2026-01-18 16:32:58] [ERROR] [Operator] [Pico 3] Packet lost (Max Retries) Seq 39
+[2026-01-18 16:32:58] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 58 Got 61
+[2026-01-18 16:33:17] [INFO] [Operator] [Pico 3] RTT: 21.7ms (Avg: 2.2ms) LQI: 53.3%
+[2026-01-18 16:33:24] [INFO] [Operator] [Pico 3] RTT: 23.0ms (Avg: 4.3ms) LQI: 59.8%
+[2026-01-18 16:33:34] [INFO] [Operator] [Pico 3] RTT: 23.6ms (Avg: 6.2ms) LQI: 66.0%
+[2026-01-18 16:33:37] [INFO] [Operator] [Pico 3] RTT: 23.2ms (Avg: 7.9ms) LQI: 67.9%
+[2026-01-18 16:33:40] [INFO] [Operator] [Pico 3] RTT: 22.9ms (Avg: 9.4ms) LQI: 69.0%
+[2026-01-18 16:33:43] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:33:43] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 16:33:43] [INFO] [Operator] [Pico 1] RTT: 117.1ms (Avg: 11.7ms) LQI: 100.0%
+[2026-01-18 16:33:43] [INFO] [Operator] [Pico 3] RTT: 119.6ms (Avg: 20.4ms) LQI: 70.3%
+[2026-01-18 16:33:43] [INFO] [Operator] [Pico 2] RTT: 263.2ms (Avg: 26.3ms) LQI: 100.0%
+[2026-01-18 16:38:55] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 16:38:57] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 16:38:57] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 16:38:57] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 16:38:57] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 16:38:57] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 16:38:57] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 16:38:57] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 16:38:57] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 16:38:57] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 16:38:57] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 16:38:58] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 16:38:58] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 16:38:58] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 16:38:58] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 16:38:58] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 16:38:58] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 16:38:58] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=MISSING,CFG=1.00,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 16:38:58] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 16:38:58] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=1.01,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 16:38:58] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 16:38:59] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 16:38:59] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 16:38:59] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 16:39:03] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:39:03] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:39:14] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 30 Got 1
+[2026-01-18 16:39:14] [CRITICAL] [Operator] [Pico 2] SAFETY ALARM: E-STOP TRIGGERED
+[2026-01-18 16:39:14] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm P2_ALARM to PAUSE (Revert to IDLE).
+[2026-01-18 16:39:14] [ERROR] [AlarmManager] [ALARM] PAUSE: P2_ALARM (E-STOP TRIGGERED)
+[2026-01-18 16:39:14] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 16:39:14] [CRITICAL] [Telemetry] [Pico 2] [SAFETY] E-STOP TRIGGERED
+[2026-01-18 16:39:15] [CRITICAL] [Operator] [Pico 2] SAFETY ALARM: Events not confirmed
+[2026-01-18 16:39:15] [CRITICAL] [Telemetry] [Pico 2] [SAFETY] Events not confirmed
+[2026-01-18 16:39:17] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 3 Got 30
+[2026-01-18 16:39:17] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: IDLE -> ERROR
+[2026-01-18 16:39:23] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 16:39:24] [INFO] [Operator] [Pico 1] RTT: 116.6ms (Avg: 11.7ms) LQI: 100.0%
+[2026-01-18 16:39:24] [INFO] [Operator] [Pico 3] RTT: 118.9ms (Avg: 11.9ms) LQI: 100.0%
+[2026-01-18 16:39:27] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 16:39:27] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 16:39:46] [ERROR] [Operator] [Pico 2] Packet lost (Max Retries) Seq 31
+[2026-01-18 17:29:35] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 2087 Got 5396
+[2026-01-18 17:29:57] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 17:29:57] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 17:29:57] [INFO] [Operator] [Pico 1] RTT: 267.8ms (Avg: 37.3ms) LQI: 100.0%
+[2026-01-18 17:29:57] [INFO] [Operator] [Pico 3] RTT: 297.3ms (Avg: 40.4ms) LQI: 99.5%
+[2026-01-18 17:29:58] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 17:29:58] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 17:31:58] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 17:32:00] [INFO] [Core0] GUI Log Bridge Attached.
+[2026-01-18 17:32:01] [INFO] [DigitalTwin] Alarm Manager initialized.
+[2026-01-18 17:32:01] [INFO] [Core0] Digital Twin Subsystems Initialized.
+[2026-01-18 17:32:01] [INFO] [Operator] [Pico 1] Connected on /dev/ttyAMA0
+[2026-01-18 17:32:01] [INFO] [Operator] [Pico 2] Connected on /dev/ttyAMA2
+[2026-01-18 17:32:01] [INFO] [Operator] [Pico 3] Connected on /dev/ttyAMA3
+[2026-01-18 17:32:01] [INFO] [Operator] Serial Fleet Online.
+[2026-01-18 17:32:01] [INFO] [Core0] Initiating Fleet Handshake...
+[2026-01-18 17:32:01] [INFO] [DigitalTwin] [Twin] Limb 2 (GATEKEEPER) State: LINKED -> IDLE
+[2026-01-18 17:32:01] [INFO] [DigitalTwin] [Twin] Limb 3 (DISTRIBUTOR) State: LINKED -> IDLE
+[2026-01-18 17:32:01] [INFO] [Operator] [Pico 1] Version Manifest Synced: 15 items.
+[2026-01-18 17:32:01] [INFO] [Telemetry] [Pico 1] [VER] Version Report: BOOT=1.02,CFG=1.02,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.00,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 17:32:01] [WARNING] [AlarmManager] [PROTOTYPE] Downgrading CRITICAL alarm L1_UNDERVOLT to PAUSE (Revert to IDLE).
+[2026-01-18 17:32:01] [ERROR] [AlarmManager] [ALARM] PAUSE: L1_UNDERVOLT (V=0.0)
+[2026-01-18 17:32:01] [INFO] [DigitalTwin] TRANSITION: BOOT -> IDLE
+[2026-01-18 17:32:02] [INFO] [Operator] [Pico 2] Version Manifest Synced: 15 items.
+[2026-01-18 17:32:02] [INFO] [Telemetry] [Pico 2] [VER] Version Report: BOOT=MISSING,CFG=1.00,LIB_ACT=1.05,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.04,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.08
+[2026-01-18 17:32:02] [INFO] [Operator] [Pico 3] Version Manifest Synced: 15 items.
+[2026-01-18 17:32:02] [INFO] [Telemetry] [Pico 3] [VER] Version Report: BOOT=1.01,CFG=1.10_MIRROR_FIX,LIB_ACT=1.07,LIB_BLDC=UNKNOWN,LIB_DIAG=1.02,LIB_LOG=1.00,LIB_MEOW=5.6,LIB_MPU=1.02,LIB_OTA=1.01,LIB_PIO=1.01,LIB_SENS=1.05,LIB_TEST=1.00,LIB_TSL=1.02,LIB_VIBE=UNKNOWN,MAIN=1.20
+[2026-01-18 17:32:02] [INFO] [DigitalTwin] [Twin] Limb 1 (LOADER) State: LINKED -> IDLE
+[2026-01-18 17:32:02] [INFO] [Core0] [Diagnostics] Scanning local file versions...
+[2026-01-18 17:32:02] [INFO] [Core0] [AUDIT] [Manifest] app.py: v5.35
+[2026-01-18 17:32:02] [INFO] [Core0] System Boot Complete. State: IDLE
+[2026-01-18 17:32:08] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 17:32:08] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 17:32:11] [INFO] [Operator] [Pico 3] RTT: 173.0ms (Avg: 17.3ms) LQI: 100.0%
+[2026-01-18 17:32:24] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 17:32:24] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 17:32:24] [INFO] [Operator] [Pico 2] RTT: 111.6ms (Avg: 11.2ms) LQI: 100.0%
+[2026-01-18 17:32:24] [INFO] [Operator] [Pico 1] RTT: 116.2ms (Avg: 11.6ms) LQI: 100.0%
+[2026-01-18 17:32:24] [INFO] [Operator] [Pico 3] RTT: 118.9ms (Avg: 27.5ms) LQI: 100.0%
+[2026-01-18 17:32:25] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 17:32:25] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 17:32:31] [WARNING] [Operator] [Pico 3] NOISE DETECTED: 1 CRC Errors
+[2026-01-18 17:32:32] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 43 Got 53
+[2026-01-18 17:32:35] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 55 Got 59
+[2026-01-18 17:32:39] [ERROR] [Operator] [Pico 3] Packet lost (Max Retries) Seq 43
+[2026-01-18 17:32:39] [WARNING] [Operator] [Pico 3] SEQ SKIP: Exp 62 Got 66
+[2026-01-18 17:33:31] [WARNING] [Operator] [Pico 2] SEQ SKIP: Exp 103 Got 160
+[2026-01-18 17:33:37] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 17:33:37] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 17:33:39] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 17:33:39] [INFO] [Operator] [Pico 1] RTT: 266.5ms (Avg: 37.1ms) LQI: 100.0%
+[2026-01-18 17:33:40] [INFO] [Operator] [Pico 2] RTT: 112.3ms (Avg: 21.3ms) LQI: 91.5%
+[2026-01-18 17:33:40] [INFO] [Operator] [Pico 3] RTT: 269.4ms (Avg: 51.7ms) LQI: 75.7%
+[2026-01-18 17:33:40] [INFO] [Core0] GUI Command: DEV_TOGGLE
+[2026-01-18 17:33:40] [INFO] [DigitalTwin] TRANSITION: IDLE -> DEV
+[2026-01-18 17:33:51] [INFO] [Operator] [Pico 3] RTT: 173.3ms (Avg: 63.8ms) LQI: 78.5%
+[2026-01-18 17:34:09] [INFO] [Core0] GUI Command: IDLE
+[2026-01-18 17:34:09] [INFO] [DigitalTwin] TRANSITION: DEV -> IDLE
+[2026-01-18 17:34:09] [INFO] [Operator] [Pico 1] RTT: 116.7ms (Avg: 45.1ms) LQI: 100.0%
+[2026-01-18 17:34:09] [INFO] [Operator] [Pico 3] RTT: 119.4ms (Avg: 69.4ms) LQI: 81.7%
+[2026-01-18 17:34:09] [INFO] [Operator] [Pico 2] RTT: 261.9ms (Avg: 45.3ms) LQI: 94.0%
