@@ -109,8 +109,8 @@ class TelemetryRouter:
                 forensic_logger.critical(f"[Pico {source_id}] [SAFETY] {text}")
                 
                 # Escalation to Alarm Manager for global interlock enforcement
-                if GLOBAL_TWIN.alarms:
-                    GLOBAL_TWIN.alarms.raise_alarm(
+                if hasattr(GLOBAL_TWIN, 'coordinator') and GLOBAL_TWIN.coordinator.alarms:
+                    GLOBAL_TWIN.coordinator.alarms.raise_alarm(
                         f"P{source_id}_ALARM", 
                         ms.SEVERITY_CRITICAL, 
                         context=text
@@ -132,7 +132,11 @@ class TelemetryRouter:
                 
                 # Update Twin version metadata
                 limb = GLOBAL_TWIN.limbs.get(source_id)
-                if limb: limb.firmware_version = text
+                if limb: 
+                    limb.firmware_version = text
+                    # [FIX] Parse the string into a dictionary so the GUI table can render it!
+                    parsed = protocol_parser.parse_kv_payload(text)
+                    if parsed: limb.remote_versions = parsed
 
                 self.gui_log_buffer.append({
                     "ts": time.time(), 
@@ -141,6 +145,51 @@ class TelemetryRouter:
                     "tag": "VER", 
                     "msg": msg
                 })
+                
+            # --- ADD THIS NEW BLOCK: 6. Status Reports (0x41) ---
+            elif msg_type == meowprotocol.MSG_TYPE_STS:
+                text = payload.decode('ascii', 'ignore')
+                parsed = protocol_parser.parse_kv_payload(text)
+                
+                limb = GLOBAL_TWIN.limbs.get(source_id)
+                if limb:
+                    # Sync the hardware reality into the Digital Twin
+                    if 'ST' in parsed: limb.remote_state = parsed['ST']
+                    if 'V' in parsed: limb.voltage = float(parsed['V'])
+                    if 'VM' in parsed: limb.voltage_min = float(parsed['VM'])
+                    if 'T' in parsed: limb.temp = float(parsed['T'])
+                    if 'UPT' in parsed: limb.uptime = int(parsed['UPT'])
+                    
+                    # --- Resiliency & Diagnostic Metrics ---
+                    if 'LA' in parsed: limb.loop_avg = int(parsed['LA'])
+                    if 'LM' in parsed: limb.loop_max = int(parsed['LM'])
+                    if 'RA' in parsed: limb.resp_avg = int(parsed['RA'])
+                    if 'RL' in parsed: limb.resp_max = int(parsed['RL'])
+                    if 'CE' in parsed: limb.crc_errors = int(parsed['CE'])
+                    if 'IE' in parsed: limb.i2c_errors = int(parsed['IE'])
+                    if 'CSE' in parsed: limb.chk_errors = int(parsed['CSE'])
+                    if 'WC' in parsed: limb.write_count = int(parsed['WC'])
+                    if 'RST' in parsed: limb.reset_cause = str(parsed['RST'])
+            
+            # --- 7. Actuator Reports (0x45) ---
+            elif msg_type == meowprotocol.MSG_TYPE_ACT:
+                text = payload.decode('ascii', 'ignore')
+                parsed = protocol_parser.parse_kv_payload(text)
+                GLOBAL_TWIN.update_actuator_telemetry(source_id, parsed)
+
+            # --- 8. Sensor Reports (0x46) ---
+            elif msg_type == meowprotocol.MSG_TYPE_SNS:
+                text = payload.decode('ascii', 'ignore')
+                parsed = protocol_parser.parse_kv_payload(text)
+                GLOBAL_TWIN.update_sensor_telemetry(source_id, parsed)
+                
+            # --- 9. Config Reports (0x47) ---
+            elif msg_type == meowprotocol.MSG_TYPE_CFG:
+                text = payload.decode('ascii', 'ignore')
+                parsed = protocol_parser.parse_kv_payload(text)
+                limb = GLOBAL_TWIN.limbs.get(source_id)
+                if limb:
+                    limb.remote_config = parsed
 
         except Exception as e:
             # We use the main 'logger' for system-level errors so the GUI bridge 
@@ -184,10 +233,14 @@ class TelemetryRouter:
             else: forensic_logger.info(log_msg)
 
             # 2. Safety Gradient Mapping (Spec 18.3)
-            if GLOBAL_TWIN.alarms:
+            if hasattr(GLOBAL_TWIN, 'coordinator') and GLOBAL_TWIN.coordinator.alarms:
                 alarm_code = f"P{src}_{tag}"
                 if lvl == 'W':
-                    GLOBAL_TWIN.alarms.raise_alarm(alarm_code, ms.SEVERITY_WARNING, context=msg)
+                    GLOBAL_TWIN.coordinator.alarms.raise_alarm(alarm_code, ms.SEVERITY_WARNING, context=msg)
+                elif lvl == 'E':
+                    GLOBAL_TWIN.coordinator.alarms.raise_alarm(alarm_code, ms.SEVERITY_PAUSE, context=msg)
+                elif lvl == 'C':
+                    GLOBAL_TWIN.coordinator.alarms.raise_alarm(alarm_code, ms.SEVERITY_CRITICAL, context=msg)
                 elif lvl == 'E':
                     GLOBAL_TWIN.alarms.raise_alarm(alarm_code, ms.SEVERITY_PAUSE, context=msg)
                 elif lvl == 'C':

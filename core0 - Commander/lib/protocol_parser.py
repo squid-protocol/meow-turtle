@@ -43,10 +43,15 @@ def parse_kv_payload(payload_str):
 
     # 1. Pre-process: Strip protocol prefixes (Spec 4.3.1)
     clean_str = payload_str.strip()
+    has_prefix = False
     for prefix in ["SENS:", "ACT:", "CFG:", "EVT:", "ALARM:"]:
         if clean_str.startswith(prefix):
             clean_str = clean_str[len(prefix):].strip()
+            has_prefix = True
             break
+            
+    # [FIX] If the string didn't have a standard prefix, it might be a raw comma-separated KV list (like Versions/Configs). 
+    # Just proceed with clean_str as is!
     
     # 2. Fast Path: Full JSON Blob
     if clean_str.startswith('{') and clean_str.endswith('}'):

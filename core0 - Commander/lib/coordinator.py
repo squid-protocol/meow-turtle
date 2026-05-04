@@ -85,6 +85,7 @@ class SystemCoordinator:
         # [Rectification 3.B] Dynamic Limb Registration
         # This resolves the Static Hardcoding in digital_twin.py.
         # We populate the Passive Mirror based on the provided serial config.
+        GLOBAL_TWIN.coordinator = self   # <--- ADD THIS: Give the GUI access to the Hub!
         for pid in self.config_ports:
             # Traditional role mapping for standard industrial setups
             role_map = {1: "LOADER", 2: "GATEKEEPER", 3: "DISTRIBUTOR"}
@@ -131,6 +132,9 @@ class SystemCoordinator:
         logger.info("[Hub] Starting System Bootstrap...")
 
         try:
+            # [FIX] Shield the initial boot sequence so the Watchdog doesn't instantly panic!
+            self.safety.trigger_recovery_grace()
+
             # Step 1: Initialize Fleet Comms
             # Switchboard (operator) handles the raw serial transport layer.
             self.fleet = operator(self.config_ports, self.logic_queue, self.warning_queue, self)
@@ -281,13 +285,22 @@ class SystemCoordinator:
                 GLOBAL_TWIN.set_state(ms.STATE_IDLE)
                 self._notify("System Secured (IDLE).")
 
-        elif command_name.startswith("RESET_P"):
+        elif command_name.startswith("REBOOT_P"):
             # Target specific reset for a single limb port.
             try:
-                pid = int(command_name.replace("RESET_P", ""))
+                pid = int(command_name.replace("REBOOT_P", ""))
                 await self.send_physical(pid, meowprotocol.MSG_TYPE_CMD_RST, "")
             except Exception as e:
                 logger.error(f"[Hub] Manual Reset Failed for P{pid}: {e}")
+                
+        elif command_name.startswith("SAVE_P"):
+            # Target specific config save for a single limb port.
+            try:
+                pid = int(command_name.replace("SAVE_P", ""))
+                await self.send_physical(pid, meowprotocol.MSG_TYPE_CMD, "CFG:SAVE")
+                self._notify(f"Save Requested for P{pid} Config", type='info')
+            except Exception as e:
+                logger.error(f"[Hub] Manual Save Failed for P{pid}: {e}")
 
     async def fetch_fleet_versions(self):
         """
@@ -320,6 +333,30 @@ class SystemCoordinator:
         
         for pid in self.config_ports:
             await self.send_physical(pid, meowprotocol.MSG_TYPE_CMD_RST, "")
+            
+        asyncio.create_task(self._monitor_reset_recovery())
+        
+    async def _monitor_reset_recovery(self):
+        """Waits for Picos to reboot, then promotes global state to IDLE."""
+        await asyncio.sleep(4.0) # Give Picos time to drop offline
+        retries = 0
+        while retries < 30: # 15 seconds max wait
+            ready = True
+            for pid in self.config_ports:
+                limb = GLOBAL_TWIN.limbs.get(pid)
+                # Wait until all Picos report they are back in IDLE
+                if limb and limb.remote_state != ms.STATE_IDLE:
+                    ready = False
+            
+            if ready:
+                logger.info("[Hub] Fleet Recovered. Global State: IDLE")
+                GLOBAL_TWIN.set_state(ms.STATE_IDLE)
+                return
+                
+            await asyncio.sleep(0.5)
+            retries += 1
+            
+        logger.warning("[Hub] Reset Recovery Timeout. Stuck in BOOT.")
 
     async def broadcast_stop(self):
         """
@@ -374,7 +411,7 @@ class SystemCoordinator:
                     skips = limb.host_seq_skips
                     prior = 200 
                     # LQI = 100 - Penalty for skips relative to volume
-                    lqi = 100.0 - (skips / (total + prior) * 1000.0)
+                    lqi = 100.0 - (skips / (total + prior) * 100.0)
                     limb.lqi = max(0.0, min(100.0, lqi)) 
                 
                 # Prune RTT pending dict for stale packets (>5s)
@@ -426,8 +463,8 @@ class SystemCoordinator:
         limb = GLOBAL_TWIN.limbs.get(pid)
         # Interlock: Don't send operational commands to limbs in ERROR state
         if limb and limb.remote_state == ms.STATE_ERROR:
-            # Exceptions for Reset and Stop commands which are required for recovery.
-            if msg_type not in [meowprotocol.MSG_TYPE_CMD_RST, meowprotocol.MSG_TYPE_CMD_STOP]:
+            # [FIX] Only block operational commands. We MUST allow STS/SNS polling!
+            if msg_type in [meowprotocol.MSG_TYPE_CMD, meowprotocol.MSG_TYPE_SET_CFG]:
                 return None
                 
         seq_id = await self.fleet.send(pid, msg_type, payload)
@@ -438,7 +475,7 @@ class SystemCoordinator:
             
         return seq_id
 
-    def send_manual_command(self, pid, act_name, val):
+    async def send_manual_command(self, pid, act_name, val):
         """
         Routes manual hardware overrides with built-in Thermal Pulse safety.
         
@@ -460,8 +497,14 @@ class SystemCoordinator:
             return
         
         # [Spec 15.4] Thermal Guard: Use pulse for solenoids to prevent burnout.
-        if norm_name.startswith("sol") and float(val) > 0.0:
-            asyncio.create_task(self.safety.pulse_solenoid(pid, norm_name, val))
+        if norm_name.lower().startswith("sol") and float(val) > 0.0:
+            # Inline the pulse logic to guarantee execution
+            async def safe_pulse():
+                await self.send_physical(pid, meowprotocol.MSG_TYPE_CMD, f"ACT:{norm_name}={val}")
+                await asyncio.sleep(0.5) # 500ms safety pulse
+                await self.send_physical(pid, meowprotocol.MSG_TYPE_CMD, f"ACT:{norm_name}=0.0")
+            
+            asyncio.create_task(safe_pulse())
             return
             
         payload = f"ACT:{norm_name}={val}"
@@ -481,15 +524,18 @@ class SystemCoordinator:
     def _normalize_actuator_name(self, pid, name):
         """Resolves shorthand or numeric actuator names to the canonical ID."""
         limb = GLOBAL_TWIN.limbs.get(pid)
-        if not limb: return None
+        if not limb: return name # Trust fallback
         if name in limb.actuators: return name
         
         # Fuzzy matching for numeric inputs (e.g. "1" -> "sol1")
         clean_num = "".join([c for c in name.lower() if c.isdigit()])
-        for prefix in ["sol", "solenoid_", "s"]:
-            test_id = f"{prefix}{clean_num}"
-            if test_id in limb.actuators: return test_id
-        return None
+        if clean_num:
+            for prefix in ["sol", "solenoid_", "s"]:
+                test_id = f"{prefix}{clean_num}"
+                if test_id in limb.actuators: return test_id
+                
+        # Ultimate Fallback: Trust the raw name from the GUI. The Pico will NAK it if invalid.
+        return name
 
     async def dedupe_cache_refresher(self):
         """
@@ -562,9 +608,13 @@ class SystemCoordinator:
                 now = time.time()
                 for pid, start in list(self.pending_log_requests.items()):
                     if now - start > 3.0:
-                        # Trigger an empty log packet to satisfy the router wait
-                        STREAM_ROUTER.route_packet(pid, meowprotocol.MSG_TYPE_LOG, b"")
-                        del self.pending_log_requests[pid]
+                            # Trigger an empty log packet to satisfy the router wait
+                            STREAM_ROUTER.route_packet(pid, meowprotocol.MSG_TYPE_LOG, b"")
+                            del self.pending_log_requests[pid]
+                            
+                            # If the dictionary is now empty, the polling sweep is complete
+                            if not self.pending_log_requests:
+                                self._notify("Log sweep complete. No new crash logs found.", type='positive')
                 await asyncio.sleep(0.5)
             except asyncio.CancelledError:
                 break

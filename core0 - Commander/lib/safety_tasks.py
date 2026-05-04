@@ -56,8 +56,8 @@ class SafetyManager:
         self.WATCHDOG_TIMEOUT = 5.0       # [Spec 15.1] Time before a silent node is declared dead
         self.WATCHDOG_INTERVAL = 0.5      # Frequency of liveness check
         self.LQI_CRITICAL_THRESHOLD = 25.0 # [Spec 20.2] Link Quality floor for emergency stop
-        self.MOTION_TIMEOUT = 2.0         # Seconds allowed for stationary belt while in FLOW
-        self.RECOVERY_GRACE_S = 10.0      # [Spec 15.3] Window to allow boot-up without re-tripping
+        self.MOTION_TIMEOUT = 4.0         # Seconds allowed for stationary belt while in FLOW
+        self.RECOVERY_GRACE_S = 20.0      # [Spec 15.3] Window to allow boot-up without re-tripping
         self.OBSERVER_HERTZ = 20          # 50ms reflex loop
         
         # [Spec 15.4] Unified Thermal Constants
@@ -138,9 +138,15 @@ class SafetyManager:
 
         try:
             self._solenoid_cooldowns[key] = now
-            await self.coord.send_physical(pid, meowprotocol.MSG_TYPE_CMD, f"ACT:{act_name}={val}")
-            await asyncio.sleep(0.5)
-            await self.coord.send_physical(pid, meowprotocol.MSG_TYPE_CMD, f"ACT:{act_name}=0.0")
+            # [FIX] Do NOT send the ON command here. The Coordinator's 
+            # send_manual_command already added it to the dedupe cache and sent it!
+            
+            await asyncio.sleep(0.1) # 100ms is standard for pneumatic air blasts
+            
+            # [FIX] Send the OFF command back through the Coordinator so it updates the 
+            # dedupe cache. Otherwise, the cache will endlessly re-transmit the ON command!
+            await self.coord.send_manual_command(pid, act_name, 0.0)
+            
         except Exception as e:
             logger.error(f"[Safety] Thermal Pulse Failure: {e}")
 

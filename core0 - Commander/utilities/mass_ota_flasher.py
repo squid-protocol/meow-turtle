@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+"""
+Ninelives Mass OTA Flasher - Enterprise Edition
+Protocol: MTIP v5.5
+Description: Reliable, chunked binary transport over RS-485 for RP2350 limbs.
+"""
+
 import serial
 import time
 import struct
@@ -7,278 +14,286 @@ import math
 import os
 import sys
 import argparse
+import logging
 
-# --- CONFIGURATION ---
-MY_ID = 5                  # RP5 (Brain)
+# --- SYSTEM DEFAULTS ---
+MY_ID = 5
 BAUD_RATE = 115200
-CHUNK_SIZE = 64            # 64 Bytes (Safe for RP2040 UART FIFO)
+CHUNK_SIZE = 64
 MAX_RETRIES = 5
+TIMEOUT_SEC = 2.0
 
 # --- TARGET LIST ---
 TARGETS = {
-    1: { "port": "/dev/ttyAMA0", "name": "Distributor" },
-    2: { "port": "/dev/ttyAMA2", "name": "Sensor Array" },
-    3: { "port": "/dev/ttyAMA3", "name": "Motor Controller" }
+    1: {"port": "/dev/ttyAMA0", "name": "Distributor"},
+    2: {"port": "/dev/ttyAMA2", "name": "Sensor Array"},
+    3: {"port": "/dev/ttyAMA3", "name": "Motor Controller"}
 }
-
-# --- PAYLOAD MODE ---
-# Set True to send [ID][HASH]. Set False to send [ID][CHUNKS][HASH].
-# Default True because current boot.py/app.py parsers do not support chunks in payload.
-USE_LEGACY_PAYLOAD = True 
 
 # --- FILE ID MAP ---
 FILE_ID_MAP = {
-    "config.json":              0x01,
-    "app.py":                   0x02,
-    "boot.py":                  0x05,
-    "lib/meowprotocol.py":      0x03,
-    "lib/tsl2591.py":           0x04,
-    "lib/actuators.py":         0x06,
-    "lib/sensors.py":           0x07,
-    "lib/diagnostics.py":       0x08,
-    "lib/tester.py":            0x09,
-    "lib/bldc_driver.py":       0x0A,
-    "lib/logging.py":           0x0B,
-    "lib/mpu6050.py":           0x0C,
-    "lib/ota.py":               0x0D,
-    "lib/pio_programs.py":      0x0E,
-    "lib/vibration_driver.py":  0x0F, 
-    "lives.txt":                0x10, 
-    "boot_attempts.txt":        0x11
+    "config.json": 0x01,
+    "app.py": 0x02,
+    "boot.py": 0x05,
+    "lib/meowprotocol.py": 0x03,
+    "lib/tsl2591.py": 0x04,
+    "lib/actuators.py": 0x06,
+    "lib/sensors.py": 0x07,
+    "lib/diagnostics.py": 0x08,
+    "lib/tester.py": 0x09,
+    "lib/bldc_driver.py": 0x0A,
+    "lib/logging.py": 0x0B,
+    "lib/mpu6050.py": 0x0C,
+    "lib/ota.py": 0x0D,
+    "lib/pio_programs.py": 0x0E,
+    "lib/vibration_driver.py": 0x0F,
+    "lives.txt": 0x10,
+    "boot_attempts.txt": 0x11
 }
 
 # --- PROTOCOL CONSTANTS ---
-MSG_TYPE_ACK       = 0x20
-MSG_TYPE_NAK       = 0x30
+MSG_TYPE_ACK = 0x20
+MSG_TYPE_NAK = 0x30
 MSG_TYPE_OTA_START = 0x50
-MSG_TYPE_OTA_DATA  = 0x51
-MSG_TYPE_OTA_END   = 0x52
+MSG_TYPE_OTA_DATA = 0x51
+MSG_TYPE_OTA_END = 0x52
 
-def crc16_ccitt(data_bytes):
-    crc = 0xFFFF
-    for byte in data_bytes:
-        crc ^= (byte << 8)
-        for _ in range(8):
-            if (crc & 0x8000): crc = (crc << 1) ^ 0x1021
-            else: crc = (crc << 1)
-            crc &= 0xFFFF
-    return crc
+# Configure Global Logger
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s',
+    datefmt='%H:%M:%S'
+)
+logger = logging.getLogger("OTA")
 
-def build_packet(target, source, seq, mtype, payload):
-    """
-    Builds Standard MTIP v5.5 Packet.
-    Format: >BBHB (Big Endian)
-    """
-    if isinstance(payload, str): payload = payload.encode('utf-8')
+class OTASession:
+    """Encapsulates a single OTA transfer session to a target device."""
     
-    # Header: Target, Source, Seq(2), Type
-    header = struct.pack(">BBHB", target, source, seq, mtype)
-    full = header + payload
-    
-    hex_body = binascii.hexlify(full).upper()
-    crc_val = crc16_ccitt(hex_body)
-    
-    # REMOVED SYNC_BYTE '?' to prevent Zombie Mode CRC failures on Pico
-    return f"<{hex_body.decode()}:{crc_val:04X}>\n".encode()
+    def __init__(self, target_id, port, file_path):
+        self.target_id = target_id
+        self.port = port
+        self.file_path = file_path
+        self.target_name = TARGETS.get(target_id, {}).get("name", "UNKNOWN")
+        self.ser = None
 
-def parse_packet(line):
-    try:
-        clean = line.strip(b'\x3F').strip().decode(errors='ignore').strip('<>')
-        if ':' not in clean: return None
-        hex_body, crc_str = clean.rsplit(':', 1)
-        
-        # Validate CRC
-        if crc16_ccitt(hex_body.encode()) != int(crc_str, 16): return "CRC_FAIL"
-        
-        binary = binascii.unhexlify(hex_body)
-        
-        # Unpack Header >BBHB (Standard Big Endian)
-        tgt, src, seq, mtype = struct.unpack(">BBHB", binary[:5])
-        payload = binary[5:]
-        
-        return (tgt, src, seq, mtype, payload)
-    except: return None
+    def _crc16_ccitt(self, data_bytes):
+        crc = 0xFFFF
+        for byte in data_bytes:
+            crc ^= (byte << 8)
+            for _ in range(8):
+                if (crc & 0x8000):
+                    crc = (crc << 1) ^ 0x1021
+                else:
+                    crc = (crc << 1)
+                crc &= 0xFFFF
+        return crc
 
-def wait_for_ack(ser, expected_seq, timeout=2.0):
-    start = time.time()
-    while (time.time() - start) < timeout:
-        if ser.in_waiting:
-            line = ser.readline()
-            if b'<' in line:
-                res = parse_packet(line)
-                if isinstance(res, tuple):
-                    tgt, src, seq, mtype, pay = res
-                    if seq == expected_seq:
-                        if mtype == MSG_TYPE_ACK: return True, pay.decode(errors='ignore')
-                        elif mtype == MSG_TYPE_NAK: return False, f"NAK: {pay.decode(errors='ignore')}"
-        time.sleep(0.005)
-    return False, "TIMEOUT"
+    def _build_packet(self, seq, mtype, payload):
+        if isinstance(payload, str):
+            payload = payload.encode('utf-8')
+        
+        header = struct.pack(">BBHB", self.target_id, MY_ID, seq, mtype)
+        full = header + payload
+        
+        hex_body = binascii.hexlify(full).upper()
+        crc_val = self._crc16_ccitt(hex_body)
+        
+        return f"<{hex_body.decode()}:{crc_val:04X}>\n".encode()
 
-def print_progress_bar(iteration, total, prefix='', suffix='', decimals=1, length=30, fill='█'):
-    """
-    Call in a loop to create terminal progress bar
-    """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filled_length = int(length * iteration // total)
-    bar = fill * filled_length + '-' * (length - filled_length)
-    sys.stdout.write(f'\r{prefix} |{bar}| {percent}% {suffix}')
-    sys.stdout.flush()
-    if iteration == total:
-        sys.stdout.write('\n')
+    def _parse_packet(self, line):
+        try:
+            clean = line.strip(b'\x3F').strip().decode(errors='ignore').strip('<>')
+            if ':' not in clean: return None
+            hex_body, crc_str = clean.rsplit(':', 1)
+            
+            if self._crc16_ccitt(hex_body.encode()) != int(crc_str, 16):
+                return "CRC_FAIL"
+            
+            binary = binascii.unhexlify(hex_body)
+            tgt, src, seq, mtype = struct.unpack(">BBHB", binary[:5])
+            payload = binary[5:]
+            return (tgt, src, seq, mtype, payload)
+        except Exception:
+            return None
 
-def flash_file(target_id, file_path, port):
-    # 1. Resolve File Details (Smart Map Lookup)
-    filename = os.path.basename(file_path)
-    file_id = filename # Default to string name
-    
-    # Try exact match
-    if filename in FILE_ID_MAP:
-        file_id = FILE_ID_MAP[filename]
-    else:
-        # Try finding 'lib/filename' in map
+    def _wait_for_ack(self, expected_seq):
+        start = time.time()
+        while (time.time() - start) < TIMEOUT_SEC:
+            if self.ser.in_waiting:
+                line = self.ser.readline()
+                if b'<' in line:
+                    res = self._parse_packet(line)
+                    if isinstance(res, tuple):
+                        tgt, src, seq, mtype, pay = res
+                        if seq == expected_seq:
+                            if mtype == MSG_TYPE_ACK:
+                                return True, pay.decode(errors='ignore')
+                            elif mtype == MSG_TYPE_NAK:
+                                return False, f"NAK: {pay.decode(errors='ignore')}"
+            time.sleep(0.005)
+        return False, "TIMEOUT"
+
+    def _send_reliable(self, pkt, seq, label="TX", verbose=False):
+        for attempt in range(MAX_RETRIES):
+            self.ser.write(pkt)
+            success, msg = self._wait_for_ack(seq)
+            
+            if success:
+                return True
+                
+            if verbose or attempt == MAX_RETRIES - 1:
+                logger.warning(f"[{label}] Retry {attempt+1}/{MAX_RETRIES} ({msg})")
+                
+        logger.error(f"[{label}] FATAL: Packet sequence {seq} failed after {MAX_RETRIES} retries.")
+        return False
+
+    def _print_progress(self, iteration, total, length=40):
+        percent = ("{0:.1f}").format(100 * (iteration / float(total)))
+        filled_length = int(length * iteration // total)
+        bar = '█' * filled_length + '-' * (length - filled_length)
+        sys.stdout.write(f'\r[TX] |{bar}| {percent}% (Chunk {iteration}/{total})')
+        sys.stdout.flush()
+        if iteration == total:
+            sys.stdout.write('\n')
+
+    def _resolve_file_id(self):
+        filename = os.path.basename(self.file_path)
+        if filename in FILE_ID_MAP:
+            return FILE_ID_MAP[filename]
         for key, val in FILE_ID_MAP.items():
             if key.endswith(f"/{filename}"):
-                file_id = val
-                break
-    
-    try:
-        with open(file_path, "rb") as f: file_data = f.read()
-    except Exception as e:
-        print(f"Read Error: {e}"); return
+                return val
+        return filename
 
-    # 2. Init Serial
-    try:
-        ser = serial.Serial(port, BAUD_RATE, timeout=0.1)
-        ser.reset_input_buffer()
-        ser.reset_output_buffer()
-    except Exception as e:
-        print(f"Serial Error: {e}"); return
-
-    file_hash = hashlib.sha256(file_data).hexdigest()
-    total_chunks = math.ceil(len(file_data) / CHUNK_SIZE)
-    seq = 0
-
-    print(f"Target: {TARGETS[target_id]['name']} (ID {target_id}) | File: {filename} ({len(file_data)} bytes)")
-    
-    # 3. START SESSION
-    sys.stdout.write(">> Initializing... ")
-    sys.stdout.flush()
-    
-    if isinstance(file_id, str):
-        # Dynamic Name: [FF][NameLen][Name][Hash] 
-        name_bytes = file_id.encode('utf-8')
-        payload = struct.pack(">BB", 0xFF, len(name_bytes)) + name_bytes + file_hash.encode()
-    else:
-        # Legacy ID Mode
-        if USE_LEGACY_PAYLOAD:
-            payload = struct.pack("B", file_id) + file_hash.encode()
-        else:
-            payload = struct.pack(">BH", file_id, total_chunks) + file_hash.encode()
-
-    pkt = build_packet(target_id, MY_ID, seq, MSG_TYPE_OTA_START, payload)
-    
-    if not _send_reliable(ser, pkt, seq, "START", verbose=False):
-        print("\n[ERROR] Target did not respond to handshake. Aborting.")
-        return
-
-    print("OK") # Handshake done
-    seq = (seq + 1) % 65536
-
-    # 4. UPLOAD DATA
-    # print(f"[2/3] Uploading...")
-    for i in range(total_chunks):
-        chunk = file_data[i*CHUNK_SIZE : (i+1)*CHUNK_SIZE]
-        pkt = build_packet(target_id, MY_ID, seq, MSG_TYPE_OTA_DATA, chunk)
-        
-        if not _send_reliable(ser, pkt, seq, f"Chunk {i+1}", verbose=False):
-            print(f"\n[ERROR] Upload Failed at Chunk {i+1}/{total_chunks}")
-            return
-        
-        # Update Progress Bar
-        print_progress_bar(i + 1, total_chunks, prefix='>> Uploading:', suffix='Complete', length=40)
-        
-        seq = (seq + 1) % 65536
-
-    # 5. COMMIT
-    sys.stdout.write(">> Committing...   ")
-    sys.stdout.flush()
-    pkt = build_packet(target_id, MY_ID, seq, MSG_TYPE_OTA_END, b"")
-    
-    # We expect NAK: TRUNCATED or similar if reboot is fast, or ACK if slow.
-    # We accept either as success, or a timeout as "likely rebooted".
-    success = _send_reliable(ser, pkt, seq, "COMMIT", timeout=5.0, verbose=False)
-    
-    if success:
-        print("DONE (Verified)")
-    else:
-        print("DONE (Implicit - No final ACK)")
-
-    ser.close()
-
-def _send_reliable(ser, pkt, seq, label="TX", timeout=2.0, verbose=True):
-    for attempt in range(MAX_RETRIES):
-        ser.write(pkt)
-        success, msg = wait_for_ack(ser, seq, timeout)
-        
-        if success: 
-            return True
-            
-        # If verbose is False (like during chunks), only print on error/retry
-        # We handle retry output differently to keep progress bar clean?
-        # Actually, for chunks, we just retry silently unless it fails max times.
-        if verbose:
-            sys.stdout.write(f"\r{label} Retry {attempt+1}/{MAX_RETRIES} ({msg})   ")
-            sys.stdout.flush()
-            
-    if verbose: print("")
-    return False
-
-def wizard():
-    print("\n=== MASS FLASHER OTA v2.0 (Clean Mode) ===")
-    
-    # 1. Target Selection
-    print("\nAvailable Targets:")
-    for tid, info in TARGETS.items():
-        print(f"  [{tid}] {info['name']}")
-    print("  [A] ALL Targets")
-        
-    selected_targets = []
-    while True:
-        val = input("\nSelect Target IDs (e.g. 1, 2 or A): ").strip().upper()
-        if val in ['A', 'ALL']:
-            selected_targets = list(TARGETS.keys())
-            break
+    def execute(self):
+        """Executes the full OTA lifecycle."""
+        logger.info(f"Targeting Node {self.target_id} ({self.target_name}) on {self.port}")
         
         try:
-            parts = [int(x.strip()) for x in val.split(',')]
-            valid = True
-            for t in parts:
-                if t not in TARGETS:
-                    print(f"Invalid ID: {t}")
-                    valid = False
-            if valid and parts:
-                selected_targets = parts
-                break
+            with open(self.file_path, "rb") as f:
+                file_data = f.read()
+        except OSError as e:
+            logger.error(f"Failed to read source file: {e}")
+            return False
+
+        file_id = self._resolve_file_id()
+        file_hash = hashlib.sha256(file_data).hexdigest()
+        total_chunks = math.ceil(len(file_data) / CHUNK_SIZE)
+        
+        logger.info(f"Payload ID: {file_id} | Size: {len(file_data)} bytes | Chunks: {total_chunks}")
+        
+        try:
+            self.ser = serial.Serial(self.port, BAUD_RATE, timeout=0.1)
+            self.ser.reset_input_buffer()
+            self.ser.reset_output_buffer()
+        except serial.SerialException as e:
+            logger.error(f"Serial port failure: {e}")
+            return False
+
+        seq = 1
+        start_time = time.time()
+
+        try:
+            # 1. HANDSHAKE
+            logger.info("Phase 1: Requesting OTA Lock (OTA_START)")
+            if isinstance(file_id, int):
+                payload = struct.pack(">BH", file_id, total_chunks) + file_hash.encode('utf-8')
+            else:
+                encoded_name = file_id.encode('utf-8')
+                payload = struct.pack(">BB", 0xFF, len(encoded_name)) + encoded_name + file_hash.encode('utf-8')
+
+            start_pkt = self._build_packet(seq, MSG_TYPE_OTA_START, payload)
+            if not self._send_reliable(start_pkt, seq, label="OTA_START", verbose=True):
+                return False
+
+            # 2. TRANSPORT
+            logger.info("Phase 2: Streaming Data Chunks")
+            seq = (seq + 1) % 256 or 1
+            
+            for i in range(total_chunks):
+                chunk = file_data[i * CHUNK_SIZE : (i + 1) * CHUNK_SIZE]
+                pkt = self._build_packet(seq, MSG_TYPE_OTA_DATA, chunk)
+                
+                if not self._send_reliable(pkt, seq, label=f"CHK_{i+1}"):
+                    return False
+                    
+                self._print_progress(i + 1, total_chunks)
+                seq = (seq + 1) % 256 or 1
+
+            # 3. COMMIT
+            logger.info("Phase 3: Finalizing and Verifying Hash (OTA_END)")
+            end_pkt = self._build_packet(seq, MSG_TYPE_OTA_END, b"COMMIT")
+            if not self._send_reliable(end_pkt, seq, label="OTA_END", verbose=True):
+                return False
+
+            elapsed = time.time() - start_time
+            logger.info(f"SUCCESS: Flash completed in {elapsed:.2f}s ({len(file_data)/elapsed:.0f} bytes/sec)")
+            return True
+
+        finally:
+            if self.ser and self.ser.is_open:
+                self.ser.close()
+
+def main():
+    parser = argparse.ArgumentParser(description="Ninelives Mass OTA Flasher - Enterprise Edition")
+    parser.add_argument('-t', '--targets', type=str, help="Target IDs (e.g., 1, 2, or A for All)")
+    parser.add_argument('-f', '--files', nargs='+', help="List of file paths to flash")
+    parser.add_argument('--debug', action='store_true', help="Enable verbose debug logging")
+    
+    args = parser.parse_args()
+
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+
+    # Required Args Check
+    if not args.targets or not args.files:
+        logger.error("Missing required arguments. Use -h for help.")
+        sys.exit(1)
+
+    # Parse Targets
+    if args.targets.upper() in ['A', 'ALL']:
+        selected_targets = list(TARGETS.keys())
+    else:
+        try:
+            selected_targets = [int(x.strip()) for x in args.targets.split(',')]
         except ValueError:
-            pass
-        print("Invalid input. Try '1,3' or 'A'.")
-    
-    print(f"Targets Selected: {selected_targets}")
+            logger.error("Invalid target format. Use comma-separated integers or 'A'.")
+            sys.exit(1)
 
-    # 2. File Selection
-    while True:
-        path = input("Enter file path (e.g., lib/ota.py): ").strip()
-        if os.path.exists(path): break
-        print("File not found.")
+    # Validate Files First
+    valid_files = []
+    for path in args.files:
+        if not os.path.exists(path):
+            logger.error(f"File not found: {path}. Aborting.")
+            sys.exit(1)
+        valid_files.append(path)
 
-    # 3. Execution Loop
-    for tid in selected_targets:
-        print(f"\n{'-'*60}")
-        flash_file(tid, path, TARGETS[tid]['port'])
-        time.sleep(1.0) # Allow bus to settle between targets
+    # Execute Deployment
+    logger.info(f"Initializing batch deployment to targets: {selected_targets}")
     
+    for path in valid_files:
+        for tid in selected_targets:
+            if tid not in TARGETS:
+                logger.warning(f"Skipping unknown target ID: {tid}")
+                continue
+                
+            print(f"\n{'-'*60}")
+            session = OTASession(tid, TARGETS[tid]['port'], path)
+            success = session.execute()
+            
+            if not success:
+                logger.error("Batch job terminated early due to failure.")
+                sys.exit(1)
+                
+            time.sleep(0.5) # Settle bus between nodes
+            
     print(f"\n{'-'*60}")
-    print("Batch Job Complete.\n")
+    logger.info("Batch Deployment Complete.")
 
 if __name__ == "__main__":
-    wizard()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n")
+        logger.error("Process interrupted by user (Ctrl+C). Aborting.")
+        sys.exit(130)

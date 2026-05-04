@@ -138,11 +138,24 @@ class TSL2591:
 
     def get_raw_channels(self):
         """
-        [Spec 11.8] Exception Propagation.
-        Burst reads 4 bytes from the luminosity registers. Propagates OSError 
-        to trigger the "Rosetta Stone" error mapping (Spec 11.5) in the parent.
+        Reads the latest available data from the double-buffered registers.
+        CRITICAL UPDATE: This function is now NON-BLOCKING.
+        It does NOT sleep. It returns the current register values immediately.
+        
+        Returns: (ch0, ch1) tuple.
         """
+        # Read 4 bytes starting from CHAN0_LOW
         data = self._read_register(TSL2591_REGISTER_CHAN0_LOW, 4)
+        
+        # --- HARDWARE INTEGRITY VERIFICATION (Byte-Tear Detection) ---
+        # If the I2C bus is being driven too fast or capacitance is too high,
+        # the sensor will choke and spit out repeating corrupted bytes 
+        # (e.g., 0x4747 or 0x2A2A) instead of genuine light data.
+        if (data[0] == data[1] and data[2] == data[3] and data[0] in [0x47, 0x2A]):
+            # -5 is ERR_BUS_LOCK (Defined in sensors.py Rosetta Stone)
+            # We return this specific error so the BusWrapper knows the silicon choked.
+            return (-5, -5) 
+            
         ch0 = (data[1] << 8) | data[0]
         ch1 = (data[3] << 8) | data[2]
         return (ch0, ch1)

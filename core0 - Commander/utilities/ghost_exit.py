@@ -22,10 +22,10 @@ import binascii
 
 # --- CONFIGURATION ---
 # Default to Pico 1 (Loader/Distributor) on ttyAMA0
-SERIAL_PORT = '/dev/ttyAMA2'
+SERIAL_PORT = '/dev/ttyAMA1'
 BAUD_RATE = 115200
 MY_ID = 0      # Main Brain ID
-TARGET_ID = 2  # Target Pico ID
+TARGET_ID = 1  # Target Pico ID
 
 # --- PROTOCOL CONSTANTS ---
 MSG_TYPE_CMD     = 0x10
@@ -151,21 +151,42 @@ def main():
     Provides an interactive CLI to send packets, manage sequence counters, 
     and display real-time decoded serial telemetry.
     """
-    print(f"--- OPENING {SERIAL_PORT} (MTIP v5 Clean Mode) ---")
+    print("=== Ninelives Hardware Diagnostic ===")
+    print("Select physical UART connection:")
+    print("  [1] Pico 1 (Distributor -> ttyAMA1)")
+    print("  [2] Pico 2 (Eyes/Sensors -> ttyAMA2)")
+    print("  [3] Pico 3 (Motor Ctrl  -> ttyAMA3)")
+    
+    while True:
+        node = input("Enter Node ID (1-3): ").strip()
+        if node in ['1', '2', '3']:
+            node_id = int(node)
+            # Map Node 1 to ttyAMA0 to match app.py SAFE_CONFIG
+            if node_id == 1:
+                serial_port = "/dev/ttyAMA0"
+            else:
+                serial_port = f"/dev/ttyAMA{node}"
+            break
+        print("Invalid input. Please enter 1, 2, or 3.")
+        
+    print(f"\n--- OPENING {serial_port} (MTIP v5 Clean Mode) ---")
     try:
-        ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1)
+        ser = serial.Serial(serial_port, BAUD_RATE, timeout=0.1)
     except Exception as e:
-        print(f"ERROR: {e}")
+        print(f"ERROR: Could not open {serial_port}: {e}")
         return
 
     seq_counter = 0
+    current_target = node_id # Default the protocol target to the physical node
 
     try:
         while True:
-            print("\nSelect Query to Send:")
+            print(f"\n=== PORT: {serial_port} | ACTIVE TARGET: PICO {current_target} ===")
+            print("Select Query to Send:")
             print("  [s] Status Request (CMD_STS 0x11)")
             print("  [r] Reset Command  (CMD 0x14 - Hard Reset)")
             print("  [e] Exit Ghost     (CMD 0x10 payload='EXIT')")
+            print("  [t] Change Target Pico ID")
             print("  [q] Quit Script")
             
             choice = input("Enter selection: ").strip().lower()
@@ -175,6 +196,18 @@ def main():
             
             if choice == 'q':
                 break
+            elif choice == 't':
+                try:
+                    new_id = int(input("Enter new Target Pico ID (1-255): "))
+                    if 1 <= new_id <= 255:
+                        current_target = new_id
+                        print(f"Target successfully locked to Pico {current_target}")
+                    else:
+                        print("Invalid ID. Must be between 1 and 255.")
+                except ValueError:
+                    print("Invalid input. Please enter a number.")
+                continue # Skip the packet sending logic
+                
             elif choice == 's':
                 msg_type = MSG_TYPE_CMD_STS
                 payload = b""
@@ -192,7 +225,7 @@ def main():
             ser.reset_input_buffer()
 
             # Send Packet
-            pkt = build_packet(TARGET_ID, MY_ID, seq_counter, msg_type, payload)
+            pkt = build_packet(current_target, MY_ID, seq_counter, msg_type, payload)
             ser.write(pkt)
             print(f"[TX] {pkt.strip().decode()}")
             

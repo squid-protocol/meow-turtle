@@ -105,6 +105,11 @@ class OTAManager:
         # 2. Setup State & Temp File (Spec 9.3)
         self.temp_filename = self.active_filename + ".new"
         self.expected_checksum = checksum_hex.lower()
+        
+        if total_chunks <= 0:
+            log.warn("OTA", "Refused: Payload declared 0 chunks.")
+            return False, "ZERO_CHUNKS"
+            
         self.total_chunks = total_chunks
         self.current_chunks = 0
         
@@ -129,6 +134,12 @@ class OTAManager:
         """
         if not self.open_file:
             return False, "NO_SESSION"
+            
+        # --- FLASH BOMB PROTECTION ---
+        # Prevent runaway transmissions from exhausting the 2MB physical flash limit.
+        if self.current_chunks >= self.total_chunks:
+            log.error("OTA", f"Overflow Prevented: Rejecting chunk {self.current_chunks + 1} (Max: {self.total_chunks})")
+            return False, "OVERFLOW_ERR"
             
         try:
             self.open_file.write(chunk_data)

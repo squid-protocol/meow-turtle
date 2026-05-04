@@ -35,6 +35,7 @@ class BLDCDriver:
             # 2. Setup Direction
             self.dir_pin = machine.Pin(dir_pin_num, machine.Pin.OUT)
             self.dir_invert = invert_dir
+            self._current_dir_val = -1     # <--- MOVED UP: Initialize memory BEFORE using it!
             self.set_direction(False) # Default Forward
             
             # 3. Parameters
@@ -84,17 +85,16 @@ class BLDCDriver:
     def set_direction(self, reverse):
         """
         [Spec 10.9.3] Directional & State Memory.
-        Filters direction requests to only write to physical GPIO pins 
-        if the direction state has changed, protecting against EMI-induced noise.
+        Filters direction requests by comparing against software memory,
+        protecting against physical voltage sag / EMI noise on the OUT pad.
         """
         logic = not reverse if self.dir_invert else reverse
-        
-        # Only log if direction actually changes (Optimization)
-        current_pin_val = self.dir_pin.value()
         new_pin_val = 1 if logic else 0
         
-        if current_pin_val != new_pin_val:
+        # Compare against software memory, NEVER physical pad voltage
+        if self._current_dir_val != new_pin_val:
             self.dir_pin.value(new_pin_val)
+            self._current_dir_val = new_pin_val
             dir_str = "REV" if reverse else "FWD"
             log.info("ACT", f"BLDC Dir: {dir_str}")
 

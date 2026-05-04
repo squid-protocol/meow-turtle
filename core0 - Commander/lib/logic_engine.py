@@ -43,10 +43,18 @@ class LogicEngine:
         self.coord = coordinator
         self.running = True
         
-        # [Spec 4.2] Part Tracking Memory
-        # Stores {timestamp, pulse_count} from Gatekeeper to match with Vision Results.
-        # This FIFO ensures that parts are sorted in the exact order they were seen.
-        self.part_fifo = collections.deque(maxlen=100)
+        # [Spec 4.2 & 11.3] The Reconciliation Engine Queues
+        self.part_located = collections.deque(maxlen=100)     # Physical parts detected by Pico 2
+        self.part_identified = collections.deque(maxlen=100)  # AI classifications from Core 1
+        self.pending_sort = collections.deque(maxlen=100)     # Married data awaiting execution
+        
+        # [IPC] Synapse Bus Setup (ZeroMQ)
+        import zmq
+        import zmq.asyncio
+        self.zmq_context = zmq.asyncio.Context()
+        self.vision_socket = self.zmq_context.socket(zmq.SUB)
+        self.vision_socket.connect("tcp://127.0.0.1:5555") # Core 1 will publish to this port
+        self.vision_socket.setsockopt_string(zmq.SUBSCRIBE, "")
         
         # [Spec 4.3.6.3] W-Protocol Tracking Registry
         # Tracks persistent IDs that have been sighted in the re-broadcast stream.
@@ -82,10 +90,13 @@ class LogicEngine:
                     evt = await self.coord.logic_queue.get()
                     await self.handle_hardware_event(evt)
                 
-                # 2. Consume Vision Results (AI Classification)
-                if not self.coord.from_brain.empty():
-                    vision_result = self.coord.from_brain.get()
-                    await self.handle_vision_result(vision_result)
+                # 2. Consume Vision Results via Synapse Bus (ZeroMQ IPC)
+                try:
+                    # Non-blocking check for incoming AI vision data
+                    vision_msg = await self.vision_socket.recv_json(flags=zmq.NOBLOCK)
+                    await self.handle_vision_result(vision_msg)
+                except zmq.Again:
+                    pass # No vision data waiting this millisecond
 
                 # High-frequency resolution (200Hz) to prevent FIFO pileups
                 await asyncio.sleep(0.005) 
@@ -128,6 +139,16 @@ class LogicEngine:
         # --- PHASE 3: KINETIC LOGIC PERCOLATION ---
         if "PART_DETECTED" in payload:
             await self._process_part_detected(payload)
+            
+        elif "HOPPER_EMPTY" in payload:
+            self.coord._notify("Loader Hopper is Empty! Add more bricks.", type='warning')
+            
+        elif "GATE_JAMMED" in payload:
+            logger.error("[Logic] Gatekeeper Jammed! Initiating clearing routine.")
+            await self.coord.send_manual_command(1, "feeder", -0.5)
+            
+        elif "SORT_ACK" in payload:
+            self.stats["parts_sorted"] += 1
             
         elif "STALL" in payload:
             logger.warning(f"[Logic] Hardware Stall on Pico {source_id}: {payload}")
@@ -178,70 +199,71 @@ class LogicEngine:
         the Vision Process. Assigns the 'Birth Certificate' to the part by 
         storing its pulse count in the FIFO.
         """
-        pulse_count = 0
         try:
-            # Parse the odometer reading from the Gatekeeper (Pico 2)
-            if "pulse_count=" in payload:
-                parts = payload.split("pulse_count=")
-                pulse_count = int(parts[1].split(',')[0])
+            # [FIX] Use the hardened central parser instead of fragile string splitting
+            from lib import protocol_parser
+            parsed_data = protocol_parser.parse_kv_payload(payload)
+            pulse_count = int(parsed_data.get('pulse_count', 0))
         except Exception as e:
             logger.error(f"[Logic] Malformed PART_DETECTED payload: {e}")
             return
 
         self.stats["parts_detected"] += 1
 
-        # 1. Inform the Vision Core to analyze the latest image
-        self.coord.to_brain.put({
-            "type": "ANALYZE_PART", 
-            "req_id": time.time(),
-            "pulse_count": pulse_count
+        # 1. Store in Reconciliation Queue
+        self.part_located.append({
+            "pulse": pulse_count,
+            "ts": time.time()
         })
         
-        # 2. Store in FIFO to await the asynchronous vision result
-        self.part_fifo.append({
-            "ts": time.time(),
-            "pulse_count": pulse_count
-        })
+        # 2. Trigger UI Flash via Digital Twin (Pico 2 is the Gatekeeper)
+        if 2 in GLOBAL_TWIN.limbs:
+            GLOBAL_TWIN.limbs[2].ui_flash_trigger = True
+            
+        # 3. Attempt Reconciliation (In case Vision beat Physics to the punch)
+        await self.reconcile_queues()
 
     # --------------------------------------------------------------------------
     # VISION FUSION & KINETIC DISPATCH
     # --------------------------------------------------------------------------
     async def handle_vision_result(self, result):
         """
-        [Spec 11.3] Vision result matching and kinetic routing.
-        
-        Matches a classification result from Core 1 with the oldest part in 
-        the FIFO. Calculates a position-fused sort command based on the 
-        part's original capture pulse.
+        [Spec 11.3] Vision result ingestion from Synapse Bus.
         """
-        if not self.part_fifo:
-            logger.warning("[Logic] Vision result orphaned: Part FIFO empty (Sync Lost).")
-            self.stats["vision_sync_errors"] += 1
-            return
+        self.part_identified.append(result)
+        await self.reconcile_queues()
 
-        # Pop the oldest part pulse count to match the oldest AI result
-        part_data = self.part_fifo.popleft()
-        start_pulse = part_data.get('pulse_count', 0)
-        
-        # Extract classification from the Vision Brain
-        target_bin = result.get('target_bin', 10) # 10 is the fallback Reject bin
-        impulse = result.get('impulse', 1.0)
-        
-        # [Spec 16.3] Position-Fused Sort Command
-        # Dispatched to Pico 3 (Distributor). Uses the 'at=' spatial target.
-        payload = f"ACT:SORT:bin={target_bin}:at={start_pulse}:str={impulse}"
-        
-        if GLOBAL_TWIN.host_state == ms.STATE_FLOW:
-            await self.coord.send_physical(3, meowprotocol.MSG_TYPE_CMD, payload)
-            self.stats["parts_sorted"] += 1
-            logger.info(f"[Logic] Sort Executed: Bin {target_bin} for part at Pulse {start_pulse}")
+    async def reconcile_queues(self):
+        """
+        The Marriage Process. Matches the oldest physical location with the 
+        oldest vision ID, and dispatches the compiled command to Pico 3.
+        """
+        # We need AT LEAST ONE physical location and ONE vision ID to make a match
+        if len(self.part_located) > 0 and len(self.part_identified) > 0:
+            
+            # The newest physical location gets the oldest vision ID
+            physical_data = self.part_located.popleft() 
+            vision_data = self.part_identified.popleft()
+            
+            target_bin = vision_data.get('target_bin', 10)
+            impulse = vision_data.get('impulse', 1.0)
+            start_pulse = physical_data["pulse"]
+            
+            # [Spec 16.3] Position-Fused Sort Command
+            payload = f"ACT:SORT:bin={target_bin}:at={start_pulse}:str={impulse}"
+            
+            if GLOBAL_TWIN.host_state == ms.STATE_FLOW:
+                await self.coord.send_physical(3, meowprotocol.MSG_TYPE_CMD, payload)
+                self.stats["parts_sorted"] += 1
+                logger.info(f"[Logic] Synapse Match: Bin {target_bin} for part at Pulse {start_pulse}")
 
     def reset_logic(self):
         """
         [Spec 15.3] Clears memory and tracking state to recover from system errors.
-        Ensures a clean slate for the FIFO and W-Protocol registries after a reset.
         """
-        self.part_fifo.clear()
+        self.part_located.clear()
+        self.part_identified.clear()
+        self.pending_sort.clear()
         for pid in self.sighted_ids:
             self.sighted_ids[pid].clear()
         logger.info("[Logic] Logic Engine state purged.")

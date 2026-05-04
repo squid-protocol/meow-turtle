@@ -262,10 +262,12 @@ class GUIModals:
                             ui.label(val_str).classes('text-[11px] font-mono text-amber-400 break-all')
 
             with ui.row().classes('w-full p-2 bg-slate-950 border-t border-slate-800 justify-end gap-2'):
-                ui.button('REFRESH ALL', on_click=lambda: (
-                    GLOBAL_TWIN.coordinator._bg_task(GLOBAL_TWIN.coordinator.fleet.send(pid, meowprotocol.MSG_TYPE_CMD_VER, "")),
-                    GLOBAL_TWIN.coordinator._bg_task(GLOBAL_TWIN.coordinator.fleet.send(pid, meowprotocol.MSG_TYPE_CMD_CFG, ""))
-                )).props('outline dense size=sm color=cyan')
+                async def refresh_data():
+                    await GLOBAL_TWIN.coordinator.send_cmd("FETCH_VERSIONS")
+                    await GLOBAL_TWIN.coordinator.send_cmd("FETCH_CONFIG")
+                    GLOBAL_TWIN.coordinator._notify("Data Requested. Close & Reopen this window in 2 seconds.", type='info')
+                    
+                ui.button('REFRESH ALL', on_click=refresh_data).props('outline dense size=sm color=cyan')
             dialog.open()
 
     @staticmethod

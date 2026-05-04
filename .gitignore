@@ -1,0 +1,48 @@
+# ==========================================
+# Ninelives / Meow Turtle .gitignore
+# ==========================================
+
+# --- Python Bytecode & Cache ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# --- Logs & Telemetry ---
+# Ignores both standard logs and your daily rotated logs (e.g., core0.log.2026-01-20)
+logs/
+*.log
+*.log.*
+
+# --- Drafts, Specs & Checklists ---
+# Ignores LibreOffice/OpenOffice document drafts
+*.odt
+*.pdf
+*.docx
+
+# --- Virtual Environments ---
+# Assuming you use a venv on the RP5 or development machine
+venv/
+.venv/
+env/
+.env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# --- OS & IDE Generated Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+__MACOSX/
+
+# --- Local Overrides & Secrets ---
+# (Uncomment these if you eventually add local-only DBs or secret keys)
+# *.sqlite3
+# .env
+# secrets.json

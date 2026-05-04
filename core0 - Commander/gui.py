@@ -118,7 +118,9 @@ class SorterGUI:
         """
         ui.query('body').style('background-color: #020617; color: #f8fafc; font-family: "Noto Sans", sans-serif; overflow: hidden;')
         
-        with ui.grid(columns=2, rows='28vh 1fr 1fr').classes('w-full h-screen p-2 gap-1'):
+        # minmax(0, ...) fixes the CSS grid blowout bug so scroll areas activate properly.
+        # 0.8fr and 1.2fr ratios force the middle row to be smaller than the bottom row.
+        with ui.grid(columns=2, rows='28vh minmax(0, 0.8fr) minmax(0, 1.2fr)').classes('w-full h-screen p-2 gap-1'):
             self.build_system_status_block()
             self.build_flight_recorder_block()
             self.build_limb_block(1, "LOADER CORE")
@@ -189,10 +191,10 @@ class SorterGUI:
                     mk_btn('D', 'D'); mk_btn('I', 'I'); mk_btn('W', 'W'); mk_btn('E', 'E')
                 ui.spinner('audio', size='xs', color='cyan-900')
 
-            self.log_scroll = ui.scroll_area().classes('w-full flex-grow bg-black p-2')
+            self.log_scroll = ui.scroll_area().classes('w-full flex-1 min-h-0 bg-black p-2')
             with self.log_scroll:
                 self.log_container = ui.column().classes('w-full gap-0 font-mono text-[10px]')
-
+                
             with ui.row().classes('w-full bg-slate-950 p-1 border-t border-slate-900 justify-between'):
                 self.buffer_stats = ui.label('Buf: 0').classes('text-[9px] font-mono text-slate-600')
                 self.log_path_lbl = ui.label(f'LOG: {self.log_file_path}').classes('text-[8px] font-mono text-slate-700 truncate max-w-[150px]')
@@ -202,7 +204,7 @@ class SorterGUI:
         """
         [Spec 6.2] Standard layout for Loader (P1) and Distributor (P3).
         """
-        card = ui.card().classes('bg-slate-900 border border-slate-800 p-3 h-full flex flex-col transition-all duration-500')
+        card = ui.card().classes('bg-slate-900 border border-slate-800 p-3 h-full flex flex-col overflow-hidden transition-all duration-500')
         self.limb_cards[pid] = card
         with card:
             with ui.row().classes('w-full items-center border-b border-slate-800 pb-1 mb-1 shrink-0'):
@@ -218,13 +220,14 @@ class SorterGUI:
 
             self._add_health_dashboard(pid)
             
-            with ui.scroll_area().classes('w-full flex-grow mt-1 pr-1'):
+            # flex-1 (instead of flex-grow) forces the baseline to 0%, activating the scrollbar
+            with ui.scroll_area().classes('w-full flex-1 min-h-0 mt-1 pr-1'):
                  with ui.column().classes('w-full gap-1'):
                     ui.label('ACTUATOR MATRIX').classes('text-[10px] font-bold text-slate-600 uppercase tracking-tighter')
                     if pid == 1:
                         self.add_vibratory_control(1, "TVIB"); self.add_vibratory_control(1, "SVIB")
                         with ui.grid(columns=2).classes('w-full gap-1 mt-1'):
-                             self.add_solenoid_button(1, "TUP"); self.add_solenoid_button(1, "TDWN")
+                             self.add_solenoid_button(1, "SOL_TUP"); self.add_solenoid_button(1, "SOL_TDWN")
                     elif pid == 3:
                         self.actuator_labels[(3, 'conveyor', 'cal')] = ui.label('Ratio: --').classes('text-[9px] text-slate-600 font-mono w-full text-right')
                         self.add_conveyor_control(3, "conveyor")
@@ -241,7 +244,7 @@ class SorterGUI:
         [Spec 6.2.2] Pico 2: Specialized Pulse/Breakbeam Sync monitor.
         """
         pid = 2
-        card = ui.card().classes('bg-slate-900 border border-slate-800 p-3 h-full flex flex-col transition-all duration-500')
+        card = ui.card().classes('bg-slate-900 border border-slate-800 p-3 h-full flex flex-col overflow-hidden transition-all duration-500')
         self.limb_cards[pid] = card
         with card:
             with ui.row().classes('w-full items-center border-b border-slate-800 pb-1 mb-1 shrink-0'):
@@ -257,15 +260,18 @@ class SorterGUI:
 
             self._add_health_dashboard(pid)
             
-            with ui.row().classes('w-full bg-black border border-slate-800 p-2 items-center justify-between rounded mt-2'):
-                ui.label('GLOBAL ODOMETER').classes('text-[9px] text-cyan-600 font-bold uppercase')
-                self.pulse_label = ui.label('00000').classes('text-xl font-mono text-cyan-400 font-black')
-            
-            self.scan_indicator = ui.card().classes('w-full flex-grow bg-black border-2 border-slate-800 flex items-center justify-center mt-1')
-            with self.scan_indicator: self.scan_label = ui.label('CLEAR').classes('text-2xl font-black text-emerald-600 uppercase')
-            
-            setattr(self, f"sensor_box_p{pid}", ui.column().classes('w-full gap-0.5 mt-2'))
-            self._add_version_table(pid); self._add_config_table(pid)
+            # flex-1 forces the scroll boundary to respect the grid cell
+            with ui.scroll_area().classes('w-full flex-1 min-h-0 mt-1 pr-1'):
+                with ui.column().classes('w-full gap-1'):
+                    with ui.row().classes('w-full bg-black border border-slate-800 p-2 items-center justify-between rounded mt-1'):
+                        ui.label('GLOBAL ODOMETER').classes('text-[9px] text-cyan-600 font-bold uppercase')
+                        self.pulse_label = ui.label('00000').classes('text-xl font-mono text-cyan-400 font-black')
+                    
+                    self.scan_indicator = ui.card().classes('w-full h-[60px] bg-black border-2 border-slate-800 flex items-center justify-center')
+                    with self.scan_indicator: self.scan_label = ui.label('CLEAR').classes('text-2xl font-black text-emerald-600 uppercase')
+                    
+                    setattr(self, f"sensor_box_p{pid}", ui.column().classes('w-full gap-0.5 mt-1'))
+                    self._add_version_table(pid); self._add_config_table(pid)
 
     # =========================================================================
     # SECTION 4: REUSABLE UI BUILDING BLOCKS
@@ -328,7 +334,7 @@ class SorterGUI:
         """
         now = time.time()
         if now - self.last_slider_cmd > 0.2:
-            self._bg_task(self.coord.fleet.send(pid, meowprotocol.MSG_TYPE_SET_CFG, cmd))
+            self._bg_task(self.coord.send_physical(pid, meowprotocol.MSG_TYPE_SET_CFG, cmd))
             self.last_slider_cmd = now
 
     async def flash_freq(self, pid, act_id, val):
@@ -336,9 +342,10 @@ class SorterGUI:
         [Section 4.3.10 Mechanism 3] Atomic Hardware Frequency Flash.
         """
         self.coord._notify(f"Flashing {val}Hz to Pico {pid}...", type='info')
-        await self.coord.fleet.send(pid, meowprotocol.MSG_TYPE_SET_CFG, f"CFG:ACT:{act_id}:freq={int(val)}")
-        await asyncio.sleep(0.1); await self.coord.fleet.send(pid, meowprotocol.MSG_TYPE_CMD, "CFG:SAVE")
-
+        await self.coord.send_physical(pid, meowprotocol.MSG_TYPE_SET_CFG, f"CFG:ACT:{act_id}:freq={int(val)}")
+        await asyncio.sleep(0.1)
+        await self.coord.send_physical(pid, meowprotocol.MSG_TYPE_CMD, "CFG:SAVE")
+        
     def add_vibratory_control(self, pid, act_id):
         """
         [Spec 19.3] High-fidelity dual-slider control for material singulation.
@@ -359,9 +366,9 @@ class SorterGUI:
             with ui.row().classes('w-full items-center no-wrap gap-1'):
                 ui.label('FRQ').classes('text-[10px] w-6 text-slate-500')
                 s_f = ui.slider(min=1000, max=30000, step=100, value=12000).classes('flex-grow').props('color=amber dense size=xs debounce="200" label')
-                s_f.on('change', lambda e: self.send_throttled_cfg(pid, f"CFG:ACT:{act_id}:freq={int(e.value)}")) 
+                s_f.on('change', lambda e: self.send_throttled_cfg(pid, f"CFG:ACT:{act_id}:freq={int(e.args)}")) 
                 ui.button(icon='save', on_click=lambda: self._bg_task(self.flash_freq(pid, act_id, s_f.value))).props('flat dense size=xs color=amber')
-
+                
     def add_conveyor_control(self, pid, act_id):
         """
         [Spec 19.4] Precision speed control for sorting transport.
@@ -378,9 +385,13 @@ class SorterGUI:
         """[Spec 19.3] Simplified one-shot trigger interface for pneumatic actuators."""
         with ui.column().classes('items-center gap-0'):
             self.actuator_labels[(pid, act_id)] = ui.label('UNM').classes('text-[8px] font-bold text-slate-600 mb-0.5')
-            btn = ui.button(act_id.split('_')[-1].upper(), on_click=lambda: self._bg_task(self.coord.send_manual_command(pid, act_id, 1.0)))
+            
+            # Catch the NiceGUI event 'e' so it doesn't overwrite our local variables
+            async def fire_solenoid(e):
+                await self.coord.send_manual_command(pid, act_id, 1.0)
+                
+            btn = ui.button(act_id.split('_')[-1].upper(), on_click=fire_solenoid)
             btn.props('flat dense color=slate-400 size=xs').classes('text-[10px] border border-slate-800 w-full px-0')
-
     # =========================================================================
     # SECTION 6: THE HEARTBEAT TICK
     # =========================================================================
@@ -418,6 +429,22 @@ class SorterGUI:
                 if pid in self.limb_cards:
                     UIUtils.update_classes(self.limb_cards[pid], self._cache, f"stale_{pid}", "opacity-50 grayscale" if is_stale else "", remove="opacity-50 grayscale")
 
+                # --- NEW: Synapse Bus / Part Detection Flash Trigger ---
+                if getattr(limb, 'ui_flash_trigger', False):
+                    if pid == 2 and hasattr(self, 'scan_indicator'):
+                        # 1. Trigger the red flash
+                        self.scan_indicator.classes('bg-red-900 border-red-500', remove='bg-black border-slate-800')
+                        self.scan_label.set_text('PART DETECTED!')
+                        self.scan_label.classes('text-white', remove='text-emerald-600')
+                        
+                        # 2. Acknowledge the trigger so it doesn't loop
+                        limb.ui_flash_trigger = False 
+                        
+                        # 3. Schedule the cleanup (return to normal) after 0.5 seconds
+                        ui.timer(0.5, lambda: self.scan_indicator.classes('bg-black border-slate-800', remove='bg-red-900 border-red-500'), once=True)
+                        ui.timer(0.5, lambda: self.scan_label.set_text('CLEAR'), once=True)
+                        ui.timer(0.5, lambda: self.scan_label.classes('text-emerald-600', remove='text-white'), once=True)
+
                 # Status Label Colors
                 if pid in self.status_labels:
                     lbl = self.status_labels[pid]
@@ -439,7 +466,17 @@ class SorterGUI:
                     UIUtils.update_text(h['V'],   self._cache, f"v_{pid}",   f"{limb.voltage:.2f}v")
                     UIUtils.update_text(h['VM'],  self._cache, f"vm_{pid}",  f"{limb.voltage_min:.2f}v")
                     UIUtils.update_text(h['WC'],  self._cache, f"wc_{pid}",  f"{limb.write_count}")
-
+                    
+                    # Missing telemetry pipelines connected to Digital Twin
+                    UIUtils.update_text(h['T'],   self._cache, f"t_{pid}",   f"{limb.temp}C")
+                    UIUtils.update_text(h['LA'],  self._cache, f"la_{pid}",  f"{limb.loop_avg}us")
+                    UIUtils.update_text(h['LM'],  self._cache, f"lm_{pid}",  f"{limb.loop_max}us")
+                    UIUtils.update_text(h['RA'],  self._cache, f"ra_{pid}",  f"{limb.resp_avg}ms")
+                    UIUtils.update_text(h['RL'],  self._cache, f"rl_{pid}",  f"{limb.resp_max}ms")
+                    UIUtils.update_text(h['IE'],  self._cache, f"ie_{pid}",  f"{limb.i2c_errors}")
+                    UIUtils.update_text(h['CSE'], self._cache, f"cse_{pid}", f"{limb.chk_errors}")
+                    UIUtils.update_text(h['RST'], self._cache, f"rst_{pid}", f"{limb.reset_cause}")
+                    
                 # 5. Actuator Verification
                 for act_id, act in getattr(limb, 'actuators', {}).items():
                     key = (pid, act_id)

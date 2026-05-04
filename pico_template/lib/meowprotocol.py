@@ -170,8 +170,17 @@ class PacketParser:
             end = self.buffer.find(b'>', start)
             
             if end == -1: 
-                # Fragment detected, waiting for more data
-                break 
+                # --- POISONED BUFFER TRAP FIX ---
+                # MTIP packets should never exceed 512 bytes. If we have scanned 
+                # past 512 bytes from the start character without seeing an end bracket, 
+                # the start character was electrical noise. Drop the false start!
+                if len(self.buffer) - start > 512:
+                    log.warn("NET", "Poisoned Buffer: Dropping false start bit")
+                    self.buffer = self.buffer[start+1:]
+                    continue
+                else:
+                    # Genuine fragment, waiting for the rest of the data
+                    break 
             
             # Extract content between Start char and >
             frame_content = self.buffer[start+1:end]

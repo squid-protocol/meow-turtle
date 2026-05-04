@@ -178,6 +178,9 @@ class Limb:
     # --- Visualization Buffers ---
     history_lm: deque = field(default_factory=lambda: deque(maxlen=100))
     history_vm: deque = field(default_factory=lambda: deque(maxlen=100))
+    
+    # --- UI Triggers ---
+    ui_flash_trigger: bool = False
 
     def touch(self):
         """Resets the liveness timer. Called by Switchboard on valid RX."""

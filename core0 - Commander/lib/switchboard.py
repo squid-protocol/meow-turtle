@@ -163,7 +163,8 @@ class PicoController:
 
         # Safety Interlock (Spec 4.5): Prevent operational noise from a failed node
         if self.model and self.model.remote_state == ms.STATE_ERROR:
-            if msg_type not in [meowprotocol.MSG_TYPE_CMD_RST, meowprotocol.MSG_TYPE_CMD_STOP]:
+            # [FIX] Only block operational commands. We MUST allow STS/SNS polling!
+            if msg_type in [meowprotocol.MSG_TYPE_CMD, meowprotocol.MSG_TYPE_SET_CFG]:
                 return None
 
         try:
@@ -318,12 +319,13 @@ class PicoController:
             asyncio.create_task(self.send_packet(meowprotocol.MSG_TYPE_CMD_STS, ""))
 
         # Broadcast telemetry to the passive mirror (Twin)
-        if mtype in [meowprotocol.MSG_TYPE_STS, meowprotocol.MSG_TYPE_ACT, meowprotocol.MSG_TYPE_SNS]:
-            if is_duplicate: return
-            try:
-                from lib.telemetry_router import STREAM_ROUTER
-                STREAM_ROUTER.route_packet(self.id, mtype, payload)
-            except Exception: pass
+        # [FIX] Do NOT filter message types here! Pass all valid payloads 
+        # to the Telemetry Router and let the Router sort them out.
+        if is_duplicate: return
+        try:
+            from lib.telemetry_router import STREAM_ROUTER
+            STREAM_ROUTER.route_packet(self.id, mtype, payload)
+        except Exception: pass
 
 # ==============================================================================
 # SECTION 3: FLEET OPERATOR (The Orchestrator)
@@ -434,7 +436,7 @@ class operator:
         """
         if target_id in self.controllers:
             ctrl = self.controllers[target_id]
-            # [Spec 4.6.2] Define types requiring reliability tracking
-            requires_ack = (msg_type in [0x10, 0x14, 0x18, 0x1A])
+            # [FIX] Removed 0x14 (RESET). Do not expect ACKs from dying Picos.
+            requires_ack = (msg_type in [0x10, 0x18, 0x1A])
             return await ctrl.send_packet(msg_type, payload, requires_ack=requires_ack)
         return None

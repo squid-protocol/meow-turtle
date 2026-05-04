@@ -1,8 +1,8 @@
 {
     "system": {
         "device_id": 1,
-        "role": "DISTRIBUTOR",
-        "version": "1.02"
+        "role": "LOADER",
+        "version": "1.03"
     },
     "app": {
         "stack_size": 8192,
@@ -30,12 +30,19 @@
             "pin": 10,
             "min_duty": 0.2,
             "max_duty": 1.0,
-            "freq": 20000,
+            "freq": 9400,
             "ramp_ms": 500,
-            "failsafe_val": 0.0
+            "failsafe_val": 0.0,
+            "verification": {
+                "strategy": "GYRO_NOISE",
+                "sensor_id": "MAIN",
+                "threshold": 5.0,
+                "settle_ms": 500,
+                "quiet_ms": 1000
+            }
         },
         { 
-            "id": "TDWN", 
+            "id": "SOL_TDWN", 
             "pin": 11, 
             "type": "SOLENOID", 
             "failsafe_val": 0.0,
@@ -47,12 +54,19 @@
             "pin": 12,
             "min_duty": 0.2,
             "max_duty": 1.0,
-            "freq": 20000,
+            "freq": 14400,
             "ramp_ms": 500,
-            "failsafe_val": 0.0
+            "failsafe_val": 0.0,
+            "verification": {
+                "strategy": "GYRO_NOISE",
+                "sensor_id": "AUX",
+                "threshold": 5.0,
+                "settle_ms": 500,
+                "quiet_ms": 1000
+            }
         },
         { 
-            "id": "TUP", 
+            "id": "SOL_TUP", 
             "pin": 13, 
             "type": "SOLENOID", 
             "failsafe_val": 0.0,
@@ -85,7 +99,7 @@
     },
     "testing": {
         "watchdog_enabled": true,
-        "share_actuator_events": true,
+        "share_actuator_events": false,
         "log_traffic": false,
         "debug_parser": false,
         "health_print_interval_ms": 0,

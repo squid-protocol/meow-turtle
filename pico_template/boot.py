@@ -589,9 +589,27 @@ def main():
         write_int_file(LIVES_FILE, lives - 1)
         log.info("SYS", "Launching App")
         
-        # [Spec 3.3] Soft Reboot Hygiene
-        # Force flush old modules from memory to ensure we load the fresh file versions
-        for mod in [ 'lib.meowprotocol', 'lib.actuators', 'lib.sensors', 'app']:
+        # [Spec 3.3] Soft Reboot Hygiene (Expanded)
+        # Force flush ALL custom modules from memory to ensure OTA updates take effect
+        # Includes both naked and lib-prefixed imports for bulletproof memory purging.
+        flush_list = [
+            'app',
+            'logging', 'lib.logging',
+            'machine_states', 'lib.machine_states',
+            'meowprotocol', 'lib.meowprotocol',
+            'actuators', 'lib.actuators',
+            'sensors', 'lib.sensors',
+            'ota', 'lib.ota',
+            'diagnostics', 'lib.diagnostics',
+            'pio_programs', 'lib.pio_programs',
+            'tsl2591', 'lib.tsl2591',
+            'mpu6050', 'lib.mpu6050',
+            'bldc_driver', 'lib.bldc_driver',
+            'vibration_driver', 'lib.vibration_driver',
+            'tester', 'lib.tester'
+        ]
+        
+        for mod in flush_list:
             if mod in sys.modules:
                 del sys.modules[mod]
         
