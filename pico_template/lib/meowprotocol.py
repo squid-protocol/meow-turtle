@@ -31,6 +31,7 @@ MSG_TYPE_CMD_SNS  = 0x16 # Query Sensors
 MSG_TYPE_CMD_CFG  = 0x17 # Query Config
 MSG_TYPE_SET_CFG  = 0x18 # Set Config
 MSG_TYPE_CMD_SYNC_TIME = 0x1A # [Spec 4.3.13] Global Time Sync
+MSG_TYPE_CMD_BAUD = 0x1B # [Spec 4.3.14] RAM-Only UART Shift
 
 MSG_TYPE_ACK      = 0x20
 MSG_TYPE_NAK      = 0x30

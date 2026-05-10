@@ -1,8 +1,8 @@
 {
     "system": {
         "device_id": 3,
-        "role": "MOTOR_CONTROLLER",
-        "version": "1.10_MIRROR_FIX"
+        "role": "DISTRIBUTOR",
+        "version": "1.11"
     },
     "app": {
         "stack_size": 8192,
@@ -25,7 +25,7 @@
     },
     "actuators": [
         {
-            "id": "conveyor",
+            "id": "CONVEYOR",
             "type": "BLDC",
             "pin": 21,
             "dir_pin": 20,
@@ -35,30 +35,29 @@
             "failsafe_val": 0.0,
             "verification": {
                 "strategy": "TACHOMETER",
-                "sensor_id": "conveyor_tach_HZ",
+                "sensor_id": "pulse_count",
                 "threshold": 10,
-                "settle_ms": 2500,
+                "settle_ms": 1000,
                 "quiet_ms": 3000
-
             }
         },
-        { "id": "sol1", "pin": 8, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol2", "pin": 9, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol3", "pin": 12, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol4", "pin": 13, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol5", "pin": 14, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol6", "pin": 15, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol7", "pin": 16, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol8", "pin": 17, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol9", "pin": 18, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 },
-        { "id": "sol10", "pin": 19, "type": "SOLENOID", "failsafe_val": 0.0, "max_on_ms": 1000 }
+        { "id": "SOL_1", "type": "SOLENOID", "pin": 8, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_2", "type": "SOLENOID", "pin": 9, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_3", "type": "SOLENOID", "pin": 12, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_4", "type": "SOLENOID", "pin": 13, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_5", "type": "SOLENOID", "pin": 14, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_6", "type": "SOLENOID", "pin": 15, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_7", "type": "SOLENOID", "pin": 16, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_8", "type": "SOLENOID", "pin": 17, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_9", "type": "SOLENOID", "pin": 18, "failsafe_val": 0.0, "max_on_ms": 1000 },
+        { "id": "SOL_10", "type": "SOLENOID", "pin": 19, "failsafe_val": 0.0, "max_on_ms": 1000 }
     ],
     "sensors": {
         "pulse_counters": [
             {
-                "id": "conveyor_tach",
-                "pin": 22,
+                "id": "pulse_count",
                 "sm_id": 0,
+                "pin": 22,
                 "mirror_pin": 4
             }
         ],
@@ -73,12 +72,12 @@
     },
     "testing": {
         "watchdog_enabled": true,
-        "share_actuator_events": true,
-        "log_traffic": true,
-        "debug_parser": true,
+        "share_actuator_events": false,
+        "log_traffic": false,
+        "debug_parser": false,
         "health_print_interval_ms": 0,
         "sensor_print_interval_ms": 0,
-        "actuator_print_interval_ms": 0,
+        "actuator_print_interval_ms": 250,
         "debug_stream_ms": 0
     }
 }

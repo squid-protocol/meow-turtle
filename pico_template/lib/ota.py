@@ -154,7 +154,7 @@ class OTAManager:
         """
         [Spec 4.3.14.4 Phase 3] Update Commit (END).
         Finalizes transport. Verifies data integrity via SHA-256 (Spec 9.15).
-        Performs the Atomic Swap (Spec 9.3) and clears boot loops (Spec 4.3.14.4).
+        Performs the Atomic Swap (Spec 9.3) and Paranoid Post-Flight Verification.
         """
         if not self.open_file:
             return False, "NO_SESSION"
@@ -170,7 +170,7 @@ class OTAManager:
             except: pass
             return False, "TRUNCATED"
         
-        # 2. Verify Integrity (Spec 9.15)
+        # 2. Verify Integrity (In-Memory Stream)
         calc_hash = ubinascii.hexlify(self.hasher.digest()).decode()
         log.debug("OTA", f"Hash Check: {calc_hash} vs {self.expected_checksum}")
         
@@ -189,16 +189,41 @@ class OTAManager:
             
             os.rename(self.temp_filename, target)
             
+            # 4. PARANOID POST-FLIGHT VERIFICATION
+            # Physically read the file back from disk to ensure LittleFS didn't lie
+            try:
+                disk_size = os.stat(target)[6]
+                if disk_size == 0:
+                    log.error("OTA", "Post-Flight Fail: File is 0 bytes")
+                    return False, "NAK_STATE_ZERO_BYTE"
+                    
+                verify_hasher = hashlib.sha256()
+                with open(target, "rb") as f:
+                    while True:
+                        # 256-byte chunks keep the RAM footprint tiny during the read
+                        chunk = f.read(256)
+                        if not chunk: break
+                        verify_hasher.update(chunk)
+                        
+                disk_hash = ubinascii.hexlify(verify_hasher.digest()).decode()
+                if disk_hash != self.expected_checksum:
+                    log.error("OTA", "Post-Flight Fail: Disk corruption detected")
+                    return False, "NAK_STATE_CORRUPT"
+            except OSError:
+                log.error("OTA", "Post-Flight Fail: File missing after swap")
+                return False, "NAK_STATE_MISSING"
+            
             # [Spec 4.3.14.4] Boot History Cleanup (Stability Restoration)
             try: os.remove("boot_attempts.txt")
             except: pass
             
-            log.info("OTA", f"Success: {target} updated")
+            log.info("OTA", f"Success: {target} verified on disk")
             return True, "COMMIT_OK"
+            
         except Exception as e:
             log.error("OTA", f"Swap Error: {e}")
-            return False, f"SWAP_ERR_{e}"
-
+            return False, f"NAK_STATE_SWAP_ERR_{e}"
+        
     def abort(self):
         """
         [Spec 4.3.14.3.1] OTA_ABORT Handler.

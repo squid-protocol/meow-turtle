@@ -129,7 +129,8 @@ class OTASession:
                             if mtype == MSG_TYPE_ACK:
                                 return True, pay.decode(errors='ignore')
                             elif mtype == MSG_TYPE_NAK:
-                                return False, f"NAK: {pay.decode(errors='ignore')}"
+                                # Return the raw payload so the executor can parse the exact error code
+                                return False, pay.decode(errors='ignore')
             time.sleep(0.005)
         return False, "TIMEOUT"
 
@@ -192,55 +193,98 @@ class OTASession:
 
         seq = 1
         start_time = time.time()
+        max_file_retries = 3
+        file_attempts = 0
+        success = False
 
-        try:
-            # 1. HANDSHAKE
-            logger.info("Phase 1: Requesting OTA Lock (OTA_START)")
-            if isinstance(file_id, int):
-                payload = struct.pack(">BH", file_id, total_chunks) + file_hash.encode('utf-8')
-            else:
-                encoded_name = file_id.encode('utf-8')
-                payload = struct.pack(">BB", 0xFF, len(encoded_name)) + encoded_name + file_hash.encode('utf-8')
+        while file_attempts < max_file_retries:
+            file_attempts += 1
+            try:
+                # 1. HANDSHAKE
+                logger.info(f"Phase 1: Requesting OTA Lock (Attempt {file_attempts}/{max_file_retries})")
+                if isinstance(file_id, int):
+                    payload = struct.pack(">BH", file_id, total_chunks) + file_hash.encode('utf-8')
+                else:
+                    encoded_name = file_id.encode('utf-8')
+                    payload = struct.pack(">BB", 0xFF, len(encoded_name)) + encoded_name + file_hash.encode('utf-8')
 
-            start_pkt = self._build_packet(seq, MSG_TYPE_OTA_START, payload)
-            if not self._send_reliable(start_pkt, seq, label="OTA_START", verbose=True):
-                return False
+                start_pkt = self._build_packet(seq, MSG_TYPE_OTA_START, payload)
+                if not self._send_reliable(start_pkt, seq, label="OTA_START", verbose=True):
+                    logger.warning("Phase 1 Handshake failed. Triggering Autonomous Recovery.")
+                    continue # Skips the rest of this attempt and loops back to try again
 
-            # 2. TRANSPORT
-            logger.info("Phase 2: Streaming Data Chunks")
-            seq = (seq + 1) % 256 or 1
-            
-            for i in range(total_chunks):
-                chunk = file_data[i * CHUNK_SIZE : (i + 1) * CHUNK_SIZE]
-                pkt = self._build_packet(seq, MSG_TYPE_OTA_DATA, chunk)
-                
-                if not self._send_reliable(pkt, seq, label=f"CHK_{i+1}"):
-                    return False
-                    
-                self._print_progress(i + 1, total_chunks)
+                # 2. TRANSPORT
+                logger.info("Phase 2: Streaming Data Chunks")
                 seq = (seq + 1) % 256 or 1
+                
+                transport_failed = False
+                for i in range(total_chunks):
+                    chunk = file_data[i * CHUNK_SIZE : (i + 1) * CHUNK_SIZE]
+                    pkt = self._build_packet(seq, MSG_TYPE_OTA_DATA, chunk)
+                    
+                    if not self._send_reliable(pkt, seq, label=f"CHK_{i+1}"):
+                        transport_failed = True
+                        break # Break out of the chunk loop
+                        
+                    self._print_progress(i + 1, total_chunks)
+                    seq = (seq + 1) % 256 or 1
 
-            # 3. COMMIT
-            logger.info("Phase 3: Finalizing and Verifying Hash (OTA_END)")
-            end_pkt = self._build_packet(seq, MSG_TYPE_OTA_END, b"COMMIT")
-            if not self._send_reliable(end_pkt, seq, label="OTA_END", verbose=True):
-                return False
+                if transport_failed:
+                    logger.warning("Phase 2 Transport failed. Triggering Autonomous Recovery.")
+                    # Send an explicit abort to clear the Pico's state before looping back
+                    abort_pkt = self._build_packet(seq+1, MSG_TYPE_OTA_ABORT, b"ABORT")
+                    self.ser.write(abort_pkt)
+                    time.sleep(1.0)
+                    continue
 
-            elapsed = time.time() - start_time
-            logger.info(f"SUCCESS: Flash completed in {elapsed:.2f}s ({len(file_data)/elapsed:.0f} bytes/sec)")
-            return True
-
-        finally:
-            if self.ser and self.ser.is_open:
-                self.ser.close()
+                # 3. COMMIT
+                logger.info("Phase 3: Finalizing and Verifying Hash (OTA_END)")
+                end_pkt = self._build_packet(seq, MSG_TYPE_OTA_END, b"COMMIT")
+                
+                for attempt in range(MAX_RETRIES):
+                    self.ser.write(end_pkt)
+                    ack_ok, ack_msg = self._wait_for_ack(seq)
+                    
+                    if ack_ok:
+                        success = True
+                        break
+                    
+                    logger.warning(f"[OTA_END] Commit failed: {ack_msg}")
+                    
+                    # --- SMART NAK PARSING ---
+                    if "NAK_STATE_ZERO_BYTE" in ack_msg or "NAK_STATE_CORRUPT" in ack_msg or "HASH_FAIL" in ack_msg:
+                        logger.error(f"Post-Flight Verification Failed ({ack_msg}). Triggering Autonomous Recovery.")
+                        abort_pkt = self._build_packet(seq+1, MSG_TYPE_OTA_ABORT, b"ABORT")
+                        self.ser.write(abort_pkt)
+                        time.sleep(1.0)
+                        break 
+                
+                if success:
+                    elapsed = time.time() - start_time
+                    logger.info(f"SUCCESS: Flash completed in {elapsed:.2f}s ({len(file_data)/elapsed:.0f} bytes/sec)")
+                    return True
+                
+            finally:
+                # Only close the port if we are completely done, not during a recovery loop
+                if file_attempts >= max_file_retries or success:
+                    if self.ser and self.ser.is_open:
+                        self.ser.close()
+        
+        logger.error("FATAL: Maximum autonomous recoveries exceeded. File deployment failed.")
+        return False
 
 def main():
     parser = argparse.ArgumentParser(description="Ninelives Mass OTA Flasher - Enterprise Edition")
     parser.add_argument('-t', '--targets', type=str, help="Target IDs (e.g., 1, 2, or A for All)")
     parser.add_argument('-f', '--files', nargs='+', help="List of file paths to flash")
+    parser.add_argument('-b', '--baud', type=int, default=115200, help="Target baud rate (default: 115200)")
     parser.add_argument('--debug', action='store_true', help="Enable verbose debug logging")
     
     args = parser.parse_args()
+
+    # Dynamically override the global BAUD_RATE
+    global BAUD_RATE
+    BAUD_RATE = args.baud
 
     if args.debug:
         logger.setLevel(logging.DEBUG)

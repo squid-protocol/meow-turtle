@@ -19,7 +19,7 @@ Key Architectural Features:
 4. Asynchronous Log Hub: Integrates the 'Flight Recorder' stream with Bayesian filtering.
 """
 
-from nicegui import ui
+from nicegui import ui, app
 import asyncio
 import time
 import datetime
@@ -169,8 +169,11 @@ class SorterGUI:
                 ui.button('CFG', on_click=lambda: self._bg_task(self.coord.send_cmd("FETCH_CONFIG"))).props('outline color=purple size=sm dense icon=download')
                 ui.button('DEV', on_click=lambda: self._bg_task(self.coord.send_cmd("DEV_TOGGLE"))).props('outline color=amber size=sm dense')
                 ui.button('RESET FLEET', on_click=lambda: self._bg_task(self.coord.send_cmd("RESET"))).props('outline color=blue size=sm dense').classes('col-span-2')
-                ui.button('E-STOP', on_click=lambda: self._bg_task(self.coord.broadcast_stop())).props('color=purple-900 size=md icon=emergency').classes('col-span-2 font-bold')
-
+                
+                # Split the bottom row into E-STOP and a clean OS-level SHUTDOWN button
+                ui.button('E-STOP', on_click=lambda: self._bg_task(self.coord.broadcast_stop())).props('color=purple-900 size=md icon=emergency').classes('font-bold')
+                ui.button('SHUTDOWN', on_click=app.shutdown).props('color=red-900 size=md icon=power_settings_new').classes('font-bold')
+                
     def build_flight_recorder_block(self):
         """
         [Spec 19.5] Top Right: Real-time Log Stream with Bayesian Filtering & Deduplication.
@@ -229,11 +232,11 @@ class SorterGUI:
                         with ui.grid(columns=2).classes('w-full gap-1 mt-1'):
                              self.add_solenoid_button(1, "SOL_TUP"); self.add_solenoid_button(1, "SOL_TDWN")
                     elif pid == 3:
-                        self.actuator_labels[(3, 'conveyor', 'cal')] = ui.label('Ratio: --').classes('text-[9px] text-slate-600 font-mono w-full text-right')
-                        self.add_conveyor_control(3, "conveyor")
+                        self.actuator_labels[(3, 'CONVEYOR', 'cal')] = ui.label('Ratio: --').classes('text-[9px] text-slate-600 font-mono w-full text-right')
+                        self.add_conveyor_control(3, "CONVEYOR")
                         with ui.grid(columns=5).classes('w-full gap-1 mt-1'):
-                            for i in range(1, 11): self.add_solenoid_button(3, f"solenoid_{i}")
-                    
+                            for i in range(1, 11): self.add_solenoid_button(3, f"SOL_{i}")
+                            
                     ui.label('SENSOR TELEMETRY').classes('text-[10px] font-bold text-slate-600 mt-2 uppercase tracking-tighter')
                     if pid == 1: self._build_gyro_table(pid)
                     setattr(self, f"sensor_box_p{pid}", ui.column().classes('w-full gap-0.5'))
@@ -360,8 +363,8 @@ class SorterGUI:
             with ui.row().classes('w-full items-center no-wrap gap-1'):
                 ui.label('STR').classes('text-[10px] w-6 text-slate-500')
                 s_d = ui.slider(min=0, max=1, step=0.01, value=0.5).classes('flex-grow').props('dense size=xs debounce="200" label')
-                s_d.on('change', lambda e: self.coord.send_manual_command(pid, act_id, e.args))
-            
+                s_d.on('change', lambda e: self._bg_task(self.coord.send_manual_command(pid, act_id, e.args)))
+                
             # Frequency (Hz)
             with ui.row().classes('w-full items-center no-wrap gap-1'):
                 ui.label('FRQ').classes('text-[10px] w-6 text-slate-500')
@@ -379,7 +382,7 @@ class SorterGUI:
                 ui.label(f"{act_id.upper()}").classes('text-[10px] font-bold text-cyan-500')
                 ui.button(icon='construction', on_click=lambda: GUIModals.open_calibration_wizard(self.coord)).props('flat dense size=xs color=amber').classes('ml-1')
                 self.actuator_labels[(pid, act_id)] = ui.label('UNM').classes('text-[10px] px-1 bg-slate-800 rounded ml-auto font-mono font-bold')
-            ui.slider(min=0, max=1, step=0.01).props('dense size=xs label debounce="200"').on('change', lambda e: self.coord.send_manual_command(pid, act_id, e.args))
+            ui.slider(min=0, max=1, step=0.01).props('dense size=xs label debounce="200"').on('change', lambda e: self._bg_task(self.coord.send_manual_command(pid, act_id, e.args)))
 
     def add_solenoid_button(self, pid, act_id):
         """[Spec 19.3] Simplified one-shot trigger interface for pneumatic actuators."""

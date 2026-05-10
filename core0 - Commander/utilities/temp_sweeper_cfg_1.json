@@ -1,0 +1,66 @@
+{
+    "system": {
+        "device_id": 2,
+        "role": "GATEKEEPER",
+        "version": "1.04-PRODUCTION"
+    },
+    "app": {
+        "stack_size": 8192,
+        "boot_grace_ms": 3000,
+        "life_refill_ms": 30000,
+        "gc_panic_threshold": 50000
+    },
+    "comms": {
+        "uart_bus": 0,
+        "baud_rate": 115200,
+        "tx_pin": 0,
+        "rx_pin": 1,
+        "max_retries": 5
+    },
+    "tuning": {
+        "reply_delay_ms": 1,
+        "debounce_ms": 10,
+        "stall_timeout_ms": 500,
+        "heartbeat_timeout_ms": 500,
+        "beam_sigma_mult": 3.0,
+        "beam_min_sigma": 15.0,
+        "beam_debounce_loops": 3
+    },
+    "actuators": [],
+    "sensors": {
+        "buses": [
+            {
+                "id": 0,
+                "sda": 20,
+                "scl": 21,
+                "prefix": "MAIN"
+            }
+        ],
+        "digital_inputs": [
+            {
+                "id": "ESTOP_BUTTON",
+                "pin": 26,
+                "invert": true,
+                "debounce_ms": 50
+            }
+        ],
+        "pulse_counters": [
+            {
+                "id": "global_tick",
+                "pin": 4,
+                "sm_id": 0
+            }
+        ]
+    },
+    "testing": {
+        "watchdog_enabled": true,
+        "network_watchdog_enabled": true,
+        "share_actuator_events": false,
+        "log_traffic": false,
+        "debug_parser": false,
+        "health_print_interval_ms": 0,
+        "sensor_print_interval_ms": 0,
+        "actuator_print_interval_ms": 0,
+        "debug_stream_ms": 0
+    }
+}

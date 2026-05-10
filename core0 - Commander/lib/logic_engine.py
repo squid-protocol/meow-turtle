@@ -20,6 +20,8 @@ Key Architectural Roles:
 import asyncio
 import time
 import collections
+import zmq
+import zmq.asyncio
 from lib.rp5_logger import logger
 from lib.digital_twin import GLOBAL_TWIN
 from lib import meowprotocol
@@ -47,10 +49,7 @@ class LogicEngine:
         self.part_located = collections.deque(maxlen=100)     # Physical parts detected by Pico 2
         self.part_identified = collections.deque(maxlen=100)  # AI classifications from Core 1
         self.pending_sort = collections.deque(maxlen=100)     # Married data awaiting execution
-        
-        # [IPC] Synapse Bus Setup (ZeroMQ)
-        import zmq
-        import zmq.asyncio
+    
         self.zmq_context = zmq.asyncio.Context()
         self.vision_socket = self.zmq_context.socket(zmq.SUB)
         self.vision_socket.connect("tcp://127.0.0.1:5555") # Core 1 will publish to this port

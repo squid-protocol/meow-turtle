@@ -141,10 +141,27 @@ async def startup_service():
 
 app.on_startup(startup_service)
 
+# ------------------------------------------------------------------------------
+# 3.2 Shutdown Hook (The Anti-Zombie Protocol)
+# ------------------------------------------------------------------------------
+async def shutdown_service():
+    """
+    [Spec 7.3] Service Teardown Sequence.
+    
+    Triggered natively by NiceGUI when it catches a SIGINT (Ctrl+C) or app.shutdown().
+    Forces the Coordinator to drop all hardware locks, close serial ports,
+    and cleanly terminate background asyncio tasks before the OS kills the process.
+    """
+    logger.warning("[App] Shutdown Signal Caught. Initiating Graceful Hardware Teardown...")
+    if hasattr(coordinator, 'stop'):
+        await coordinator.stop()
+    logger.info("[App] Teardown Complete. Safe to exit.")
+
+app.on_shutdown(shutdown_service)
+
 # ==============================================================================
 # SECTION 4: MAIN ENTRY POINT
 # ==============================================================================
-
 if __name__ in {"__main__", "__mp_main__"}:
     """
     [Spec 10.1] Indestructible Entry Point.

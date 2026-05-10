@@ -93,6 +93,7 @@ class ActuatorManager:
         # [VERIFICATION & HEALTH] (Spec 10.8)
         self.verify_states = {} # Current Status String (U, V, ON, F_STL...)
         self.verify_timers = {} # Time accumulator (ms) for settling/quieting logic
+        self.confidence = {}    # Leaky bucket confidence score (0.0 to 100.0)
         
         # [THERMAL FUSE TRACKING] (Spec 10.7.7)
         self.on_time_ms = {}    # Tracks how many ms a device has been continuously active
@@ -357,17 +358,18 @@ class ActuatorManager:
                     is_moving = True
 
             elif strategy == "GYRO_NOISE":
-                # [FIX] Prevent bogus stalls if vibration shakes I2C wires loose
-                if sensor_data.get(f"{sensor_key}_GYRO", 0) == -1:
-                    return # Sensor is deaf, ignore this frame!
-                    
-                # [Spec 16.3.2] Kinetic Strategy (Vibratory Motors)
-                # Added fallbacks to handle MPU6050 dictionary key variations
+                if sensor_data.get(f"{sensor_key}_GYRO", 0) == -1: return 
                 gx = abs(sensor_data.get(f"{sensor_key}_GYRO_X", sensor_data.get(f"{sensor_key}_GYRO_GX", 0)))
                 gy = abs(sensor_data.get(f"{sensor_key}_GYRO_Y", sensor_data.get(f"{sensor_key}_GYRO_GY", 0)))
                 gz = abs(sensor_data.get(f"{sensor_key}_GYRO_Z", sensor_data.get(f"{sensor_key}_GYRO_GZ", 0)))
-                
                 val = gx + gy + gz
+                if val > threshold: is_moving = True
+
+            # --- NEW: DIRECTIONAL ISOLATION STRATEGIES ---
+            elif strategy == "GYRO_Z_ONLY":
+                if sensor_data.get(f"{sensor_key}_GYRO", 0) == -1: return
+                gz = abs(sensor_data.get(f"{sensor_key}_GYRO_Z", sensor_data.get(f"{sensor_key}_GYRO_GZ", 0)))
+                val = gz
                 if val > threshold: is_moving = True
         except:
             return 
