@@ -5,8 +5,8 @@
 """
 [Spec 16.0] Ninelives Spatial Calibration System.
 
-The CalibrationManager is responsible for translating logical intents 
-into physical hardware parameters and converting raw sensor data 
+The CalibrationManager is responsible for translating logical intents
+into physical hardware parameters and converting raw sensor data
 (Motor Pulses) into real-world units (Millimeters).
 """
 
@@ -22,22 +22,19 @@ DEFAULT_CALIBRATION = {
         "feeder_freq_hz": 60,
         "shaker_freq_hz": 80,
         "feeder_strength_scale": 1.0,
-        "shaker_strength_scale": 1.0
+        "shaker_strength_scale": 1.0,
     },
-    "distributor": {
-        "mm_per_pulse": 0.05123456, 
-        "belt_min_start_pwm": 15
-    },
-    "gatekeeper": {
-        "sensor_threshold": 200
-    }
+    "distributor": {"mm_per_pulse": 0.05123456, "belt_min_start_pwm": 15},
+    "gatekeeper": {"sensor_threshold": 200},
 }
+
 
 class CalibrationManager:
     """
     [Spec 16.0] The Calibration Manager.
     Central authority for unit conversion and hardware tuning parameters.
     """
+
     def __init__(self):
         """Initializes the manager and loads persistent data."""
         self.data = self._load_data()
@@ -45,13 +42,15 @@ class CalibrationManager:
     def _load_data(self):
         """[Spec 10.4] Configuration Anti-Poison Logic."""
         if not os.path.exists("config"):
-            try: os.makedirs("config")
-            except: pass
+            try:
+                os.makedirs("config")
+            except:
+                pass
         if not os.path.exists(CAL_FILE):
             self._write_defaults()
             return DEFAULT_CALIBRATION.copy()
         try:
-            with open(CAL_FILE, 'r') as f:
+            with open(CAL_FILE, "r") as f:
                 return json.load(f)
         except:
             self._write_defaults()
@@ -60,17 +59,24 @@ class CalibrationManager:
     def _write_defaults(self):
         """Commits hardcoded defaults to disk to recover from corruption."""
         try:
-            with open(CAL_FILE, 'w') as f:
+            with open(CAL_FILE, "w") as f:
                 json.dump(DEFAULT_CALIBRATION, f, indent=2)
         except Exception as e:
             logger.critical(f"Write Fail: {e}")
 
     def save(self):
-        """Atomic write of the calibration data to JSON."""
+        """Atomic write of the calibration data to JSON to prevent power-loss corruption."""
         try:
-            with open(CAL_FILE, 'w') as f:
+            tmp_file = CAL_FILE + ".tmp"
+            with open(tmp_file, "w") as f:
                 json.dump(self.data, f, indent=2)
-        except: pass
+                f.flush()
+                os.fsync(f.fileno())  # Force OS to write to physical SSD hardware
+
+            # Atomic swap replaces the old file with the new one safely
+            os.replace(tmp_file, CAL_FILE)
+        except Exception as e:
+            logger.error(f"Calibration Save Fail: {e}")
 
     def get_loader_params(self, strength_percent, motor_type="feeder"):
         """[Spec 19.3] Translates GUI 'Strength' into hardware PWM parameters."""
@@ -84,7 +90,8 @@ class CalibrationManager:
         """[Spec 19.4] Precision speed scaling for the transport belt."""
         cfg = self.data.get("distributor", {})
         min_pwm = cfg.get("belt_min_start_pwm", 15)
-        if target_speed_percent <= 0: return 0
+        if target_speed_percent <= 0:
+            return 0
         pwm_range = 255 - min_pwm
         pwm = int(min_pwm + (target_speed_percent / 100.0) * pwm_range)
         return max(0, min(255, pwm))
@@ -97,7 +104,8 @@ class CalibrationManager:
     def mm_to_pulses(self, mm_distance):
         """[Spec 16.3] Translates physical distance into target motor pulses."""
         ratio = self.data["distributor"].get("mm_per_pulse", 0.05)
-        if ratio == 0: return 0
+        if ratio == 0:
+            return 0
         return int(mm_distance / ratio)
 
     def get_real_speed(self, pulses_per_second):
@@ -106,10 +114,12 @@ class CalibrationManager:
 
     def update_pulse_ratio(self, measured_distance_mm, total_pulses_observed):
         """[Spec 16.4] Commits new calibration results from the Wizard."""
-        if total_pulses_observed <= 0: return
+        if total_pulses_observed <= 0:
+            return
         new_ratio = float(measured_distance_mm) / float(total_pulses_observed)
-        self.data["distributor"]["mm_per_pulse"] = round(new_ratio, 8) 
+        self.data["distributor"]["mm_per_pulse"] = round(new_ratio, 8)
         logger.info(f"Calibration Updated: {new_ratio:.8f} mm/p")
         self.save()
+
 
 CALIBRATION = CalibrationManager()
