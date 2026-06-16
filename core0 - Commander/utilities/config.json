@@ -18,10 +18,15 @@
         "max_retries": 5
     },
     "tuning": {
-        "reply_delay_ms": 15,
+        "reply_delay_ms": 1,
         "debounce_ms": 10,
         "stall_timeout_ms": 500,
-        "heartbeat_timeout_ms": 500
+        "heartbeat_timeout_ms": 500,
+        "beam_min_sigma": 15.0,
+        "beam_alpha": 0.001,
+        "beam_downward_gate_sigma": 1.5,
+        "beam_tripwire_sigma": 6.0,
+        "beam_sustain_ms": 80
     },
     "actuators": [],
     "sensors": {
@@ -29,20 +34,25 @@
         "sda_pin": 20,
         "scl_pin": 21,
         "digital_inputs": [
-            { "id": "estop", "pin": 26, "active_low": true }
-        ],
+            {
+                "id": "ESTOP_BUTTON",
+                "pin": 26,
+                "invert": true,
+                "debounce_ms": 50
+            }        ],
         "pulse_counters": [
-            { "id": "global_tick", "pin": 4, "sm_id": 0 }
+            { "id": "global_tick", "pin": 28, "sm_id": 0 }
         ]
     },
     "testing": {
         "watchdog_enabled": true,
-        "share_actuator_events": false,
-        "log_traffic": false,
+        "share_actuator_events": true,
+        "log_traffic": true,
         "debug_parser": false,
-        "health_print_interval_ms": 0,
-        "sensor_print_interval_ms": 0,
+        "health_print_interval_ms": 20000,
+        "sensor_print_interval_ms": 20000,
         "actuator_print_interval_ms": 0,
-        "debug_stream_ms": 0
+        "debug_stream_ms": 20000,
+        "standalone_mode": true
     }
 }
