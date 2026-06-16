@@ -77,31 +77,45 @@ class LogicEngine:
         """
         [Spec 10.1] Main Event Processing Loop.
         
-        Consumes hardware events from the fleet and vision results from Core 1.
-        Uses non-blocking queue polling to maintain a high processing frequency
-        without saturating the CPU.
+        Launches dedicated, truly asynchronous tasks for Hardware Events and Vision Data.
         """
         logger.info("[Logic] Event Processor Loop Active.")
+        
+        hardware_task = asyncio.create_task(self._process_hardware_events())
+        vision_task = asyncio.create_task(self._process_vision_events())
+        
+        # Keep the main task alive and monitor the children
+        while self.running:
+            await asyncio.sleep(1.0)
+            
+        hardware_task.cancel()
+        vision_task.cancel()
+
+    async def _process_hardware_events(self):
+        """Dedicated task for consuming hardware telemetry."""
         while self.running:
             try:
-                # 1. Consume Hardware Events (Telemetry, Alarms, Breakbeams)
-                if not self.coord.logic_queue.empty():
-                    evt = await self.coord.logic_queue.get()
-                    await self.handle_hardware_event(evt)
-                
-                # 2. Consume Vision Results via Synapse Bus (ZeroMQ IPC)
-                try:
-                    # Non-blocking check for incoming AI vision data
-                    vision_msg = await self.vision_socket.recv_json(flags=zmq.NOBLOCK)
-                    await self.handle_vision_result(vision_msg)
-                except zmq.Again:
-                    pass # No vision data waiting this millisecond
-
-                # High-frequency resolution (200Hz) to prevent FIFO pileups
-                await asyncio.sleep(0.005) 
-                
+                # True asynchronous wait. Uses 0% CPU until a packet arrives.
+                evt = await self.coord.logic_queue.get()
+                await self.handle_hardware_event(evt)
+                self.coord.logic_queue.task_done()
+            except asyncio.CancelledError:
+                break
             except Exception as e:
-                logger.critical(f"[Logic] Loop Crash: {e}")
+                logger.critical(f"[Logic] Hardware Loop Crash: {e}")
+                await asyncio.sleep(1.0)
+
+    async def _process_vision_events(self):
+        """Dedicated task for consuming ZMQ vision data."""
+        while self.running:
+            try:
+                # True asynchronous wait. Uses 0% CPU until ZMQ delivers data.
+                vision_msg = await self.vision_socket.recv_json()
+                await self.handle_vision_result(vision_msg)
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.critical(f"[Logic] Vision Loop Crash: {e}")
                 await asyncio.sleep(1.0)
 
     # --------------------------------------------------------------------------
@@ -199,12 +213,12 @@ class LogicEngine:
         storing its pulse count in the FIFO.
         """
         try:
-            # [FIX] Use the hardened central parser instead of fragile string splitting
-            from lib import protocol_parser
-            parsed_data = protocol_parser.parse_kv_payload(payload)
-            pulse_count = int(parsed_data.get('pulse_count', 0))
+            # Avoid redundant parsing: Read the pre-parsed reality directly from the Digital Twin
+            limb_3 = GLOBAL_TWIN.limbs.get(3)
+            pulse_sensor = limb_3.sensors.get('pulse_count')
+            pulse_count = int(getattr(pulse_sensor, 'raw_value', 0))
         except Exception as e:
-            logger.error(f"[Logic] Malformed PART_DETECTED payload: {e}")
+            logger.error(f"[Logic] Part Detection Sync Error: {e}")
             return
 
         self.stats["parts_detected"] += 1

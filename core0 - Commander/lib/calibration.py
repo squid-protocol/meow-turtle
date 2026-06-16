@@ -66,11 +66,18 @@ class CalibrationManager:
             logger.critical(f"Write Fail: {e}")
 
     def save(self):
-        """Atomic write of the calibration data to JSON."""
+        """Atomic write of the calibration data to JSON to prevent power-loss corruption."""
         try:
-            with open(CAL_FILE, 'w') as f:
+            tmp_file = CAL_FILE + ".tmp"
+            with open(tmp_file, 'w') as f:
                 json.dump(self.data, f, indent=2)
-        except: pass
+                f.flush()
+                os.fsync(f.fileno()) # Force OS to write to physical SSD hardware
+                
+            # Atomic swap replaces the old file with the new one safely
+            os.replace(tmp_file, CAL_FILE)
+        except Exception as e:
+            logger.error(f"Calibration Save Fail: {e}")
 
     def get_loader_params(self, strength_percent, motor_type="feeder"):
         """[Spec 19.3] Translates GUI 'Strength' into hardware PWM parameters."""

@@ -67,10 +67,10 @@ class SystemCoordinator:
             config_ports (dict): Mapping of Port IDs to device paths.
         """
         # 1. PRIMARY COMMUNICATION PIPES
-        # Internal queues for cross-domain signaling
-        self.logic_queue = asyncio.Queue()            
-        self.warning_queue = asyncio.Queue()          
-        self.ui_notification_queue = asyncio.Queue()     
+        # Capped internal queues to provide backpressure and prevent OOM memory bombs
+        self.logic_queue = asyncio.Queue(maxsize=2000)            
+        self.warning_queue = asyncio.Queue(maxsize=500)          
+        self.ui_notification_queue = asyncio.Queue(maxsize=100)
         
         # 2. Inter-Core Pipelines (Multiprocessing Brain Link)
         # Queues for future vision/inference core synchronization
@@ -289,6 +289,8 @@ class SystemCoordinator:
             # Target specific reset for a single limb port.
             try:
                 pid = int(command_name.replace("REBOOT_P", ""))
+                # Tell the Watchdog to stand down while the hardware reboots
+                self.safety.trigger_recovery_grace()
                 await self.send_physical(pid, meowprotocol.MSG_TYPE_CMD_RST, "")
             except Exception as e:
                 logger.error(f"[Hub] Manual Reset Failed for P{pid}: {e}")
@@ -344,8 +346,8 @@ class SystemCoordinator:
             ready = True
             for pid in self.config_ports:
                 limb = GLOBAL_TWIN.limbs.get(pid)
-                # Wait until all Picos report they are back in IDLE
-                if limb and limb.remote_state != ms.STATE_IDLE:
+                # Wait until all Picos report they are back in IDLE or BOOT
+                if limb and limb.remote_state not in [ms.STATE_IDLE, ms.STATE_BOOT]:
                     ready = False
             
             if ready:
@@ -626,7 +628,7 @@ class SystemCoordinator:
         """Pushes a notification message to the GUI consumer queue."""
         self.ui_notification_queue.put_nowait((msg, type))
 
-    def stop(self):
+    async def stop(self):
         """Clean shutdown of the Coordinator lifecycle."""
         logger.info("[Hub] Coordinator Shutdown Initiated.")
         self.running = False

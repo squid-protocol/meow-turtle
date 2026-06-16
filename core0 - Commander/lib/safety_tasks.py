@@ -287,10 +287,13 @@ class SafetyManager:
                 now = time.time()
                 for pid, limb in GLOBAL_TWIN.limbs.items():
                     # Judgement A: Never Connected (Ghost Watchdog)
+                    # Judgement A: Never Connected (Ghost Watchdog)
                     if limb.remote_state == ms.STATE_OFFLINE:
                         if not self.in_grace_period:
-                            logger.critical(f"[Safety] WATCHDOG: P{pid} is MISSING from fleet.")
-                            GLOBAL_TWIN.set_state(ms.STATE_ERROR)
+                            # Only log if we aren't already in ERROR state to prevent 2Hz spam
+                            if GLOBAL_TWIN.host_state != ms.STATE_ERROR:
+                                logger.critical(f"[Safety] WATCHDOG: P{pid} is MISSING from fleet.")
+                                GLOBAL_TWIN.set_state(ms.STATE_ERROR)
                         continue
 
                     # Judgement B: Lost Connection (Heartbeat Watchdog)
@@ -305,6 +308,14 @@ class SafetyManager:
                         if not self.in_grace_period:
                             logger.critical(f"[Safety] SIGNAL LOSS: P{pid} LQI {limb.lqi:.1f}%.")
                             GLOBAL_TWIN.set_state(ms.STATE_ERROR)
+
+                    # Judgement D: State Cohesion (Split-Brain Prevention)
+                    # If the Brain is running but a Pico falls back to a dormant state.
+                    if GLOBAL_TWIN.host_state in [ms.STATE_FLOW, ms.STATE_ARMING]:
+                        if limb.remote_state in [ms.STATE_BOOT, ms.STATE_IDLE, ms.STATE_ERROR]:
+                            if not self.in_grace_period:
+                                logger.critical(f"[Safety] SPLIT BRAIN: Host is {GLOBAL_TWIN.host_state} but P{pid} dropped to {limb.remote_state}.")
+                                GLOBAL_TWIN.set_state(ms.STATE_ERROR)
                 
                 await asyncio.sleep(self.WATCHDOG_INTERVAL)
             except Exception as e:

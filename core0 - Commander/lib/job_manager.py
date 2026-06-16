@@ -260,8 +260,9 @@ class JobManager:
                 return True
                 
             for limb in GLOBAL_TWIN.limbs.values():
-                if limb.remote_state == ms.STATE_ERROR:
-                    logger.error(f"[Job] Arming Aborted: Pico {limb.id} reported ERROR state.")
+                # Strict Inclusion: Limbs MUST be IDLE to accept an arming sequence
+                if limb.remote_state not in [ms.STATE_IDLE, ms.STATE_READY]:
+                    logger.error(f"[Job] Arming Aborted: Pico {limb.id} is in {limb.remote_state}, expected IDLE.")
                     return False
             
             await asyncio.sleep(0.1)
