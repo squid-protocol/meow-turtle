@@ -368,7 +368,9 @@ class BusWrapper:
         if current_val == hist["val"] and current_val != 0:
             hist["count"] += 1
             # [Spec 11.5.2] Trigger after ~100 consecutive identical polls
-            if hist["count"] > 100:
+            # [FIX] TSL light sensors can be perfectly stable. Increase limit to 1200 (60 seconds)
+            zombie_limit = 1200 if "TSL" in name else 100
+            if hist["count"] > zombie_limit:
                 return ERR_ZOMBIE
         else:
             hist["val"] = current_val
@@ -460,32 +462,32 @@ class SensorManager:
                 if total != ERR_POISONED: self.last_results[f"{name}_TOTAL"] = total
                 
             # 2. I2C Buses [Spec 11.4.3 Self-Healing]
-        any_io_err = False
-        for bus in self.buses:
-            io_err = bus.read(self.last_results)
-            if io_err:
-                any_io_err = True
-                bus.err_count += 1
-                # I2C WATCHDOG TRIGGER
-                if bus.err_count > 10:
-                    log.warn("SEN", f"Bus {bus.id} Lock Detected (-5). Resetting...")
-                    bus.teardown()
-                    time.sleep_ms(50) 
-                    bus.setup()
+            any_io_err = False
+            for bus in self.buses:
+                io_err = bus.read(self.last_results)
+                if io_err:
+                    any_io_err = True
+                    bus.err_count += 1
+                    # I2C WATCHDOG TRIGGER
+                    if bus.err_count > 10:
+                        log.warn("SEN", f"Bus {bus.id} Lock Detected (-5). Resetting...")
+                        bus.teardown()
+                        time.sleep_ms(50) 
+                        bus.setup()
+                        bus.err_count = 0
+                        # Current cycle reports Bus Lock
+                        for k in bus.sensors.keys(): self.last_results[k] = ERR_BUS_LOCK
+                else:
                     bus.err_count = 0
-                    # Current cycle reports Bus Lock
-                    for k in bus.sensors.keys(): self.last_results[k] = ERR_BUS_LOCK
-            else:
-                bus.err_count = 0
 
-        self.consecutive_errors = 1 if any_io_err else 0
+            self.consecutive_errors = 1 if any_io_err else 0
 
-        # 3. Digital Inputs
-        for name, d in self.digitals.items():
-            self.last_results[name] = d.read()
+            # 3. Digital Inputs
+            for name, d in self.digitals.items():
+                self.last_results[name] = d.read()
                 
-        return self.last_results.copy()
-
+            return self.last_results.copy()
+        
     def get_telemetry_string(self):
         """
         [Spec 4.3.9] The Sensor Dump Serializer.

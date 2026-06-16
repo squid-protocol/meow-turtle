@@ -22,9 +22,11 @@
         "debounce_ms": 10,
         "stall_timeout_ms": 500,
         "heartbeat_timeout_ms": 500,
-        "beam_sigma_mult": 3.0,
         "beam_min_sigma": 15.0,
-        "beam_debounce_loops": 3
+        "beam_alpha": 0.001,
+        "beam_downward_gate_sigma": 1.5,
+        "beam_tripwire_sigma": 6.0,
+        "beam_sustain_ms": 80
     },
     "actuators": [],
     "sensors": {
@@ -39,7 +41,7 @@
                 "debounce_ms": 50
             }        ],
         "pulse_counters": [
-            { "id": "global_tick", "pin": 4, "sm_id": 0 }
+            { "id": "global_tick", "pin": 28, "sm_id": 0 }
         ]
     },
     "testing": {

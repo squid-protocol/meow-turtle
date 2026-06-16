@@ -113,6 +113,8 @@ shared_state = {
     
     # --- BREAKBEAM TRACKING ---
     "beam_was_broken": False,
+    "beam_calibrating": True,
+    "calib_samples": [],
     "beam_start_ms": 0,
     "beam_start_pulse": 0,
     "part_ready_to_send": False,
@@ -435,16 +437,16 @@ def core1_task():
     local_max_us = 0
     
     # --- STATISTICAL BREAKBEAM SETUP ---
-    beam_sigma_mult = system_config.get("tuning", {}).get("beam_sigma_mult", 3.0)
     beam_min_sigma = system_config.get("tuning", {}).get("beam_min_sigma", 15.0)
-    beam_debounce = system_config.get("tuning", {}).get("beam_debounce_loops", 3)
-    
-    beam_calibrating = True
-    calib_samples = []
+    beam_alpha = system_config.get("tuning", {}).get("beam_alpha", 0.001)
+    beam_gate_sigma = system_config.get("tuning", {}).get("beam_downward_gate_sigma", 1.5)
+    beam_trip_sigma = system_config.get("tuning", {}).get("beam_tripwire_sigma", 6.0)
+    beam_sustain_ms = system_config.get("tuning", {}).get("beam_sustain_ms", 80)
     
     beam_mean = 0.0
     beam_threshold = 0.0
-    beam_hit_count = 0
+    beam_stddev = 0.0
+    beam_break_start_ms = 0
     
     log.info("SYS", "Core 1 Thread Start")
     
@@ -478,36 +480,67 @@ def core1_task():
                     if tsl_val is not None and tsl_val > 0:
                         
                         # 1. Startup Calibration Phase (20 Samples)
-                        if beam_calibrating:
-                            calib_samples.append(tsl_val)
+                        with state_lock:
+                            is_calibrating = shared_state.get("beam_calibrating", False)
                             
-                            if len(calib_samples) >= 20:
+                        if is_calibrating:
+                            with state_lock:
+                                shared_state["calib_samples"].append(tsl_val)
+                                current_samples = list(shared_state["calib_samples"])
+                            
+                            if len(current_samples) >= 20:
                                 # Calculate Mean
-                                beam_mean = sum(calib_samples) / 20.0
+                                beam_mean = sum(current_samples) / 20.0
                                 
                                 # Calculate Variance & Standard Deviation
-                                variance = sum((x - beam_mean) ** 2 for x in calib_samples) / 20.0
+                                variance = sum((x - beam_mean) ** 2 for x in current_samples) / 20.0
                                 beam_stddev = variance ** 0.5
                                 
-                                # Apply Noise Floor Trap
-                                beam_stddev = max(beam_stddev, beam_min_sigma)
+                                # Apply Noise Floor Trap (Force at least 5% of mean for high-gain stability)
+                                dynamic_noise_floor = max(beam_stddev, beam_min_sigma, beam_mean * 0.05)
                                 
                                 # Calculate Final Trip Threshold
-                                beam_threshold = beam_mean - (beam_sigma_mult * beam_stddev)
+                                beam_threshold = beam_mean - (beam_trip_sigma * dynamic_noise_floor)
                                 
                                 log.info("SEN", f"Beam Calibrated. Mean: {int(beam_mean)}, StdDev: {int(beam_stddev)}, Thresh: {int(beam_threshold)}")
-                                beam_calibrating = False
+                                
+                                # Export to Sensor Manager for GUI Telemetry
+                                with sns_mgr.lock:
+                                    sns_mgr.last_results["BEAM_MEAN"] = int(beam_mean)
+                                    sns_mgr.last_results["BEAM_THRESH"] = int(beam_threshold)
+                                
+                                with state_lock:
+                                    shared_state["beam_calibrating"] = False
                         
                         # 2. Active Run Phase
                         else:
-                            # Duration Check (Debounce)
-                            if tsl_val < beam_threshold:
-                                beam_hit_count += 1
-                            else:
-                                beam_hit_count = 0
+                            dynamic_noise_floor = max(beam_stddev, beam_min_sigma, beam_mean * 0.05)
+                            beam_gate_floor = beam_mean - (beam_gate_sigma * dynamic_noise_floor)
+                            beam_threshold = beam_mean - (beam_trip_sigma * dynamic_noise_floor)
 
-                            is_broken = (beam_hit_count >= beam_debounce) 
-                            
+                            # --- ASYMMETRIC GATED EMA ---
+                            # Escape Hatch (Bright light) OR within safe downward gate (Normal drift)
+                            if tsl_val > beam_mean or tsl_val >= beam_gate_floor:
+                                beam_mean = (tsl_val * beam_alpha) + (beam_mean * (1.0 - beam_alpha))
+                                
+                                if sns_mgr:
+                                    with sns_mgr.lock:
+                                        sns_mgr.last_results["BEAM_MEAN"] = int(beam_mean)
+                                        sns_mgr.last_results["BEAM_THRESH"] = int(beam_threshold)
+
+                            # --- TEMPORAL TRIPWIRE LOGIC ---
+                            if tsl_val < beam_threshold:
+                                if beam_break_start_ms == 0:
+                                    beam_break_start_ms = time.ticks_ms()
+                            else:
+                                beam_break_start_ms = 0
+
+                            # Validate part ONLY if it has been down longer than required sustain
+                            is_broken = False
+                            if beam_break_start_ms > 0:
+                                if time.ticks_diff(time.ticks_ms(), beam_break_start_ms) >= beam_sustain_ms:
+                                    is_broken = True
+                                    
                             # Falling & Rising Edge Metrology Logic
                             with state_lock:
                                 was_broken = shared_state.get("beam_was_broken", False)
@@ -710,6 +743,11 @@ def process_packet(uart, packet, log_traffic=False):
                     else:
                         with state_lock: shared_state["current_state"] = STATE_FLOW
                         response = meowprotocol.build_packet(source, shared_state["id"], seq, meowprotocol.MSG_TYPE_ACK, str(seq))
+                elif cmd_str == "CALIBRATE":
+                    with state_lock:
+                        shared_state["calib_samples"] = []
+                        shared_state["beam_calibrating"] = True
+                    response = meowprotocol.build_packet(source, shared_state["id"], seq, meowprotocol.MSG_TYPE_ACK, str(seq))
                 # SAVE CONFIG CMD
                 elif cmd_str == "CFG:SAVE":
                     if save_config_atomic():
