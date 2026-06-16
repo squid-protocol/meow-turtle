@@ -6,8 +6,8 @@
 """
 [Spec 6.0] Ninelives Logic Engine (The Frontal Lobe).
 
-The LogicEngine is responsible for high-level decision making and the 
-synchronization of asynchronous data streams. It bridges the gap between 
+The LogicEngine is responsible for high-level decision making and the
+synchronization of asynchronous data streams. It bridges the gap between
 physical hardware events (breakbeams) and high-latency computer vision results.
 
 Key Architectural Roles:
@@ -27,45 +27,54 @@ from lib.digital_twin import GLOBAL_TWIN
 from lib import meowprotocol
 from lib import machine_states as ms
 
+
 class LogicEngine:
     """
     [Spec 6.0] The Frontal Lobe.
-    
-    Handles high-speed event processing and synchronization between physical 
-    breakbeam events and asynchronous vision results. It serves as the primary 
+
+    Handles high-speed event processing and synchronization between physical
+    breakbeam events and asynchronous vision results. It serves as the primary
     verifier for reliable transport acknowledgments.
     """
 
     def __init__(self, coordinator):
         """
         Initializes the Logic Engine and its internal memory structures.
-        
+
         :param coordinator: Reference to the SystemCoordinator (The Hub).
         """
         self.coord = coordinator
         self.running = True
-        
+
         # [Spec 4.2 & 11.3] The Reconciliation Engine Queues
-        self.part_located = collections.deque(maxlen=100)     # Physical parts detected by Pico 2
-        self.part_identified = collections.deque(maxlen=100)  # AI classifications from Core 1
-        self.pending_sort = collections.deque(maxlen=100)     # Married data awaiting execution
-    
+        self.part_located = collections.deque(
+            maxlen=100
+        )  # Physical parts detected by Pico 2
+        self.part_identified = collections.deque(
+            maxlen=100
+        )  # AI classifications from Core 1
+        self.pending_sort = collections.deque(
+            maxlen=100
+        )  # Married data awaiting execution
+
         self.zmq_context = zmq.asyncio.Context()
         self.vision_socket = self.zmq_context.socket(zmq.SUB)
-        self.vision_socket.connect("tcp://127.0.0.1:5555") # Core 1 will publish to this port
+        self.vision_socket.connect(
+            "tcp://127.0.0.1:5555"
+        )  # Core 1 will publish to this port
         self.vision_socket.setsockopt_string(zmq.SUBSCRIBE, "")
-        
+
         # [Spec 4.3.6.3] W-Protocol Tracking Registry
         # Tracks persistent IDs that have been sighted in the re-broadcast stream.
         # Format: {pid: {seq_id1, seq_id2, ...}}
         self.sighted_ids = {pid: set() for pid in coordinator.config_ports}
-        
+
         # Performance and Audit Statistics
         self.stats = {
             "parts_detected": 0,
             "parts_sorted": 0,
             "vision_sync_errors": 0,
-            "wipes_confirmed": 0
+            "wipes_confirmed": 0,
         }
 
         logger.info("[Logic] LogicEngine Initialized with W-Verification Logic.")
@@ -76,18 +85,18 @@ class LogicEngine:
     async def run_loop(self):
         """
         [Spec 10.1] Main Event Processing Loop.
-        
+
         Launches dedicated, truly asynchronous tasks for Hardware Events and Vision Data.
         """
         logger.info("[Logic] Event Processor Loop Active.")
-        
+
         hardware_task = asyncio.create_task(self._process_hardware_events())
         vision_task = asyncio.create_task(self._process_vision_events())
-        
+
         # Keep the main task alive and monitor the children
         while self.running:
             await asyncio.sleep(1.0)
-            
+
         hardware_task.cancel()
         vision_task.cancel()
 
@@ -124,16 +133,16 @@ class LogicEngine:
     async def handle_hardware_event(self, evt):
         """
         Parses raw payloads from Picos and translates them into logical actions.
-        
-        Fulfills the 'Verification of Success' requirement (Spec 4.3.6.3.B) by 
-        monitoring incoming status reports to confirm that persistent events 
+
+        Fulfills the 'Verification of Success' requirement (Spec 4.3.6.3.B) by
+        monitoring incoming status reports to confirm that persistent events
         have been successfully wiped from hardware memory.
         """
-        payload = evt.get('payload', "")
-        source_id = evt.get('source', 0)
-        msg_type = evt.get('mtype', 0)
-        seq = evt.get('seq', 0)
-        
+        payload = evt.get("payload", "")
+        source_id = evt.get("source", 0)
+        msg_type = evt.get("mtype", 0)
+        seq = evt.get("seq", 0)
+
         # --- PHASE 1: W-PROTOCOL SIGHTING ---
         # Every Event (0x40) or Alarm (0x48) is treated as a persistent re-broadcast.
         # We notify the Hub to start the piggyback wipe injection.
@@ -144,7 +153,7 @@ class LogicEngine:
             self.sighted_ids[source_id].add(seq)
 
         # --- PHASE 2: WIPE VERIFICATION (Spec 4.3.6.3.B) ---
-        # When a Status Report (0x41) arrives, we check if our sighted IDs are 
+        # When a Status Report (0x41) arrives, we check if our sighted IDs are
         # still in the Pico's 'Un-Acknowledged' (UA) list.
         if msg_type == meowprotocol.MSG_TYPE_STS:
             await self._verify_wipe_success(source_id, payload)
@@ -152,26 +161,28 @@ class LogicEngine:
         # --- PHASE 3: KINETIC LOGIC PERCOLATION ---
         if "PART_DETECTED" in payload:
             await self._process_part_detected(payload)
-            
+
         elif "HOPPER_EMPTY" in payload:
-            self.coord._notify("Loader Hopper is Empty! Add more bricks.", type='warning')
-            
+            self.coord._notify(
+                "Loader Hopper is Empty! Add more bricks.", type="warning"
+            )
+
         elif "GATE_JAMMED" in payload:
             logger.error("[Logic] Gatekeeper Jammed! Initiating clearing routine.")
             await self.coord.send_manual_command(1, "feeder", -0.5)
-            
+
         elif "SORT_ACK" in payload:
             self.stats["parts_sorted"] += 1
-            
+
         elif "STALL" in payload:
             logger.warning(f"[Logic] Hardware Stall on Pico {source_id}: {payload}")
 
     async def _verify_wipe_success(self, pid, payload):
         """
         [Spec 4.3.6.3] Verification of Success.
-        
-        Parses the 'UA' (Un-Acknowledged) list from hardware telemetry. If a 
-        previously sighted ID is missing from the list, the LogicEngine confirms 
+
+        Parses the 'UA' (Un-Acknowledged) list from hardware telemetry. If a
+        previously sighted ID is missing from the list, the LogicEngine confirms
         that the Pico has successfully received the wipe command and processed it.
         """
         un_acked = set()
@@ -182,7 +193,7 @@ class LogicEngine:
                 ua_tokens = []
                 for token in ua_part.split(","):
                     token = token.strip()
-                    if "=" in token: # Reached next key (e.g., ,V=24.0)
+                    if "=" in token:  # Reached next key (e.g., ,V=24.0)
                         break
                     if token.isdigit():
                         ua_tokens.append(int(token))
@@ -190,7 +201,7 @@ class LogicEngine:
             except Exception as e:
                 logger.error(f"[Logic] UA Parsing Error: {e}")
 
-        # ID Tracking Logic: 
+        # ID Tracking Logic:
         # If a SeqID was sighted but is no longer in the Pico's UA list, it's wiped!
         confirmed = []
         for seq in list(self.sighted_ids[pid]):
@@ -202,21 +213,23 @@ class LogicEngine:
             # Tell the Hub to stop the piggyback injection for these IDs
             self.coord._clear_confirmed_wipes(pid, confirmed)
             self.stats["wipes_confirmed"] += len(confirmed)
-            logger.debug(f"[Logic] W-Verification Success: P{pid} cleared IDs {confirmed}")
+            logger.debug(
+                f"[Logic] W-Verification Success: P{pid} cleared IDs {confirmed}"
+            )
 
     async def _process_part_detected(self, payload):
         """
         [Spec 4.2] Odometer Synchronization.
-        
-        Extracts the Global Pulse Count from a PART_DETECTED event and triggers 
-        the Vision Process. Assigns the 'Birth Certificate' to the part by 
+
+        Extracts the Global Pulse Count from a PART_DETECTED event and triggers
+        the Vision Process. Assigns the 'Birth Certificate' to the part by
         storing its pulse count in the FIFO.
         """
         try:
             # Avoid redundant parsing: Read the pre-parsed reality directly from the Digital Twin
             limb_3 = GLOBAL_TWIN.limbs.get(3)
-            pulse_sensor = limb_3.sensors.get('pulse_count')
-            pulse_count = int(getattr(pulse_sensor, 'raw_value', 0))
+            pulse_sensor = limb_3.sensors.get("pulse_count")
+            pulse_count = int(getattr(pulse_sensor, "raw_value", 0))
         except Exception as e:
             logger.error(f"[Logic] Part Detection Sync Error: {e}")
             return
@@ -224,15 +237,12 @@ class LogicEngine:
         self.stats["parts_detected"] += 1
 
         # 1. Store in Reconciliation Queue
-        self.part_located.append({
-            "pulse": pulse_count,
-            "ts": time.time()
-        })
-        
+        self.part_located.append({"pulse": pulse_count, "ts": time.time()})
+
         # 2. Trigger UI Flash via Digital Twin (Pico 2 is the Gatekeeper)
         if 2 in GLOBAL_TWIN.limbs:
             GLOBAL_TWIN.limbs[2].ui_flash_trigger = True
-            
+
         # 3. Attempt Reconciliation (In case Vision beat Physics to the punch)
         await self.reconcile_queues()
 
@@ -248,27 +258,28 @@ class LogicEngine:
 
     async def reconcile_queues(self):
         """
-        The Marriage Process. Matches the oldest physical location with the 
+        The Marriage Process. Matches the oldest physical location with the
         oldest vision ID, and dispatches the compiled command to Pico 3.
         """
         # We need AT LEAST ONE physical location and ONE vision ID to make a match
         if len(self.part_located) > 0 and len(self.part_identified) > 0:
-            
             # The newest physical location gets the oldest vision ID
-            physical_data = self.part_located.popleft() 
+            physical_data = self.part_located.popleft()
             vision_data = self.part_identified.popleft()
-            
-            target_bin = vision_data.get('target_bin', 10)
-            impulse = vision_data.get('impulse', 1.0)
+
+            target_bin = vision_data.get("target_bin", 10)
+            impulse = vision_data.get("impulse", 1.0)
             start_pulse = physical_data["pulse"]
-            
+
             # [Spec 16.3] Position-Fused Sort Command
             payload = f"ACT:SORT:bin={target_bin}:at={start_pulse}:str={impulse}"
-            
+
             if GLOBAL_TWIN.host_state == ms.STATE_FLOW:
                 await self.coord.send_physical(3, meowprotocol.MSG_TYPE_CMD, payload)
                 self.stats["parts_sorted"] += 1
-                logger.info(f"[Logic] Synapse Match: Bin {target_bin} for part at Pulse {start_pulse}")
+                logger.info(
+                    f"[Logic] Synapse Match: Bin {target_bin} for part at Pulse {start_pulse}"
+                )
 
     def reset_logic(self):
         """

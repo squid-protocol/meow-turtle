@@ -6,8 +6,8 @@
 """
 [Spec 6.0] Core 0 Main Entry Point.
 
-This module serves as the primary bootstrap for the Ninelives.shell environment. 
-It initializes the logging infrastructure, establishes the NiceGUI server, 
+This module serves as the primary bootstrap for the Ninelives.shell environment.
+It initializes the logging infrastructure, establishes the NiceGUI server,
 and launches the SystemCoordinator as a background service.
 
 Architectural Role:
@@ -16,7 +16,6 @@ Architectural Role:
 3. Host: Serves the high-density vertical dashboard for human operators.
 """
 
-import asyncio
 import logging
 import multiprocessing as mp
 from nicegui import ui, app
@@ -31,6 +30,7 @@ from gui import SorterGUI
 # ------------------------------------------------------------------------------
 try:
     import config.settings
+
     SERIAL_PORTS = config.settings.SERIAL_PORTS
 except Exception as e:
     """
@@ -39,56 +39,65 @@ except Exception as e:
     loads a minimal 'Lifeboat' configuration to maintain connectivity.
     """
     logger.critical(f"Config Import Failed: {e}. Loading SAFE_CONFIG.")
-    SERIAL_PORTS = {1: '/dev/ttyAMA0', 2: '/dev/ttyAMA2', 3: '/dev/ttyAMA3'}
+    SERIAL_PORTS = {1: "/dev/ttyAMA0", 2: "/dev/ttyAMA2", 3: "/dev/ttyAMA3"}
 
 # ==============================================================================
 # SECTION 2: LOGGING INFRASTRUCTURE
 # ==============================================================================
 
+
 class GuiLogBridge(logging.Handler):
     """
     [Spec 19.5] Industrial GUI Logging Bridge.
-    
+
     Transforms standard Python logging records into structured dictionary entries
     compatible with the Asynchronous Flight Recorder (STREAM_ROUTER).
-    
+
     Responsibilities:
     - Level Normalization: Converts logging.LEVEL to 'C', 'E', 'W', 'I', 'D'.
     - Tagging: Truncates logger names to 5-character uppercase tags (e.g., 'COORD').
     - Buffer Management: Appends formatted strings to the GUI consumer queue.
     """
+
     def emit(self, record):
         """
         [Spec 19.5.1] Record Interception and Transformation.
-        
+
         This method is invoked by the Python logging framework whenever a message
         is logged. It performs real-time sanitization and schema mapping before
         injecting the record into the global STREAM_ROUTER buffer.
 
         Args:
-            record (logging.LogRecord): The raw event record containing message, 
+            record (logging.LogRecord): The raw event record containing message,
                                         level, and source metadata.
         """
         try:
             msg = self.format(record)
-            lvl_char = 'I'
-            if record.levelno >= logging.CRITICAL: lvl_char = 'C'
-            elif record.levelno >= logging.ERROR: lvl_char = 'E'
-            elif record.levelno >= logging.WARNING: lvl_char = 'W'
-            elif record.levelno == logging.DEBUG: lvl_char = 'D'
-            
+            lvl_char = "I"
+            if record.levelno >= logging.CRITICAL:
+                lvl_char = "C"
+            elif record.levelno >= logging.ERROR:
+                lvl_char = "E"
+            elif record.levelno >= logging.WARNING:
+                lvl_char = "W"
+            elif record.levelno == logging.DEBUG:
+                lvl_char = "D"
+
             # Create a 5-char tag from the logger name for the Flight Recorder
             tag = record.name if len(record.name) < 6 else record.name[:5].upper()
-            
-            STREAM_ROUTER.gui_log_buffer.append({
-                "ts": record.created,
-                "src": "SYS",
-                "lvl": lvl_char,
-                "tag": tag,
-                "msg": msg
-            })
+
+            STREAM_ROUTER.gui_log_buffer.append(
+                {
+                    "ts": record.created,
+                    "src": "SYS",
+                    "lvl": lvl_char,
+                    "tag": tag,
+                    "msg": msg,
+                }
+            )
         except Exception:
             self.handleError(record)
+
 
 def setup_logging():
     """
@@ -98,9 +107,10 @@ def setup_logging():
     """
     root_logger = logging.getLogger()
     bridge = GuiLogBridge()
-    bridge.setFormatter(logging.Formatter('%(message)s'))
+    bridge.setFormatter(logging.Formatter("%(message)s"))
     root_logger.addHandler(bridge)
     logger.info("GUI Log Bridge Attached.")
+
 
 # ==============================================================================
 # SECTION 3: SYSTEM INITIALIZATION
@@ -114,16 +124,18 @@ setup_logging()
 # We instantiate this here to ensure it persists for the lifetime of the server.
 coordinator = SystemCoordinator(SERIAL_PORTS)
 
-@ui.page('/')
+
+@ui.page("/")
 def index_page():
     """
     [Spec 6.0] NiceGUI Client Landing Page.
-    
-    Instantiates the SorterGUI for every new browser session. 
+
+    Instantiates the SorterGUI for every new browser session.
     By binding the GUI class to the singleton 'coordinator', multiple clients
     can observe the same 'Digital Twin' state simultaneously.
     """
     SorterGUI(coordinator)
+
 
 # ------------------------------------------------------------------------------
 # 3.1 Startup Hook
@@ -131,15 +143,17 @@ def index_page():
 async def startup_service():
     """
     [Spec 7.2] Service Startup Sequence.
-    
+
     Triggered by the NiceGUI server once the event loop is ready.
-    This initiates the hardware discovery handshake and launches the 
+    This initiates the hardware discovery handshake and launches the
     high-frequency Safety and Logic background tasks.
     """
     logger.info("[App] Service Startup: Booting Coordinator...")
     await coordinator.start()
 
+
 app.on_startup(startup_service)
+
 
 # ------------------------------------------------------------------------------
 # 3.2 Shutdown Hook (The Anti-Zombie Protocol)
@@ -147,15 +161,18 @@ app.on_startup(startup_service)
 async def shutdown_service():
     """
     [Spec 7.3] Service Teardown Sequence.
-    
+
     Triggered natively by NiceGUI when it catches a SIGINT (Ctrl+C) or app.shutdown().
     Forces the Coordinator to drop all hardware locks, close serial ports,
     and cleanly terminate background asyncio tasks before the OS kills the process.
     """
-    logger.warning("[App] Shutdown Signal Caught. Initiating Graceful Hardware Teardown...")
-    if hasattr(coordinator, 'stop'):
+    logger.warning(
+        "[App] Shutdown Signal Caught. Initiating Graceful Hardware Teardown..."
+    )
+    if hasattr(coordinator, "stop"):
         await coordinator.stop()
     logger.info("[App] Teardown Complete. Safe to exit.")
+
 
 app.on_shutdown(shutdown_service)
 
@@ -174,12 +191,6 @@ if __name__ in {"__main__", "__mp_main__"}:
     - dark=True: Standard Industrial high-contrast dashboard theme.
     """
     # Compliance: Multiprocessing method must be 'spawn'
-    mp.set_start_method('spawn', force=True)
-    
-    ui.run(
-        title="Ninelives Core 0",
-        port=8080,
-        reload=False, 
-        dark=True,
-        show=False
-    )
+    mp.set_start_method("spawn", force=True)
+
+    ui.run(title="Ninelives Core 0", port=8080, reload=False, dark=True, show=False)
