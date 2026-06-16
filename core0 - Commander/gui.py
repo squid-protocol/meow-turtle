@@ -210,23 +210,22 @@ class SorterGUI:
         card = ui.card().classes('bg-slate-900 border border-slate-800 p-3 h-full flex flex-col overflow-hidden transition-all duration-500')
         self.limb_cards[pid] = card
         with card:
-            with ui.row().classes('w-full items-center border-b border-slate-800 pb-1 mb-1 shrink-0'):
-                ui.label(f"PICO {pid}: {name}").classes('text-[10px] font-black text-cyan-400 uppercase tracking-widest')
-                self.status_labels[pid] = ui.label('OFFLINE').classes('text-[10px] font-mono ml-auto')
-                self.watchdog_labels[pid] = ui.label('WD: --').classes('text-[10px] font-mono text-slate-600 ml-2')
+            with ui.scroll_area().classes('w-full h-full pr-1'):
+                with ui.column().classes('w-full gap-1'):
+                    with ui.row().classes('w-full items-center border-b border-slate-800 pb-1 mb-1 shrink-0'):
+                        ui.label(f"PICO {pid}: {name}").classes('text-[10px] font-black text-cyan-400 uppercase tracking-widest')
+                        self.status_labels[pid] = ui.label('OFFLINE').classes('text-[10px] font-mono ml-auto')
+                        self.watchdog_labels[pid] = ui.label('WD: --').classes('text-[10px] font-mono text-slate-600 ml-2')
 
-            with ui.row().classes('w-full items-center justify-end gap-1 mb-1') as row:
-                self.maintenance_rows[pid] = row
-                ui.button('INSPECT', on_click=lambda: GUIModals.open_inspector(pid)).props('flat dense size=xs color=cyan').classes('text-[9px]')
-                ui.button('SAVE', on_click=lambda: self._bg_task(self.coord.send_cmd(f"SAVE_P{pid}"))).props('flat dense size=xs color=amber').classes('text-[9px]')
-                ui.button('REBOOT', on_click=lambda: self._bg_task(self.coord.send_cmd(f"REBOOT_P{pid}"))).props('flat dense size=xs color=red').classes('text-[9px]')
+                    with ui.row().classes('w-full items-center justify-end gap-1 mb-1') as row:
+                        self.maintenance_rows[pid] = row
+                        ui.button('INSPECT', on_click=lambda: GUIModals.open_inspector(pid)).props('flat dense size=xs color=cyan').classes('text-[9px]')
+                        ui.button('SAVE', on_click=lambda: self._bg_task(self.coord.send_cmd(f"SAVE_P{pid}"))).props('flat dense size=xs color=amber').classes('text-[9px]')
+                        ui.button('REBOOT', on_click=lambda: self._bg_task(self.coord.send_cmd(f"REBOOT_P{pid}"))).props('flat dense size=xs color=red').classes('text-[9px]')
 
-            self._add_health_dashboard(pid)
-            
-            # flex-1 (instead of flex-grow) forces the baseline to 0%, activating the scrollbar
-            with ui.scroll_area().classes('w-full flex-1 min-h-0 mt-1 pr-1'):
-                 with ui.column().classes('w-full gap-1'):
-                    ui.label('ACTUATOR MATRIX').classes('text-[10px] font-bold text-slate-600 uppercase tracking-tighter')
+                    self._add_health_dashboard(pid)
+                    
+                    ui.label('ACTUATOR MATRIX').classes('text-[10px] font-bold text-slate-600 uppercase tracking-tighter mt-1')
                     if pid == 1:
                         self.add_vibratory_control(1, "TVIB"); self.add_vibratory_control(1, "SVIB")
                         with ui.grid(columns=2).classes('w-full gap-1 mt-1'):
@@ -241,7 +240,7 @@ class SorterGUI:
                     if pid == 1: self._build_gyro_table(pid)
                     setattr(self, f"sensor_box_p{pid}", ui.column().classes('w-full gap-0.5'))
                     self._add_version_table(pid); self._add_config_table(pid)
-
+                    
     def build_gatekeeper_block(self):
         """
         [Spec 6.2.2] Pico 2: Specialized Pulse/Breakbeam Sync monitor.
@@ -250,22 +249,21 @@ class SorterGUI:
         card = ui.card().classes('bg-slate-900 border border-slate-800 p-3 h-full flex flex-col overflow-hidden transition-all duration-500')
         self.limb_cards[pid] = card
         with card:
-            with ui.row().classes('w-full items-center border-b border-slate-800 pb-1 mb-1 shrink-0'):
-                ui.label(f"PICO 2: GATEKEEPER").classes('text-[10px] font-black text-cyan-400 uppercase tracking-widest')
-                self.status_labels[pid] = ui.label('OFFLINE').classes('text-[10px] font-mono ml-auto')
-                self.watchdog_labels[pid] = ui.label('WD: --').classes('text-[10px] font-mono text-slate-600 ml-2')
-
-            with ui.row().classes('w-full items-center justify-end gap-1 mb-1') as row:
-                self.maintenance_rows[pid] = row
-                ui.button('INSPECT', on_click=lambda: GUIModals.open_inspector(pid)).props('flat dense size=xs color=cyan').classes('text-[9px]')
-                ui.button('SAVE', on_click=lambda: self._bg_task(self.coord.send_cmd(f"SAVE_P{pid}"))).props('flat dense size=xs color=amber').classes('text-[9px]')
-                ui.button('REBOOT', on_click=lambda: self._bg_task(self.coord.send_cmd(f"REBOOT_P{pid}"))).props('flat dense size=xs color=red').classes('text-[9px]')
-
-            self._add_health_dashboard(pid)
-            
-            # flex-1 forces the scroll boundary to respect the grid cell
-            with ui.scroll_area().classes('w-full flex-1 min-h-0 mt-1 pr-1'):
+            with ui.scroll_area().classes('w-full h-full pr-1'):
                 with ui.column().classes('w-full gap-1'):
+                    with ui.row().classes('w-full items-center border-b border-slate-800 pb-1 mb-1 shrink-0'):
+                        ui.label(f"PICO 2: GATEKEEPER").classes('text-[10px] font-black text-cyan-400 uppercase tracking-widest')
+                        self.status_labels[pid] = ui.label('OFFLINE').classes('text-[10px] font-mono ml-auto')
+                        self.watchdog_labels[pid] = ui.label('WD: --').classes('text-[10px] font-mono text-slate-600 ml-2')
+
+                    with ui.row().classes('w-full items-center justify-end gap-1 mb-1') as row:
+                        self.maintenance_rows[pid] = row
+                        ui.button('INSPECT', on_click=lambda: GUIModals.open_inspector(pid)).props('flat dense size=xs color=cyan').classes('text-[9px]')
+                        ui.button('SAVE', on_click=lambda: self._bg_task(self.coord.send_cmd(f"SAVE_P{pid}"))).props('flat dense size=xs color=amber').classes('text-[9px]')
+                        ui.button('REBOOT', on_click=lambda: self._bg_task(self.coord.send_cmd(f"REBOOT_P{pid}"))).props('flat dense size=xs color=red').classes('text-[9px]')
+
+                    self._add_health_dashboard(pid)
+                    
                     with ui.row().classes('w-full bg-black border border-slate-800 p-2 items-center justify-between rounded mt-1'):
                         ui.label('GLOBAL ODOMETER').classes('text-[9px] text-cyan-600 font-bold uppercase')
                         self.pulse_label = ui.label('00000').classes('text-xl font-mono text-cyan-400 font-black')
@@ -275,7 +273,7 @@ class SorterGUI:
                     
                     setattr(self, f"sensor_box_p{pid}", ui.column().classes('w-full gap-0.5 mt-1'))
                     self._add_version_table(pid); self._add_config_table(pid)
-
+                    
     # =========================================================================
     # SECTION 4: REUSABLE UI BUILDING BLOCKS
     # =========================================================================
