@@ -26,7 +26,8 @@ import os
 import sys
 import glob
 import re
-from logging.handlers import TimedRotatingFileHandler
+import queue
+from logging.handlers import TimedRotatingFileHandler, QueueHandler, QueueListener
 
 # --- CONFIGURATION CHECKS ---
 try:
@@ -70,6 +71,8 @@ def setup_logger():
     if root_logger.hasHandlers():
         root_logger.handlers.clear()
 
+    handlers_list = []
+
     # 1. Disk Egress (Spec 9.1: Daily Rotation, Keep 7 Days)
     try:
         file_handler = TimedRotatingFileHandler(
@@ -82,14 +85,23 @@ def setup_logger():
         file_handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
         # Custom suffix for rotated files: core0.log.YYYY-MM-DD
         file_handler.suffix = "%Y-%m-%d" 
-        root_logger.addHandler(file_handler)
+        handlers_list.append(file_handler)
     except Exception as e:
         print(f"[WARN] Failed to setup file logging: {e}")
 
     # 2. Terminal Egress for Real-time Monitoring
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(logging.Formatter(LOG_FORMAT, datefmt=DATE_FORMAT))
-    root_logger.addHandler(console_handler)
+    handlers_list.append(console_handler)
+
+    # --- NON-BLOCKING I/O FIX ---
+    # Decouple synchronous SD card/SSD writes from the asyncio event loop
+    log_queue = queue.Queue(-1)
+    queue_handler = QueueHandler(log_queue)
+    root_logger.addHandler(queue_handler)
+
+    listener = QueueListener(log_queue, *handlers_list, respect_handler_level=True)
+    listener.start()
 
     return logging.getLogger("Core0")
 

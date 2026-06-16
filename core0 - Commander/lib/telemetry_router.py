@@ -39,10 +39,11 @@ forensic_logger = logging.getLogger("forensic")
 forensic_logger.propagate = False
 
 # Copy existing handlers (File/Console) from the main logger to the forensic logger
-# to ensure hardware logs are still persisted to disk.
+# but EXCLUDE the GuiLogBridge to prevent infinite recursion and buffer floods.
 if not forensic_logger.handlers:
     for handler in logger.handlers:
-        forensic_logger.addHandler(handler)
+        if "GuiLogBridge" not in str(type(handler)):
+            forensic_logger.addHandler(handler)
 
 # --- DEBUG CONFIGURATION ---
 try:

@@ -61,37 +61,41 @@ def parse_kv_payload(payload_str):
             # If it looks like JSON but fails, strip braces and try manual K-V
             clean_str = clean_str[1:-1]
 
-    # 3. Robust Linear Scan (Depth Tracking)
-    current_token = []
-    depth_brace = 0   
-    depth_bracket = 0 
-    in_quote = False
-    quote_char = None
-    tokens = []
-    
-    for char in clean_str:
-        # Handle Quoted Strings (Spec 4.3.2)
-        if char in ['"', "'"]:
-            if not in_quote:
-                in_quote, quote_char = True, char
-            elif char == quote_char:
-                in_quote = False
+    # 3. Fast-Path for Flat Telemetry (C-Optimized Split)
+    if '{' not in clean_str and '[' not in clean_str:
+        tokens = clean_str.split(',')
+    else:
+        # 4. Robust Linear Scan (Fallback for nested JSON arrays/dicts)
+        current_token = []
+        depth_brace = 0   
+        depth_bracket = 0 
+        in_quote = False
+        quote_char = None
+        tokens = []
         
-        # Handle Structural Markers
-        if not in_quote:
-            if char == '{': depth_brace += 1
-            elif char == '}': depth_brace -= 1
-            elif char == '[': depth_bracket += 1
-            elif char == ']': depth_bracket -= 1
-            # Only split on commas at depth 0
-            elif char == ',' and depth_brace == 0 and depth_bracket == 0:
-                tokens.append("".join(current_token))
-                current_token = []
-                continue
-        current_token.append(char)
-    
-    if current_token:
-        tokens.append("".join(current_token))
+        for char in clean_str:
+            # Handle Quoted Strings (Spec 4.3.2)
+            if char in ['"', "'"]:
+                if not in_quote:
+                    in_quote, quote_char = True, char
+                elif char == quote_char:
+                    in_quote = False
+            
+            # Handle Structural Markers
+            if not in_quote:
+                if char == '{': depth_brace += 1
+                elif char == '}': depth_brace -= 1
+                elif char == '[': depth_bracket += 1
+                elif char == ']': depth_bracket -= 1
+                # Only split on commas at depth 0
+                elif char == ',' and depth_brace == 0 and depth_bracket == 0:
+                    tokens.append("".join(current_token))
+                    current_token = []
+                    continue
+            current_token.append(char)
+        
+        if current_token:
+            tokens.append("".join(current_token))
             
     # 4. Token Processing and Type Conversion
     for token in tokens:

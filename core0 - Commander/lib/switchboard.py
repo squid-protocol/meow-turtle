@@ -117,9 +117,13 @@ class PicoController:
         
         # Protocol Parser (local_id=5 represents the RP5 Brain)
         self.parser = meowprotocol.PacketParser(local_id=5)
+        
+        # --- ASYNCIO LOCK FIX ---
+        # Prevents concurrent tasks from mangling the RS485 transmission gap
+        self.tx_lock = asyncio.Lock()
 
         logger.debug(f"[Pico {self.id}] Controller Initialized on {port}")
-
+        
     async def connect(self):
         """
         [Spec 4.1.1] Attempts to open the asynchronous serial connection.
@@ -168,13 +172,17 @@ class PicoController:
                 return None
 
         try:
-            now = time.time()
-            # Physical Backpressure safety gap
-            elapsed = now - self.last_tx_time
-            if elapsed < INTER_PACKET_DELAY:
-                await asyncio.sleep(INTER_PACKET_DELAY - elapsed)
+            # --- ASYNCIO LOCK FIX ---
+            # Wait in line before attempting to calculate delays or touch the UART writer
+            async with self.tx_lock:
+                now = time.time()
+                # Physical Backpressure safety gap
+                elapsed = now - self.last_tx_time
+                if elapsed < INTER_PACKET_DELAY:
+                    await asyncio.sleep(INTER_PACKET_DELAY - elapsed)
+                    now = time.time() # Update 'now' after waking up from sleep
 
-            # --- W-PROTOCOL INJECTION (Spec 4.3.6.3.B) ---
+                # --- W-PROTOCOL INJECTION (Spec 4.3.6.3.B) ---
             w_payload = payload
             pending_wipes = self.coord.pending_wipes.get(self.id, set())
             
@@ -271,7 +279,12 @@ class PicoController:
         detection, RTT calculation) before forwarding data to consumers.
         """
         target, source, seq, mtype, payload = pkt
-        payload_str = payload.decode('ascii', 'ignore')
+        
+        # Only decode to string if it is a known text-based message type
+        # Bypass decoding for binary payloads (like MSG_TYPE_OTA_DATA)
+        payload_str = ""
+        if mtype < 0x50:
+            payload_str = payload.decode('ascii', 'ignore')
         
         # [Spec 4.2] Watchdog Touch
         if self.model: 
@@ -283,20 +296,28 @@ class PicoController:
         if not is_duplicate and self.last_rx_seq != -1:
             expected = (self.last_rx_seq + 1) % 65535
             if seq != expected:
-                if self.model: self.model.host_seq_skips += 1
-                logger.warning(f"[Pico {self.id}] DATA GAP: Exp {expected} Got {seq}")
-
+                # Silently accept sequence resets caused by hardware reboots
+                if seq < 5 and expected > 10:
+                    self.last_rx_seq = seq
+                else:
+                    if self.model: self.model.host_seq_skips += 1
+                    logger.warning(f"[Pico {self.id}] DATA GAP: Exp {expected} Got {seq}")
+                    
         if not is_duplicate:
             self.last_rx_seq = seq
             if self.model: self.model.packet_count += 1
 
         # Forward to LogicEngine for W-Protocol verification
-        self.logic_queue.put_nowait({
-            "source": self.id, 
-            "mtype": mtype, 
-            "seq": seq,
-            "payload": payload_str
-        })
+        try:
+            self.logic_queue.put_nowait({
+                "source": self.id, 
+                "mtype": mtype, 
+                "seq": seq,
+                "payload": payload_str
+            })
+        except asyncio.QueueFull:
+            # Physical backpressure: Drop telemetry to save the OS from crashing
+            logger.warning(f"[Pico {self.id}] Logic Queue Full! Dropping telemetry event.")
 
         # --- INTERNAL TRANSPORT ACKS ---
         if mtype == meowprotocol.MSG_TYPE_ACK:
