@@ -56,11 +56,11 @@ except ImportError:
     log = LogFallback()
 
 # --- 1. CONFIGURATION & CONSTANTS ---
-STATE_BOOT    = "BOOTING"
+STATE_BOOT    = "BOOT"
 STATE_IDLE    = "IDLE"
-STATE_FLOW    = "FLOWING"
+STATE_FLOW    = "FLOW"
 STATE_ERROR   = "ERROR"
-STATE_OTA     = "OTA_LOCKED"
+STATE_OTA     = "OTA"
 STATE_GHOST   = "GHOST"
 
 # Default "Anti-Poison" Config (Used if disk config fails)
@@ -111,16 +111,9 @@ shared_state = {
     "tx_safety": {},      # Queue 0x48 (High Priority - Alarms/Errors)
     "tx_events": {},      # Queue 0x40 (Medium Priority - Sensor Events)
     
-    # --- BREAKBEAM TRACKING ---
-    "beam_was_broken": False,
-    "beam_calibrating": True,
-    "calib_samples": [],
-    "beam_start_ms": 0,
-    "beam_start_pulse": 0,
-    "part_ready_to_send": False,
-    "part_center_pulse": -1,
-    "part_center_ms": -1,
-    "part_length_ms": 0
+    # --- GENERIC CORE-1 -> CORE-0 EVENT STAGING ---
+    "pending_events": [],
+    "recalibrate_requested": False
 }
 
 packet_dedupe = {}
@@ -375,8 +368,12 @@ def build_status_string():
         cse = shared_state['checksum_errors']
         la = shared_state['loop_avg_us']
         curr_st = shared_state['current_state']
+        ua_ids = sorted(
+            list(shared_state['tx_safety'].keys())
+            + list(shared_state['tx_events'].keys())
+        )
 
-    return (
+    status = (
         f"ST={curr_st},"
         f"UPT={uptime},"
         f"V={volt:.2f},"
@@ -393,6 +390,9 @@ def build_status_string():
         f"RL={rl}," 
         f"CSE={cse}"
     )
+    if ua_ids:
+        status += ",UA=" + ",".join(str(x) for x in ua_ids)
+    return status
 
 # --- HELPER: PRIORITY SEND (Spec 4.3.2) ---
 def send_reliable(uart, target, m_type, payload):
@@ -436,17 +436,17 @@ def core1_task():
     loop_count = 0
     local_max_us = 0
     
-    # --- STATISTICAL BREAKBEAM SETUP ---
-    beam_min_sigma = system_config.get("tuning", {}).get("beam_min_sigma", 15.0)
-    beam_alpha = system_config.get("tuning", {}).get("beam_alpha", 0.001)
-    beam_gate_sigma = system_config.get("tuning", {}).get("beam_downward_gate_sigma", 1.5)
-    beam_trip_sigma = system_config.get("tuning", {}).get("beam_tripwire_sigma", 6.0)
-    beam_sustain_ms = system_config.get("tuning", {}).get("beam_sustain_ms", 80)
-    
-    beam_mean = 0.0
-    beam_threshold = 0.0
-    beam_stddev = 0.0
-    beam_break_start_ms = 0
+    # --- OPTIONAL METROLOGY / EVENT PLUGIN ---
+    event_monitor = None
+    try:
+        import lib.breakbeam_monitor as bm
+        event_monitor = bm.BreakbeamMonitor(system_config)
+    except ImportError:
+        try:
+            import breakbeam_monitor as bm
+            event_monitor = bm.BreakbeamMonitor(system_config)
+        except ImportError:
+            pass
     
     log.info("SYS", "Core 1 Thread Start")
     
@@ -473,109 +473,15 @@ def core1_task():
             if sns_mgr: 
                 try:
                     sensor_data = sns_mgr.read_all()
-                    
-                    # --- STATISTICAL BREAKBEAM TRIPWIRE ---
-                    tsl_val = sensor_data.get("MAIN_TSL")
-                    
-                    if tsl_val is not None and tsl_val > 0:
-                        
-                        # 1. Startup Calibration Phase (20 Samples)
+                    if event_monitor:
                         with state_lock:
-                            is_calibrating = shared_state.get("beam_calibrating", False)
-                            
-                        if is_calibrating:
+                            if shared_state.get("recalibrate_requested", False):
+                                event_monitor.reset_calibration()
+                                shared_state["recalibrate_requested"] = False
+                        evt_payload = event_monitor.update(sensor_data, sns_mgr=sns_mgr)
+                        if evt_payload:
                             with state_lock:
-                                shared_state["calib_samples"].append(tsl_val)
-                                current_samples = list(shared_state["calib_samples"])
-                            
-                            if len(current_samples) >= 20:
-                                # Calculate Mean
-                                beam_mean = sum(current_samples) / 20.0
-                                
-                                # Calculate Variance & Standard Deviation
-                                variance = sum((x - beam_mean) ** 2 for x in current_samples) / 20.0
-                                beam_stddev = variance ** 0.5
-                                
-                                # Apply Noise Floor Trap (Force at least 5% of mean for high-gain stability)
-                                dynamic_noise_floor = max(beam_stddev, beam_min_sigma, beam_mean * 0.05)
-                                
-                                # Calculate Final Trip Threshold
-                                beam_threshold = beam_mean - (beam_trip_sigma * dynamic_noise_floor)
-                                
-                                log.info("SEN", f"Beam Calibrated. Mean: {int(beam_mean)}, StdDev: {int(beam_stddev)}, Thresh: {int(beam_threshold)}")
-                                
-                                # Export to Sensor Manager for GUI Telemetry
-                                with sns_mgr.lock:
-                                    sns_mgr.last_results["BEAM_MEAN"] = int(beam_mean)
-                                    sns_mgr.last_results["BEAM_THRESH"] = int(beam_threshold)
-                                
-                                with state_lock:
-                                    shared_state["beam_calibrating"] = False
-                        
-                        # 2. Active Run Phase
-                        else:
-                            dynamic_noise_floor = max(beam_stddev, beam_min_sigma, beam_mean * 0.05)
-                            beam_gate_floor = beam_mean - (beam_gate_sigma * dynamic_noise_floor)
-                            beam_threshold = beam_mean - (beam_trip_sigma * dynamic_noise_floor)
-
-                            # --- ASYMMETRIC GATED EMA ---
-                            # Escape Hatch (Bright light) OR within safe downward gate (Normal drift)
-                            if tsl_val > beam_mean or tsl_val >= beam_gate_floor:
-                                beam_mean = (tsl_val * beam_alpha) + (beam_mean * (1.0 - beam_alpha))
-                                
-                                if sns_mgr:
-                                    with sns_mgr.lock:
-                                        sns_mgr.last_results["BEAM_MEAN"] = int(beam_mean)
-                                        sns_mgr.last_results["BEAM_THRESH"] = int(beam_threshold)
-
-                            # --- TEMPORAL TRIPWIRE LOGIC ---
-                            if tsl_val < beam_threshold:
-                                if beam_break_start_ms == 0:
-                                    beam_break_start_ms = time.ticks_ms()
-                            else:
-                                beam_break_start_ms = 0
-
-                            # Validate part ONLY if it has been down longer than required sustain
-                            is_broken = False
-                            if beam_break_start_ms > 0:
-                                if time.ticks_diff(time.ticks_ms(), beam_break_start_ms) >= beam_sustain_ms:
-                                    is_broken = True
-                                    
-                            # Falling & Rising Edge Metrology Logic
-                            with state_lock:
-                                was_broken = shared_state.get("beam_was_broken", False)
-                                
-                                # FALLING EDGE (Part Enters Beam)
-                                if is_broken and not was_broken:
-                                    shared_state["beam_was_broken"] = True
-                                    shared_state["beam_start_ms"] = time.ticks_ms()
-                                    shared_state["beam_start_pulse"] = sensor_data.get("global_tick_TOTAL", 0)
-                                    
-                                # RISING EDGE (Part Exits Beam)
-                                elif not is_broken and was_broken:
-                                    shared_state["beam_was_broken"] = False
-                                    
-                                    end_ms = time.ticks_ms()
-                                    end_pulse = sensor_data.get("global_tick_TOTAL", 0)
-                                    start_ms = shared_state["beam_start_ms"]
-                                    start_pulse = shared_state["beam_start_pulse"]
-                                    
-                                    # Center Calculations (Time)
-                                    length_ms = time.ticks_diff(end_ms, start_ms)
-                                    center_ms = start_ms + (length_ms // 2)
-                                    
-                                    # Center Calculations (Spatial Pulses)
-                                    length_pulses = end_pulse - start_pulse
-                                    center_pulse = start_pulse + (length_pulses // 2)
-                                    
-                                    # Stage payload for Core 0 Dispatch
-                                    shared_state["part_center_pulse"] = center_pulse
-                                    shared_state["part_center_ms"] = center_ms
-                                    shared_state["part_length_ms"] = length_ms
-                                    shared_state["part_ready_to_send"] = True
-                                    
-                                    log.info("SEN", f"PART MEASURED! CenterPulse: {center_pulse}, Duration: {length_ms}ms")
-                                    
+                                shared_state["pending_events"].append(evt_payload)
                 except Exception as e:
                     pass
 
@@ -693,15 +599,20 @@ def process_packet(uart, packet, log_traffic=False):
             try:
                 p_str = payload.decode()
                 if "|W=" in p_str:
-                    content, wipe_tag = p_str.split("|W=")
-                    try:
-                        ack_id = int(wipe_tag)
-                        with state_lock:
-                            if ack_id in shared_state["tx_safety"]:
-                                del shared_state["tx_safety"][ack_id]
-                            elif ack_id in shared_state["tx_events"]:
-                                del shared_state["tx_events"][ack_id]
-                    except: pass
+                    content, wipe_tag = p_str.split("|W=", 1)
+                    for tok in wipe_tag.split(","):
+                        tok = tok.strip()
+                        if not tok:
+                            continue
+                        try:
+                            ack_id = int(tok)
+                            with state_lock:
+                                if ack_id in shared_state["tx_safety"]:
+                                    del shared_state["tx_safety"][ack_id]
+                                elif ack_id in shared_state["tx_events"]:
+                                    del shared_state["tx_events"][ack_id]
+                        except:
+                            pass
                     payload = content.encode()
             except: pass
 
@@ -745,8 +656,7 @@ def process_packet(uart, packet, log_traffic=False):
                         response = meowprotocol.build_packet(source, shared_state["id"], seq, meowprotocol.MSG_TYPE_ACK, str(seq))
                 elif cmd_str == "CALIBRATE":
                     with state_lock:
-                        shared_state["calib_samples"] = []
-                        shared_state["beam_calibrating"] = True
+                        shared_state["recalibrate_requested"] = True
                     response = meowprotocol.build_packet(source, shared_state["id"], seq, meowprotocol.MSG_TYPE_ACK, str(seq))
                 # SAVE CONFIG CMD
                 elif cmd_str == "CFG:SAVE":
@@ -866,11 +776,6 @@ def process_packet(uart, packet, log_traffic=False):
                                 act_mgr.configs[aid]['freq'] = int(float(val))
                                 updated = True
                             
-                            # [FIX] Added 'freq' to whitelist for atomic save workflow
-                            elif param == 'freq':
-                                act_mgr.configs[aid]['freq'] = int(float(val))
-                                updated = True
-                            
                             if updated:
                                 # [FIX] Sync back to system_config so CFG:SAVE writes it to disk
                                 for a_cfg in system_config.get('actuators', []):
@@ -909,8 +814,14 @@ def process_packet(uart, packet, log_traffic=False):
                     if fid == 0xFF: 
                         n_len = payload[1] 
                         fname = payload[2 : 2+n_len].decode()
-                        chk = payload[2+n_len:].decode()
-                        ok, msg = ota_mgr.start_update(fname, 0, chk)
+                        rem = payload[2+n_len:]
+                        if len(rem) >= 66:
+                            chunks = struct.unpack(">H", rem[:2])[0]
+                            chk = rem[2:].decode()
+                        else:
+                            chunks = 1
+                            chk = rem.decode()
+                        ok, msg = ota_mgr.start_update(fname, chunks, chk)
                     else:
                         if len(payload) >= 67:
                             chunks = struct.unpack(">H", payload[1:3])[0]
@@ -1190,23 +1101,14 @@ def main():
                     last_error_code_sent = shared_state["error_code"]
                     if log_traffic: log.debug("NET", f"[TX ALARM] {shared_state['error_code']}")
 
-            # --- ASYNC EVENT GENERATION (Part Detected) ---
-            send_evt = False
-            c_pulse = 0
-            c_time = 0
-            length = 0
-            
+            # --- ASYNC EVENT GENERATION (Core 1 -> Core 0 Queue) ---
+            events_to_send = []
             with state_lock:
-                if shared_state.get("part_ready_to_send", False):
-                    send_evt = True
-                    c_pulse = shared_state["part_center_pulse"]
-                    c_time = shared_state["part_center_ms"]
-                    length = shared_state["part_length_ms"]
-                    shared_state["part_ready_to_send"] = False
-                    
-            if send_evt:
-                # Payload now supports both Standalone (Time) and Production (Pulse) modes
-                payload = f"PART_DETECTED,center_pulse={c_pulse},center_ms={c_time},len_ms={length}"
+                if shared_state["pending_events"]:
+                    events_to_send = list(shared_state["pending_events"])
+                    shared_state["pending_events"].clear()
+
+            for payload in events_to_send:
                 send_reliable(uart, 0, meowprotocol.MSG_TYPE_EVT, payload)
                 if log_traffic: log.debug("NET", f"[TX EVT] {payload}")
 

@@ -343,8 +343,8 @@ class GhostOTAManager:
         0x07: "lib/sensors.py", 
         0x08: "lib/diagnostics.py",
         0x09: "lib/tester.py",
-        0x0A: "lib/logging.py",
-        0x0B: "lib/bldc_driver.py",
+        0x0A: "lib/bldc_driver.py",
+        0x0B: "lib/logging.py",
         0x0C: "lib/mpu6050.py",
         0x0D: "lib/ota.py",
         0x0E: "lib/pio_programs.py",
@@ -415,10 +415,18 @@ class GhostOTAManager:
             except: pass
             return False, "HASH_FAIL"
         
-        # Atomic Rename
+        # Atomic Rename (preserve app.py.bak for automatic rollback)
         try:
-            try: os.remove(self.name)
-            except: pass
+            if self.name == "app.py":
+                try:
+                    if "app.py" in os.listdir():
+                        try: os.remove("app.py.bak")
+                        except: pass
+                        os.rename("app.py", "app.py.bak")
+                except: pass
+            else:
+                try: os.remove(self.name)
+                except: pass
             os.rename(self.name + ".new", self.name)
             return True, "DONE"
         except Exception as e: return False, f"MV_{e}"
@@ -493,15 +501,16 @@ def run_ghost_mode():
                 # --- OTA START (0x50) ---
                 elif m_type == 0x50:
                     try:
-                        # Protocol: [FILE_ID] or [FF][NAME_LEN][NAME][HASH]
+                        # Protocol: [FILE_ID][CHUNKS(2)]?[HASH(64)] or [FF][NAME_LEN][NAME][CHUNKS(2)]?[HASH(64)]
                         fid = m_pay[0]
                         if fid == 0xFF: # Dynamic Name
                             n_len = m_pay[1] 
                             fname = m_pay[2 : 2+n_len].decode()
-                            chk = m_pay[2+n_len:].decode()
+                            rem = m_pay[2+n_len:]
+                            chk = rem[2:].decode() if len(rem) >= 66 else rem.decode()
                             ok, msg = ota_mgr.start(fname, chk)
                         else: # Legacy ID
-                            chk = m_pay[1:].decode()
+                            chk = m_pay[3:].decode() if len(m_pay) >= 67 else m_pay[1:].decode()
                             ok, msg = ota_mgr.start(fid, chk)
                         uart.write(ghost_frame_packet(src, my_id, seq, 0x20 if ok else 0x30, msg.encode()))
                     except:

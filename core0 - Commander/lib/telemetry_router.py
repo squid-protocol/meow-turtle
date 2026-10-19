@@ -283,14 +283,6 @@ class TelemetryRouter:
                     GLOBAL_TWIN.coordinator.alarms.raise_alarm(
                         alarm_code, ms.SEVERITY_CRITICAL, context=msg
                     )
-                elif lvl == "E":
-                    GLOBAL_TWIN.alarms.raise_alarm(
-                        alarm_code, ms.SEVERITY_PAUSE, context=msg
-                    )
-                elif lvl == "C":
-                    GLOBAL_TWIN.alarms.raise_alarm(
-                        alarm_code, ms.SEVERITY_CRITICAL, context=msg
-                    )
 
             # 3. Flight Recorder Injection (Spec 2.4)
             if lvl == "D" and not DEBUG_ROUTER:

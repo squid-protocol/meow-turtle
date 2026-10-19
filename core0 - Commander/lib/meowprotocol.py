@@ -171,12 +171,15 @@ class PacketParser:
 
         :return: List of valid tuples (Target, Source, Seq, MType, Payload).
         """
+        if not chunk:
+            return []
+
         self.buffer += chunk
         packets = []
 
         # Search for full frames wrapped in delimiters
         # Support both normal '<' and zombie '?' start markers
-        while (b"<" in self.buffer or b"?" in self.buffer) and b">" in self.buffer:
+        while True:
             start_idx_normal = self.buffer.find(b"<")
             start_idx_zombie = self.buffer.find(b"?")
 
@@ -199,7 +202,30 @@ class PacketParser:
 
             end_idx = self.buffer.find(b">", start_idx)
             if end_idx == -1:
+                # --- POISONED BUFFER TRAP FIX ---
+                # MTIP packets should not exceed 512 bytes. If we have scanned
+                # past 512 bytes from the start character without seeing '>',
+                # the start character was electrical noise. Drop the false start!
+                if len(self.buffer) - start_idx > 512:
+                    self.buffer = self.buffer[start_idx + 1 :]
+                    continue
                 break
+
+            # If a newer start delimiter ('<' or '?') appears before '>', the earlier
+            # start delimiter was electrical noise—advance to the newer start delimiter.
+            next_normal = self.buffer.find(b"<", start_idx + 1, end_idx)
+            next_zombie = self.buffer.find(b"?", start_idx + 1, end_idx)
+            next_start = -1
+            if next_normal != -1 and next_zombie != -1:
+                next_start = min(next_normal, next_zombie)
+            elif next_normal != -1:
+                next_start = next_normal
+            elif next_zombie != -1:
+                next_start = next_zombie
+
+            if next_start != -1:
+                self.buffer = self.buffer[next_start:]
+                continue
 
             frame_content = self.buffer[start_idx + 1 : end_idx]
             self.buffer = self.buffer[end_idx + 1 :]
@@ -238,5 +264,9 @@ class PacketParser:
 
             except Exception:
                 continue
+
+        # Safety Flush (Buffer Overflow Protection)
+        if len(self.buffer) > 4096:
+            self.buffer = b""
 
         return packets

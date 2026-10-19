@@ -102,16 +102,19 @@ class SafetyManager:
 
         Determines if the hardware fleet is physically capable of entering FLOW.
         Checks for:
-        1. Ghost Nodes (missing expected hardware).
+        1. Ghost / Offline Nodes (missing or unrecovered expected hardware).
         2. Signal Integrity (LQI above critical threshold).
-        3. Active Fault Badges (existing stalls or runaway conditions).
+        3. Active Fault Badges (existing stalls, runaway, or thermal conditions).
 
         :return: Boolean indicating if arming is permitted.
         """
-        # 1. Ghost Detection
-        if 1 in GLOBAL_TWIN.limbs and len(self.coord.config_ports) > 1:
-            logger.error("[Safety] ARMING BLOCKED: Ghost Node detected.")
-            return False
+        # 1. Ghost / Offline Detection
+        for pid, limb in GLOBAL_TWIN.limbs.items():
+            if limb.remote_state in [ms.STATE_OFFLINE, ms.STATE_GHOST]:
+                logger.error(
+                    f"[Safety] ARMING BLOCKED: P{pid} ({limb.name}) is {limb.remote_state}."
+                )
+                return False
 
         # 2. Signal Integrity Check
         for pid, limb in GLOBAL_TWIN.limbs.items():
@@ -124,9 +127,13 @@ class SafetyManager:
         # 3. Check for Active Fault Badges (Spec 15.5)
         for pid, limb in GLOBAL_TWIN.limbs.items():
             for act in limb.actuators.values():
-                if act.verification_state in [ms.ACT_FAULT_STALL, ms.ACT_FAULT_RUNAWAY]:
+                if act.verification_state in [
+                    ms.ACT_FAULT_STALL,
+                    ms.ACT_FAULT_RUNAWAY,
+                    ms.ACT_FAULT_THERMAL,
+                ]:
                     logger.error(
-                        f"[Safety] ARMING BLOCKED: {limb.name} has latched fault: {act.name}"
+                        f"[Safety] ARMING BLOCKED: {limb.name} has latched fault: {act.name} ({act.verification_state})"
                     )
                     return False
 
@@ -213,12 +220,16 @@ class SafetyManager:
         """
         [Spec 15.5] Detects and reacts to Pico-autonomous safety decisions.
 
-        Monitors the Digital Twin for 'F_STL' (Stall) or 'F_RUN' (Runaway) badges.
+        Monitors the Digital Twin for 'F_STL' (Stall), 'F_RUN' (Runaway), or 'F_HOT' (Thermal) badges.
         If detected, it escalates the local limb fault to a global system ERROR.
         """
         for pid, limb in GLOBAL_TWIN.limbs.items():
             for act_name, act in limb.actuators.items():
-                if act.verification_state in [ms.ACT_FAULT_STALL, ms.ACT_FAULT_RUNAWAY]:
+                if act.verification_state in [
+                    ms.ACT_FAULT_STALL,
+                    ms.ACT_FAULT_RUNAWAY,
+                    ms.ACT_FAULT_THERMAL,
+                ]:
                     if not self.in_grace_period:
                         logger.critical(
                             f"[Safety] HW OVERRIDE: {limb.name} reports {act_name} is {act.verification_state}!"
@@ -230,19 +241,21 @@ class SafetyManager:
         """
         Kinetic Jam detection via odometer stagnation.
 
-        Monitors the pulse count from Pico 3 (Distributor). If the belt is
-        commanded ON but the odometer remains stationary for >2.0s, a
-        mechanical jam is declared.
+        Monitors the pulse count from Pico 3 (Distributor) or Pico 2 (Gatekeeper).
+        If the belt is commanded ON but the odometer remains stationary for >MOTION_TIMEOUT,
+        a mechanical jam is declared.
         """
-        limb = GLOBAL_TWIN.limbs.get(3)  # Distributor Odometer
+        limb = GLOBAL_TWIN.limbs.get(3) or GLOBAL_TWIN.limbs.get(2)
         if not limb:
             return
 
-        current_pulse = 0
-        if "odo" in limb.sensors:
-            current_pulse = limb.sensors["odo"].raw_value
-        elif "pulse_count" in limb.sensors:
-            current_pulse = limb.sensors["pulse_count"].raw_value
+        current_pulse = None
+        for key in ("global_tick_TOTAL", "odo", "pulse_count"):
+            if key in limb.sensors:
+                current_pulse = limb.sensors[key].raw_value
+                break
+        if current_pulse is None:
+            return
 
         now = time.time()
         if current_pulse == self._last_odometer_reading[3]:

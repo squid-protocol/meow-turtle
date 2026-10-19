@@ -17,7 +17,7 @@ import argparse
 import logging
 
 # --- SYSTEM DEFAULTS ---
-MY_ID = 5
+MY_ID = 0
 BAUD_RATE = 115200
 CHUNK_SIZE = 64
 MAX_RETRIES = 5
@@ -130,8 +130,8 @@ class OTASession:
                         if seq == expected_seq:
                             if mtype == MSG_TYPE_ACK:
                                 return True, pay.decode(errors="ignore")
-                            elif mtype == MSG_TYPE_NAK:
-                                # Return the raw payload so the executor can parse the exact error code
+                            elif 0x30 <= mtype <= 0x3F:
+                                # Catch 0x30 NAK as well as 0x31-0x35 NAK subtypes
                                 return False, pay.decode(errors="ignore")
             time.sleep(0.005)
         return False, "TIMEOUT"
@@ -221,6 +221,7 @@ class OTASession:
                     payload = (
                         struct.pack(">BB", 0xFF, len(encoded_name))
                         + encoded_name
+                        + struct.pack(">H", total_chunks)
                         + file_hash.encode("utf-8")
                     )
 

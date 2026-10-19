@@ -182,7 +182,24 @@ class PacketParser:
                 else:
                     # Genuine fragment, waiting for the rest of the data
                     break 
-            
+
+            # If a newer start delimiter ('<' or '?') appears before '>', the earlier
+            # start character was electrical noise—advance to the newer start delimiter.
+            next_bracket = self.buffer.find(b'<', start + 1, end)
+            next_qm = self.buffer.find(b'?', start + 1, end)
+            next_start = -1
+            if next_bracket != -1 and next_qm != -1:
+                next_start = min(next_bracket, next_qm)
+            elif next_bracket != -1:
+                next_start = next_bracket
+            elif next_qm != -1:
+                next_start = next_qm
+
+            if next_start != -1:
+                log.warn("NET", "Poisoned Buffer: Skipping false start before valid frame")
+                self.buffer = self.buffer[next_start:]
+                continue
+
             # Extract content between Start char and >
             frame_content = self.buffer[start+1:end]
             

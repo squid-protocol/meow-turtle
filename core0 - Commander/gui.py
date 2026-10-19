@@ -839,6 +839,10 @@ class SorterGUI:
                             v_text, v_col = "VFY", "#fbbf24"
                         elif v_state == ms.ACT_FAULT_STALL:
                             v_text, v_col = "STALL", "#ef4444"
+                        elif v_state == ms.ACT_FAULT_RUNAWAY:
+                            v_text, v_col = "RUNAWAY", "#ef4444"
+                        elif v_state == ms.ACT_FAULT_THERMAL:
+                            v_text, v_col = "HOT", "#ef4444"
                         UIUtils.update_text(lbl, self._cache, f"act_txt_{key}", v_text)
                         UIUtils.update_style(
                             lbl, self._cache, f"act_col_{key}", f"color: {v_col}"

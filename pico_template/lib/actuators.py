@@ -448,8 +448,9 @@ class ActuatorManager:
                     if self.on_time_ms[aid] > max_on:
                         if aid not in self.faults:
                             with self.lock:
-                                self.faults[aid] = "THERMAL"
+                                self.faults[aid] = VS_FAULT_THERMAL
                                 self.targets[aid] = 0.0 
+                            self.verify_states[aid] = VS_FAULT_THERMAL
                             log.error("ACT", f"Thermal Trip: {aid} (> {max_on}ms)")
                 else:
                     self.on_time_ms[aid] = 0 # Reset timer when OFF

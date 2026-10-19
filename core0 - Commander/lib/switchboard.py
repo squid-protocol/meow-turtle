@@ -115,8 +115,8 @@ class PicoController:
         # [Spec 4.3.6.2] Command Accountability Registry
         self.pending_acks = {}  # {seq: {ts, retries, pkt, type}}
 
-        # Protocol Parser (local_id=5 represents the RP5 Brain)
-        self.parser = meowprotocol.PacketParser(local_id=5)
+        # Protocol Parser (local_id=0 represents the RP5 Brain)
+        self.parser = meowprotocol.PacketParser(local_id=0)
 
         # --- ASYNCIO LOCK FIX ---
         # Prevents concurrent tasks from mangling the RS485 transmission gap
@@ -173,7 +173,7 @@ class PicoController:
 
         try:
             # --- ASYNCIO LOCK FIX ---
-            # Wait in line before attempting to calculate delays or touch the UART writer
+            # Hold the lock across gap calculation, sequence assignment, and UART drain
             async with self.tx_lock:
                 now = time.time()
                 # Physical Backpressure safety gap
@@ -183,46 +183,46 @@ class PicoController:
                     now = time.time()  # Update 'now' after waking up from sleep
 
                 # --- W-PROTOCOL INJECTION (Spec 4.3.6.3.B) ---
-            w_payload = payload
-            pending_wipes = self.coord.pending_wipes.get(self.id, set())
+                w_payload = payload
+                pending_wipes = self.coord.pending_wipes.get(self.id, set())
 
-            if pending_wipes and msg_type in [
-                meowprotocol.MSG_TYPE_CMD,
-                meowprotocol.MSG_TYPE_CMD_STS,
-            ]:
-                # Cap injections to prevent packet fragmentation
-                to_wipe = list(pending_wipes)[:5]
-                wipe_str = ",".join(map(str, to_wipe))
+                if pending_wipes and msg_type in [
+                    meowprotocol.MSG_TYPE_CMD,
+                    meowprotocol.MSG_TYPE_CMD_STS,
+                ]:
+                    # Cap injections to prevent packet fragmentation
+                    to_wipe = list(pending_wipes)[:5]
+                    wipe_str = ",".join(map(str, to_wipe))
 
-                if isinstance(payload, bytes):
-                    p_str = payload.decode("ascii", "ignore")
-                    w_payload = f"{p_str}|W={wipe_str}".encode("ascii")
-                else:
-                    w_payload = f"{payload}|W={wipe_str}"
+                    if isinstance(payload, bytes):
+                        p_str = payload.decode("ascii", "ignore")
+                        w_payload = f"{p_str}|W={wipe_str}".encode("ascii")
+                    else:
+                        w_payload = f"{payload}|W={wipe_str}"
 
-            # Sequence Assignment
-            self.tx_seq_counter = (self.tx_seq_counter + 1) % 65535
-            seq = self.tx_seq_counter
+                # Sequence Assignment
+                self.tx_seq_counter = (self.tx_seq_counter + 1) % 65535
+                seq = self.tx_seq_counter
 
-            # Assembly and Dispatch
-            packet = meowprotocol.build_packet(self.id, 0, seq, msg_type, w_payload)
-            self.writer.write(packet)
-            await self.writer.drain()
-            self.last_tx_time = time.time()
+                # Assembly and Dispatch
+                packet = meowprotocol.build_packet(self.id, 0, seq, msg_type, w_payload)
+                self.writer.write(packet)
+                await self.writer.drain()
+                self.last_tx_time = time.time()
 
-            if DEBUG_PACKETS:
-                logger.debug(f"[TX P{self.id}] MType={hex(msg_type)} Seq={seq}")
+                if DEBUG_PACKETS:
+                    logger.debug(f"[TX P{self.id}] MType={hex(msg_type)} Seq={seq}")
 
-            # [Spec 4.3.6.2] Accountability Registry Entry
-            if requires_ack:
-                self.pending_acks[seq] = {
-                    "ts": time.time(),
-                    "retries": 0,
-                    "pkt": packet,
-                    "type": msg_type,
-                }
+                # [Spec 4.3.6.2] Accountability Registry Entry
+                if requires_ack:
+                    self.pending_acks[seq] = {
+                        "ts": self.last_tx_time,
+                        "retries": 0,
+                        "pkt": packet,
+                        "type": msg_type,
+                    }
 
-            return seq
+                return seq
 
         except Exception as e:
             logger.error(f"[Pico {self.id}] Transmission Crash: {e}")
@@ -455,10 +455,17 @@ class operator:
                         if now - info["ts"] > ACK_TIMEOUT:
                             if info["retries"] < MAX_RETRIES:
                                 if ctrl.writer:
-                                    ctrl.writer.write(info["pkt"])
-                                    await ctrl.writer.drain()
+                                    async with ctrl.tx_lock:
+                                        elapsed = time.time() - ctrl.last_tx_time
+                                        if elapsed < INTER_PACKET_DELAY:
+                                            await asyncio.sleep(
+                                                INTER_PACKET_DELAY - elapsed
+                                            )
+                                        ctrl.writer.write(info["pkt"])
+                                        await ctrl.writer.drain()
+                                        ctrl.last_tx_time = time.time()
                                     info["retries"] += 1
-                                    info["ts"] = now
+                                    info["ts"] = ctrl.last_tx_time
                             else:
                                 logger.error(
                                     f"[Pico {ctrl.id}] Comms Timeout (Seq {seq})."

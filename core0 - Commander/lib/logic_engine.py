@@ -226,10 +226,27 @@ class LogicEngine:
         storing its pulse count in the FIFO.
         """
         try:
-            # Avoid redundant parsing: Read the pre-parsed reality directly from the Digital Twin
-            limb_3 = GLOBAL_TWIN.limbs.get(3)
-            pulse_sensor = limb_3.sensors.get("pulse_count")
-            pulse_count = int(getattr(pulse_sensor, "raw_value", 0))
+            pulse_count = None
+            if "center_pulse=" in payload:
+                for token in payload.split(","):
+                    if token.startswith("center_pulse="):
+                        pulse_count = int(float(token.split("=", 1)[1]))
+                        break
+
+            if pulse_count is None:
+                for pid in (3, 2):
+                    limb = GLOBAL_TWIN.limbs.get(pid)
+                    if not limb:
+                        continue
+                    for key in ("global_tick_TOTAL", "pulse_count", "odo"):
+                        if key in limb.sensors:
+                            pulse_count = int(getattr(limb.sensors[key], "raw_value", 0))
+                            break
+                    if pulse_count is not None:
+                        break
+
+            if pulse_count is None:
+                pulse_count = 0
         except Exception as e:
             logger.error(f"[Logic] Part Detection Sync Error: {e}")
             return

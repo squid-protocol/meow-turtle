@@ -184,8 +184,16 @@ class OTAManager:
         target = self.active_filename
         try:
             # Create Backup if applicable (Spec 15.3)
-            try: os.remove(target)
-            except: pass 
+            if target == "app.py":
+                try:
+                    if "app.py" in os.listdir():
+                        try: os.remove("app.py.bak")
+                        except: pass
+                        os.rename("app.py", "app.py.bak")
+                except: pass
+            else:
+                try: os.remove(target)
+                except: pass 
             
             os.rename(self.temp_filename, target)
             

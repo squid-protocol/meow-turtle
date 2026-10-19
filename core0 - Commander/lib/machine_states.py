@@ -74,8 +74,8 @@ ACT_CONFIRMED_ON = "ON"  # [Spec 3.2] Closed Loop: Sensors prove activity
 ACT_CONFIRMED_OFF = "OFF"  # [Spec 3.2] Closed Loop: Sensors prove silence
 
 # 4.3 Faults (Critical)
-ACT_FAULT_STALL = "S"  # [Spec 15.5] Command ON, Sensor OFF (Jam/Stall)
-ACT_FAULT_RUNAWAY = "R"  # [Spec 15.5] Command OFF, Sensor ON (Circuit Short)
+ACT_FAULT_STALL = "F_STL"  # [Spec 15.5] Command ON, Sensor OFF (Jam/Stall)
+ACT_FAULT_RUNAWAY = "F_RUN"  # [Spec 15.5] Command OFF, Sensor ON (Circuit Short)
 ACT_FAULT_THERMAL = "F_HOT"  # [Spec 15.4] Hardware Silicon Fuse Tripped
 
 # ==============================================================================
