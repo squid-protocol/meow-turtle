@@ -83,9 +83,13 @@ class JobManager:
             )
             return False
 
-        if self.active_job:
+        if self.active_job or GLOBAL_TWIN.host_state in [
+            ms.STATE_FLOW,
+            ms.STATE_ARMING,
+        ]:
             self.coord._notify(
-                f"Arming Blocked: {self.active_job} in progress.", type="warning"
+                f"Arming Blocked: Job active or state is {GLOBAL_TWIN.host_state}.",
+                type="warning",
             )
             return False
 

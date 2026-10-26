@@ -100,6 +100,7 @@ class PicoController:
         self.writer = None
         self.reader = None
         self.connected = False
+        self.running = True
 
         # Timing & Sequence History
         self.last_rx_time = 0
@@ -241,9 +242,11 @@ class PicoController:
         one pass to maximize throughput. Performs 'Noise Harvesting' by
         reporting CRC failures to the Digital Twin.
         """
-        while True:
+        while self.running:
             if not self.connected:
-                await asyncio.sleep(1.0)
+                await asyncio.sleep(0.5)
+                if not self.running:
+                    break
                 await self.connect()
                 continue
 
@@ -375,6 +378,16 @@ class PicoController:
             STREAM_ROUTER.route_packet(self.id, mtype, payload)
         except Exception:
             pass
+
+    def close(self):
+        """Stops background read loops and closes transport."""
+        self.running = False
+        self.connected = False
+        if self.writer:
+            try:
+                self.writer.close()
+            except Exception:
+                pass
 
 
 # ==============================================================================

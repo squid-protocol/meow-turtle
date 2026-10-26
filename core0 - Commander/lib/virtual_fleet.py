@@ -207,7 +207,7 @@ class VirtualPicoController(PicoController):
         elif mtype == meowprotocol.MSG_TYPE_CMD_RST:
             self.sim_state = ms.STATE_BOOT
             self.sim_conveyor_speed = 0.0
-            asyncio.create_task(self._delayed_state_change(ms.STATE_IDLE, 1.5))
+            asyncio.create_task(self._delayed_state_change(ms.STATE_IDLE, 0.4))
             self._send_sim_packet(source, seq, meowprotocol.MSG_TYPE_ACK, str(seq))
 
         # 7. ACTUATOR QUERY (0x15)
@@ -373,6 +373,7 @@ class VirtualPicoController(PicoController):
 
     def close(self):
         """Stops the simulation task and closes pipes."""
+        self.running = False
         self.connected = False
         if self._sim_task:
             self._sim_task.cancel()

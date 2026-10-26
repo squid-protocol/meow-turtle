@@ -348,7 +348,7 @@ class SystemCoordinator:
 
     async def _monitor_reset_recovery(self):
         """Waits for Picos to reboot, then promotes global state to IDLE."""
-        await asyncio.sleep(4.0)  # Give Picos time to drop offline
+        await asyncio.sleep(0.5 if getattr(self, "simulate", False) else 4.0)
         retries = 0
         while retries < 30:  # 15 seconds max wait
             ready = True
@@ -675,5 +675,9 @@ class SystemCoordinator:
         """Clean shutdown of the Coordinator lifecycle."""
         logger.info("[Hub] Coordinator Shutdown Initiated.")
         self.running = False
+        if hasattr(self, "safety") and self.safety:
+            self.safety.running = False
+        if hasattr(self, "logic") and self.logic:
+            self.logic.running = False
         if self.fleet and hasattr(self.fleet, "stop"):
             await self.fleet.stop()

@@ -107,12 +107,20 @@ class SafetyManager:
 
         Determines if the hardware fleet is physically capable of entering FLOW.
         Checks for:
-        1. Ghost / Offline Nodes (missing or unrecovered expected hardware).
-        2. Signal Integrity (LQI above critical threshold).
-        3. Active Fault Badges (existing stalls, runaway, or thermal conditions).
+        1. Host state (must not be ERROR or BOOT).
+        2. Ghost / Offline Nodes (missing or unrecovered expected hardware).
+        3. Signal Integrity (LQI above critical threshold).
+        4. Active Fault Badges (existing stalls, runaway, or thermal conditions).
 
         :return: Boolean indicating if arming is permitted.
         """
+        # 0. Host State Check
+        if GLOBAL_TWIN.host_state in [ms.STATE_ERROR, ms.STATE_BOOT]:
+            logger.error(
+                f"[Safety] ARMING BLOCKED: Host is in {GLOBAL_TWIN.host_state} state."
+            )
+            return False
+
         # 1. Ghost / Offline / Error State Detection
         for pid, limb in GLOBAL_TWIN.limbs.items():
             if limb.remote_state in [
