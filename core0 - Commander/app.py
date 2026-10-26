@@ -18,6 +18,8 @@ Architectural Role:
 
 import logging
 import multiprocessing as mp
+import os
+import sys
 from nicegui import ui, app
 
 from lib.rp5_logger import logger
@@ -28,10 +30,18 @@ from gui import SorterGUI
 # ------------------------------------------------------------------------------
 # 1. CONFIG HYGIENE (Spec 10.4)
 # ------------------------------------------------------------------------------
+# Parse simulation flags and prune from sys.argv before NiceGUI / Uvicorn startup
+simulate_cli = False
+for flag in ("--simulate", "-s", "--mock"):
+    if flag in sys.argv:
+        simulate_cli = True
+        sys.argv.remove(flag)
+
 try:
     import config.settings
 
     SERIAL_PORTS = config.settings.SERIAL_PORTS
+    SIMULATE_FLEET = getattr(config.settings, "SIMULATE_FLEET", False)
 except Exception as e:
     """
     [Spec 10.4] Configuration Anti-Poison Logic.
@@ -40,6 +50,13 @@ except Exception as e:
     """
     logger.critical(f"Config Import Failed: {e}. Loading SAFE_CONFIG.")
     SERIAL_PORTS = {1: "/dev/ttyAMA0", 2: "/dev/ttyAMA2", 3: "/dev/ttyAMA3"}
+    SIMULATE_FLEET = False
+
+if (
+    simulate_cli
+    or os.environ.get("MEOW_SIMULATE", "").lower() in ("1", "true", "yes")
+):
+    SIMULATE_FLEET = True
 
 # ==============================================================================
 # SECTION 2: LOGGING INFRASTRUCTURE
@@ -119,10 +136,15 @@ def setup_logging():
 # 1. Initialize Logging
 setup_logging()
 
+if SIMULATE_FLEET:
+    logger.info(
+        "[App] Fleet Simulation Mode ENABLED. Microcontrollers are virtualized."
+    )
+
 # 2. Global System Coordinator (Singleton)
 # [Spec 5.1] The Coordinator acts as the central hub (The Hub).
 # We instantiate this here to ensure it persists for the lifetime of the server.
-coordinator = SystemCoordinator(SERIAL_PORTS)
+coordinator = SystemCoordinator(SERIAL_PORTS, simulate=SIMULATE_FLEET)
 
 
 @ui.page("/")

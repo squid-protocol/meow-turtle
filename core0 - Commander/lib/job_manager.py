@@ -48,9 +48,10 @@ class JobManager:
         self.active_job = None
 
         # Path Strategy (Spec 10.4): Try config subfolder, then local
-        self.profile_path = os.path.join("config", "profiles.json")
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        self.profile_path = os.path.join(base_dir, "config", "profiles.json")
         if not os.path.exists(self.profile_path):
-            self.profile_path = "profiles.json"
+            self.profile_path = os.path.join(base_dir, "profiles.json")
 
         logger.info(
             "[Job] JobManager Initialized with Atomic Handshake and Calibration logic."
@@ -204,7 +205,7 @@ class JobManager:
             new_ratio = test_distance_mm / pulse_delta
 
             # Atomic Update to Calibration Library
-            CALIBRATION.update_pulse_ratio("distributor", new_ratio)
+            CALIBRATION.update_pulse_ratio(test_distance_mm, pulse_delta)
             CALIBRATION.save()
 
             self.coord._notify(
@@ -241,7 +242,10 @@ class JobManager:
             dist_cfg = data.get("distributor", {})
             if "belt_speed" in dist_cfg:
                 speed = float(dist_cfg["belt_speed"])
-                if speed < 0 or speed > 1.0:
+                if 1.0 < speed <= 100.0:
+                    speed = speed / 100.0
+                    dist_cfg["belt_speed"] = speed
+                elif speed < 0 or speed > 1.0:
                     logger.error(f"[Job] CRITICAL: Profile speed {speed} is OOB.")
                     return None
 
@@ -287,16 +291,22 @@ class JobManager:
         if not pending_acks:
             return True
 
+        remaining_acks = set(pending_acks)
         timeout_at = time.time() + 3.0
         while time.time() < timeout_at:
-            all_ready = True
-            for pid, seq in pending_acks:
+            for pid, seq in list(remaining_acks):
                 limb = GLOBAL_TWIN.limbs.get(pid)
-                if limb and limb.last_acked_seq != seq:
-                    all_ready = False
-                    break
+                ctrl = (
+                    self.coord.fleet.controllers.get(pid)
+                    if self.coord.fleet
+                    else None
+                )
+                if (ctrl and seq not in ctrl.pending_acks) or (
+                    limb and limb.last_acked_seq == seq
+                ):
+                    remaining_acks.discard((pid, seq))
 
-            if all_ready:
+            if not remaining_acks:
                 logger.info("[Job] Atomic Handshake Verified. Fleet Ready.")
                 return True
 
@@ -308,9 +318,9 @@ class JobManager:
                     )
                     return False
 
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.05)
 
-        logger.warning("[Job] Handshake TIMEOUT. One or more Picos failed to ACK.")
+        logger.warning(f"[Job] Handshake TIMEOUT. Un-ACKed: {remaining_acks}")
         return False
 
     async def enter_idle_sequence(self):

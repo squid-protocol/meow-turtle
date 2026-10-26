@@ -206,21 +206,25 @@ class PicoController:
 
                 # Assembly and Dispatch
                 packet = meowprotocol.build_packet(self.id, 0, seq, msg_type, w_payload)
-                self.writer.write(packet)
-                await self.writer.drain()
-                self.last_tx_time = time.time()
-
-                if DEBUG_PACKETS:
-                    logger.debug(f"[TX P{self.id}] MType={hex(msg_type)} Seq={seq}")
 
                 # [Spec 4.3.6.2] Accountability Registry Entry
+                # Must register before writing to avoid race condition where fast reply arrives first
                 if requires_ack:
                     self.pending_acks[seq] = {
-                        "ts": self.last_tx_time,
+                        "ts": now,
                         "retries": 0,
                         "pkt": packet,
                         "type": msg_type,
                     }
+
+                self.writer.write(packet)
+                await self.writer.drain()
+                self.last_tx_time = time.time()
+                if requires_ack and seq in self.pending_acks:
+                    self.pending_acks[seq]["ts"] = self.last_tx_time
+
+                if DEBUG_PACKETS:
+                    logger.debug(f"[TX P{self.id}] MType={hex(msg_type)} Seq={seq}")
 
                 return seq
 
@@ -299,25 +303,34 @@ class PicoController:
             self.model.touch()
 
         # --- SEQUENCE VALIDATION & DEDUPLICATION ---
-        is_duplicate = self.last_rx_seq != -1 and seq == self.last_rx_seq
+        # Asynchronous unsolicited events (0x40 / 0x48) originate from the Pico's independent
+        # event queue and do not share the synchronous query sequence space.
+        is_event = mtype in [
+            meowprotocol.MSG_TYPE_EVT,
+            meowprotocol.MSG_TYPE_ALARM,
+        ]
+        is_duplicate = False
+        if not is_event:
+            is_duplicate = self.last_rx_seq != -1 and seq == self.last_rx_seq
 
-        if not is_duplicate and self.last_rx_seq != -1:
-            expected = (self.last_rx_seq + 1) % 65535
-            if seq != expected:
-                # Silently accept sequence resets caused by hardware reboots
-                if seq < 5 and expected > 10:
-                    self.last_rx_seq = seq
-                else:
-                    if self.model:
-                        self.model.host_seq_skips += 1
-                    logger.warning(
-                        f"[Pico {self.id}] DATA GAP: Exp {expected} Got {seq}"
-                    )
+            if not is_duplicate and self.last_rx_seq != -1:
+                expected = (self.last_rx_seq + 1) % 65535
+                if seq != expected:
+                    # Silently accept sequence resets caused by hardware reboots
+                    if seq < 5 and expected > 10:
+                        self.last_rx_seq = seq
+                    else:
+                        if self.model:
+                            self.model.host_seq_skips += 1
+                        logger.warning(
+                            f"[Pico {self.id}] DATA GAP: Exp {expected} Got {seq}"
+                        )
 
-        if not is_duplicate:
-            self.last_rx_seq = seq
-            if self.model:
-                self.model.packet_count += 1
+            if not is_duplicate:
+                self.last_rx_seq = seq
+
+        if self.model:
+            self.model.packet_count += 1
 
         # Forward to LogicEngine for W-Protocol verification
         try:
@@ -378,7 +391,9 @@ class Switchboard:
     even when the system is IDLE.
     """
 
-    def __init__(self, port_map, logic_queue, warning_queue, coordinator):
+    def __init__(
+        self, port_map, logic_queue, warning_queue, coordinator, simulate=False
+    ):
         """
         Initializes the fleet manager and instantiates controllers for each limb.
 
@@ -386,16 +401,26 @@ class Switchboard:
         :param logic_queue: Destination for logical events.
         :param warning_queue: Destination for UI warnings.
         :param coordinator: Reference to the SystemCoordinator.
+        :param simulate: Enable virtual hardware loopback simulation.
         """
         self.coord = coordinator
+        self.simulate = simulate
         self.controllers = {}
-        for pid, port in port_map.items():
-            self.controllers[pid] = PicoController(
-                port, 115200, pid, logic_queue, coordinator
-            )
+        if self.simulate:
+            from lib.virtual_fleet import VirtualPicoController
+
+            for pid, port in port_map.items():
+                self.controllers[pid] = VirtualPicoController(
+                    port, 115200, pid, logic_queue, coordinator
+                )
+        else:
+            for pid, port in port_map.items():
+                self.controllers[pid] = PicoController(
+                    port, 115200, pid, logic_queue, coordinator
+                )
 
         self.running = True
-        self.last_sync_time = 0
+        self.last_sync_time = time.time()
 
     async def start(self):
         """
@@ -495,6 +520,19 @@ class Switchboard:
             requires_ack = msg_type in [0x10, 0x18, 0x1A]
             return await ctrl.send_packet(msg_type, payload, requires_ack=requires_ack)
         return None
+
+    async def stop(self):
+        """Teardown method to safely shut down polling and close limb transports."""
+        self.running = False
+        for ctrl in self.controllers.values():
+            if hasattr(ctrl, "close"):
+                ctrl.close()
+            elif ctrl.writer:
+                try:
+                    ctrl.writer.close()
+                except Exception:
+                    pass
+        logger.info("[Switchboard] Fleet Commander Offline.")
 
 
 # Backward-compatibility alias for legacy code expecting `operator`

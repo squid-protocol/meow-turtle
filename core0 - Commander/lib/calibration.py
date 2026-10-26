@@ -15,7 +15,8 @@ import os
 import logging
 
 logger = logging.getLogger("Calibration")
-CAL_FILE = "config/calibration.json"
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+CAL_FILE = os.path.join(BASE_DIR, "config", "calibration.json")
 
 DEFAULT_CALIBRATION = {
     "loader": {
@@ -112,12 +113,21 @@ class CalibrationManager:
         """Calculates current belt velocity in millimeters per second."""
         return self.pulses_to_mm(pulses_per_second)
 
-    def update_pulse_ratio(self, measured_distance_mm, total_pulses_observed):
+    def update_pulse_ratio(self, measured_distance_or_key, total_pulses_or_ratio):
         """[Spec 16.4] Commits new calibration results from the Wizard."""
-        if total_pulses_observed <= 0:
-            return
-        new_ratio = float(measured_distance_mm) / float(total_pulses_observed)
-        self.data["distributor"]["mm_per_pulse"] = round(new_ratio, 8)
+        if isinstance(measured_distance_or_key, str):
+            key = measured_distance_or_key
+            new_ratio = float(total_pulses_or_ratio)
+            if key not in self.data:
+                self.data[key] = {}
+            self.data[key]["mm_per_pulse"] = round(new_ratio, 8)
+        else:
+            measured_distance_mm = float(measured_distance_or_key)
+            total_pulses_observed = float(total_pulses_or_ratio)
+            if total_pulses_observed <= 0:
+                return
+            new_ratio = measured_distance_mm / total_pulses_observed
+            self.data["distributor"]["mm_per_pulse"] = round(new_ratio, 8)
         logger.info(f"Calibration Updated: {new_ratio:.8f} mm/p")
         self.save()
 

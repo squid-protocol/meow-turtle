@@ -55,12 +55,13 @@ class SystemCoordinator:
     - [Rectification 3.B] Dynamic Limb Registration.
     """
 
-    def __init__(self, config_ports):
+    def __init__(self, config_ports, simulate=False):
         """
         Initializes the central orchestrator and populates the Digital Twin.
 
         Args:
             config_ports (dict): Mapping of Port IDs to device paths.
+            simulate (bool): Whether to run in virtual fleet simulation mode.
         """
         # 1. PRIMARY COMMUNICATION PIPES
         # Capped internal queues to provide backpressure and prevent OOM memory bombs
@@ -76,6 +77,7 @@ class SystemCoordinator:
         # 3. STATE & INFRASTRUCTURE REGISTRY
         self.running = True
         self.config_ports = config_ports
+        self.simulate = simulate
         self.fleet = None
 
         # [Rectification 3.B] Dynamic Limb Registration
@@ -134,7 +136,11 @@ class SystemCoordinator:
             # Step 1: Initialize Fleet Comms
             # Switchboard handles the raw serial transport layer.
             self.fleet = Switchboard(
-                self.config_ports, self.logic_queue, self.warning_queue, self
+                self.config_ports,
+                self.logic_queue,
+                self.warning_queue,
+                self,
+                simulate=self.simulate,
             )
             await self.fleet.start()
 
@@ -657,3 +663,5 @@ class SystemCoordinator:
         """Clean shutdown of the Coordinator lifecycle."""
         logger.info("[Hub] Coordinator Shutdown Initiated.")
         self.running = False
+        if self.fleet and hasattr(self.fleet, "stop"):
+            await self.fleet.stop()
