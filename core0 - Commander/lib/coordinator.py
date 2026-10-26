@@ -30,7 +30,7 @@ import psutil  # [Spec 21.0] Required for active Host Health monitoring
 
 from lib.rp5_logger import logger, scan_local_versions
 from lib.digital_twin import GLOBAL_TWIN
-from lib.switchboard import operator
+from lib.switchboard import Switchboard, operator
 from lib.telemetry_router import STREAM_ROUTER
 from lib import meowprotocol
 from lib import machine_states as ms
@@ -132,8 +132,8 @@ class SystemCoordinator:
             self.safety.trigger_recovery_grace()
 
             # Step 1: Initialize Fleet Comms
-            # Switchboard (operator) handles the raw serial transport layer.
-            self.fleet = operator(
+            # Switchboard handles the raw serial transport layer.
+            self.fleet = Switchboard(
                 self.config_ports, self.logic_queue, self.warning_queue, self
             )
             await self.fleet.start()

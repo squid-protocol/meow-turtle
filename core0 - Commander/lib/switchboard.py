@@ -369,9 +369,9 @@ class PicoController:
 # ==============================================================================
 
 
-class operator:
+class Switchboard:
     """
-    [Spec 4.1.2] Fleet Operator.
+    [Spec 4.1.2] Fleet Operator (Switchboard).
 
     Orchestrates the polling cycles and transport-layer synchronization for
     all connected Pico nodes. It ensures that the network remains active
@@ -495,3 +495,8 @@ class operator:
             requires_ack = msg_type in [0x10, 0x18, 0x1A]
             return await ctrl.send_packet(msg_type, payload, requires_ack=requires_ack)
         return None
+
+
+# Backward-compatibility alias for legacy code expecting `operator`
+operator = Switchboard
+
