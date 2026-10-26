@@ -360,6 +360,11 @@ class BusWrapper:
         if current_val > 65000: return ERR_LIMIT
 
         # 2. Zombie Detection (Code -8)
+        # Exempt ambient sensors (TSL light sensors, temperature probes) where
+        # identical steady readings are normal physical reality.
+        if "TSL" in name or "TEMP" in name:
+            return current_val
+
         if name not in self.history:
             self.history[name] = {"val": current_val, "count": 0, "last_change": time.ticks_ms()}
             return current_val
@@ -367,10 +372,8 @@ class BusWrapper:
         hist = self.history[name]
         if current_val == hist["val"] and current_val != 0:
             hist["count"] += 1
-            # [Spec 11.5.2] Trigger after ~100 consecutive identical polls
-            # [FIX] TSL light sensors can be perfectly stable. Increase limit to 1200 (60 seconds)
-            zombie_limit = 1200 if "TSL" in name else 100
-            if hist["count"] > zombie_limit:
+            # Trigger after ~500 consecutive identical polls for dynamic motion axes
+            if hist["count"] > 500:
                 return ERR_ZOMBIE
         else:
             hist["val"] = current_val

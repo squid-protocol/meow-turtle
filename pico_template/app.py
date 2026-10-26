@@ -306,28 +306,34 @@ def get_vsys_voltage():
     except: return 5.0
 
 # --- HELPER: BROWNOUT CHECK (Death Gasp) ---
+_brownout_consecutive_drops = 0
+
 def check_brownout():
     """
     [Spec 9.4] Industrial Robustness: Brownout Protocol.
-    Detects critical power loss (<4.4V). Triggers immediate actuator halt 
-    and safe hibernation to prevent flash corruption and uncontrolled 
-    mechanical movement.
+    Detects sustained power loss (<4.4V). Implements a debounced 3-sample 
+    filter to reject ADC noise and momentary inrush voltage sags.
+    Triggers immediate actuator halt and safe ERROR state transition.
     """
+    global _brownout_consecutive_drops
     v = get_vsys_voltage()
     
     with state_lock:
         if v < shared_state["min_voltage_latch"]:
             shared_state["min_voltage_latch"] = v
 
-    # [CRITICAL] Immediate Shutdown Threshold
+    # [CRITICAL] Sustained Shutdown Threshold (Debounced)
     if v < 4.4:
-        log.crit("PWR", f"BROWNOUT DETECTED: {v:.2f}V")
-        if act_mgr: act_mgr.emergency_stop()
-        while True: machine.idle()
-        
-    # [WARNING] Yellow Zone (Near Brownout)
-    elif v < 4.7:
-        pass 
+        _brownout_consecutive_drops += 1
+        if _brownout_consecutive_drops >= 3:
+            log.crit("PWR", f"SUSTAINED BROWNOUT DETECTED: {v:.2f}V")
+            if act_mgr: act_mgr.emergency_stop()
+            with state_lock:
+                if shared_state["current_state"] != STATE_ERROR:
+                    shared_state["current_state"] = STATE_ERROR
+                    shared_state["error_code"] = f"BROWNOUT:{v:.2f}V"
+    else:
+        _brownout_consecutive_drops = 0 
 
 # Generates the 'STS' key-value string for system health reporting
 def build_status_string():
@@ -561,12 +567,11 @@ def process_packet(uart, packet, log_traffic=False):
     Implements the Wipe Interceptor (Spec 4.3.1.1.D) for bandwidth-efficient 
     piggyback acknowledgement and command inventory execution (Spec 4.3.4).
     """
-    # [RESILIENCY] Perform Deterministic GC at start of every processing cycle
-    # to free memory from the previous transaction.
-    gc.collect()
+    # [RESILIENCY] Guard against memory exhaustion.
+    # Only force GC if available heap is low to prevent Core 1 physics loop jitter.
+    if gc.mem_free() < 8192:
+        gc.collect()
 
-    # [RESILIENCY] Guard against memory exhaustion. If heap is critically low, 
-    # abort complex processing to prevent a hard MemoryError.
     if not memory_guard(threshold_bytes=6144): # 6KB threshold for command handling
         log.warn("NET", "Dropping packet: RAM exhaustion protection active")
         return None
@@ -1240,12 +1245,14 @@ def main():
                             except:
                                 log.debug("TX", str(resp))
             
-            # --- NEW: AUTONOMOUS NETWORK WATCHDOG ---
-            # If we haven't received a valid packet in 60 seconds, we are deaf.
-            # Intentionally crash the loop so boot.py deducts a life.
+            # --- AUTONOMOUS NETWORK WATCHDOG ---
+            # If we haven't received a valid packet in 60 seconds, cleanly reboot.
             if test_cfg.get("network_watchdog_enabled", True) and not test_cfg.get("standalone_mode", False):
                 if time.ticks_diff(t_ms, last_valid_rx_time) > 60000:
-                    raise Exception("Network Timeout - Deaf to RS485")
+                    log.crit("SYS", "Network Timeout - Deaf to RS485 for 60s. Forcing reboot.")
+                    if act_mgr: act_mgr.emergency_stop()
+                    time.sleep(0.5)
+                    machine.reset()
                         
             time.sleep_ms(1)
             

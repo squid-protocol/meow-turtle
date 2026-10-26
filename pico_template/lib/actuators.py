@@ -22,14 +22,20 @@ import lib.logging as log
 # If these files are missing, the system will log an error but won't crash 
 # unless an actuator of that type is initialized.
 try: 
-    import vibration_driver
-except ImportError: 
-    vibration_driver = None
+    import lib.vibration_driver as vibration_driver
+except ImportError:
+    try: 
+        import vibration_driver
+    except ImportError: 
+        vibration_driver = None
 
 try: 
-    import bldc_driver
-except ImportError: 
-    bldc_driver = None
+    import lib.bldc_driver as bldc_driver
+except ImportError:
+    try: 
+        import bldc_driver
+    except ImportError: 
+        bldc_driver = None
 
 # --- VERIFICATION STATES (Spec 4.0 / 10.8.2) ---
 # These states represent the "Digital Twin" status of the physical hardware.
@@ -358,18 +364,24 @@ class ActuatorManager:
                     is_moving = True
 
             elif strategy == "GYRO_NOISE":
-                if sensor_data.get(f"{sensor_key}_GYRO", 0) == -1: return 
-                gx = abs(sensor_data.get(f"{sensor_key}_GYRO_X", sensor_data.get(f"{sensor_key}_GYRO_GX", 0)))
-                gy = abs(sensor_data.get(f"{sensor_key}_GYRO_Y", sensor_data.get(f"{sensor_key}_GYRO_GY", 0)))
-                gz = abs(sensor_data.get(f"{sensor_key}_GYRO_Z", sensor_data.get(f"{sensor_key}_GYRO_GZ", 0)))
-                val = gx + gy + gz
+                # Check bus/device status error code (< 0)
+                if sensor_data.get(f"{sensor_key}_GYRO", 0) < 0: return 
+                gx_raw = sensor_data.get(f"{sensor_key}_GYRO_X", sensor_data.get(f"{sensor_key}_GYRO_GX", 0))
+                gy_raw = sensor_data.get(f"{sensor_key}_GYRO_Y", sensor_data.get(f"{sensor_key}_GYRO_GY", 0))
+                gz_raw = sensor_data.get(f"{sensor_key}_GYRO_Z", sensor_data.get(f"{sensor_key}_GYRO_GZ", 0))
+                
+                # Reject frame if any axis reports a negative error code (prevents abs() from converting error to motion)
+                if gx_raw < 0 or gy_raw < 0 or gz_raw < 0: return
+                
+                val = abs(gx_raw) + abs(gy_raw) + abs(gz_raw)
                 if val > threshold: is_moving = True
 
             # --- NEW: DIRECTIONAL ISOLATION STRATEGIES ---
             elif strategy == "GYRO_Z_ONLY":
-                if sensor_data.get(f"{sensor_key}_GYRO", 0) == -1: return
-                gz = abs(sensor_data.get(f"{sensor_key}_GYRO_Z", sensor_data.get(f"{sensor_key}_GYRO_GZ", 0)))
-                val = gz
+                if sensor_data.get(f"{sensor_key}_GYRO", 0) < 0: return
+                gz_raw = sensor_data.get(f"{sensor_key}_GYRO_Z", sensor_data.get(f"{sensor_key}_GYRO_GZ", 0))
+                if gz_raw < 0: return
+                val = abs(gz_raw)
                 if val > threshold: is_moving = True
         except:
             return 
