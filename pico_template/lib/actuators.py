@@ -418,13 +418,15 @@ class ActuatorManager:
 
     # --- PHYSICS LOOP (Core 1) ---
     
-    def update(self, dt_ms, sensor_data={}):
+    def update(self, dt_ms, sensor_data=None):
         """
         [Spec 10.6.3 & 10.4.2] Core 1 High-Speed Physics Step.
         Advances the physical simulation including soft-start ramping (Spec 10.7.5).
         Enforces Solenoid Thermal Fusing (Spec 10.7.7) and Escalation overrides (Spec 16.5).
         Performs hardware write abstraction for heterogeneous drivers.
         """
+        if sensor_data is None:
+            sensor_data = {}
         local_targets = {}
         
         # [Spec 10.7.4] Thread-Safe Copy of Targets
