@@ -1119,6 +1119,9 @@ def main():
                 if (time.time() - shared_state["uptime_start"]) * 1000 > grace_ms:
                     if clear_boot_attempts():
                         shared_state["boot_attempts_cleared"] = True
+                        if not shared_state["lives_refilled"] and shared_state["current_state"] != STATE_FLOW:
+                            if refill_lives():
+                                shared_state["lives_refilled"] = True
 
             if shared_state["error_code"].startswith("C1_CRASH"):
                 if shared_state["current_state"] != STATE_ERROR:

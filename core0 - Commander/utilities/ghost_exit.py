@@ -109,7 +109,9 @@ def main():
             print("Select Command:")
             print("  [s] Status Request (Ping)")
             print("  [r] Reset Command  (Hard Reset)")
-            print("  [e] EXIT GHOST MODE")
+            print("  [e] EXIT GHOST MODE (Restore Lives & Reboot)")
+            print("  [c] Clear Lives Counter (Without Reboot)")
+            print("  [p] Drop to REPL (USB Console)")
             print("  [q] Quit")
 
             choice = input("Enter selection: ").strip().lower()
@@ -122,6 +124,10 @@ def main():
                 msg_type, payload = MSG_TYPE_CMD_RST, b""
             elif choice == "e":
                 msg_type, payload = MSG_TYPE_CMD, b"EXIT"
+            elif choice == "c":
+                msg_type, payload = MSG_TYPE_CMD, b"CLEAR"
+            elif choice == "p":
+                msg_type, payload = MSG_TYPE_CMD, b"REPL"
             else:
                 continue
 

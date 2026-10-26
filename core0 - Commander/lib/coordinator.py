@@ -303,6 +303,16 @@ class SystemCoordinator:
             except Exception as e:
                 logger.error(f"[Hub] Manual Reset Failed for P{pid}: {e}")
 
+        elif command_name.startswith("EXIT_GHOST_P"):
+            # Command limb to restore lives, clear boot loop, and reboot to main app
+            try:
+                pid = int(command_name.replace("EXIT_GHOST_P", ""))
+                self.safety.trigger_recovery_grace()
+                await self.send_physical(pid, meowprotocol.MSG_TYPE_CMD, "EXIT")
+                self._notify(f"Exit Ghost Command Sent to Pico {pid}", type="info")
+            except Exception as e:
+                logger.error(f"[Hub] Exit Ghost Failed for P{pid}: {e}")
+
         elif command_name.startswith("SAVE_P"):
             # Target specific config save for a single limb port.
             try:

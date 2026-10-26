@@ -15,10 +15,22 @@ import hashlib
 import sys
 
 # !!! IMPORTANT: DEVICE IDENTITY !!!
-# This file must be tailored for each specific Pico.
-# 'GHOST_DEVICE_ID' sets the identity when config.json is corrupt or missing.
-# Update this value before flashing!
+# Fallback identity when config.json is corrupt or missing.
 GHOST_DEVICE_ID = 1 
+
+def get_device_id():
+    """
+    [Spec 4.3.14.5.3] Dynamic Identity Resolution.
+    Reads system.device_id from config.json.
+    Falls back to GHOST_DEVICE_ID (1) if config.json is unreadable.
+    """
+    try:
+        import json
+        with open('config.json', 'r') as f:
+            cfg = json.load(f)
+            return int(cfg.get('system', {}).get('device_id', GHOST_DEVICE_ID))
+    except:
+        return GHOST_DEVICE_ID 
 
 # --- LOGGING INIT (INDEPENDENCE FALLBACK) ---
 # Spec 14.1: Attempt to load the unified logger. 
@@ -57,12 +69,11 @@ except ImportError:
     log = LogFallback()
 
 # --- 1. CONFIGURATION & CONSTANTS ---
-VERSION = 1.02
+VERSION = 1.03
 LIVES_FILE = "lives.txt"
 BOOT_ATTEMPTS_FILE = "boot_attempts.txt" # Tracks consecutive failures
 MAX_LIVES = 9
-MAX_BOOT_ATTEMPTS = 9 # Rollback after 3 failed boots
-my_id = 3 ###Needs to be updated for each pico! ##### WARNING - ISSUE - CHECK - FIX - 
+MAX_BOOT_ATTEMPTS = 3 # Rollback after 3 failed boots 
 
 # Spec 9.2 Deviation: Recovery Pin is GPIO 27.
 # Holding this pin LOW during boot forces Ghost Mode.
@@ -180,6 +191,7 @@ def perform_rollback():
     [Spec 15.2 / 4.3.14.5.2] Automatic Rollback (Boot Loop Protection).
     Renames the current app.py to app.py.bad for forensic analysis and 
     restores the 'Golden Image' app.py.bak to resume machine operation.
+    Preserves app.py.bak so future recovery remains possible.
     """
     log.warn("SYS", "ROLLBACK TRIGGERED: Restoring Backup...")
     print("[BOOT] !!! ROLLBACK TRIGGERED !!!")
@@ -191,11 +203,21 @@ def perform_rollback():
 
     try:
         # Move corrupted app.py to app.py.bad for forensic analysis
-        try: os.rename("app.py", "app.py.bad")
+        try:
+            if "app.py.bad" in os.listdir():
+                try: os.remove("app.py.bad")
+                except: pass
+            os.rename("app.py", "app.py.bad")
         except: pass
         
-        # Restore backup
-        os.rename("app.py.bak", "app.py")
+        # Restore backup by stream copy so app.py.bak remains intact as a golden image
+        with open("app.py.bak", "rb") as src, open("app.py", "wb") as dst:
+            while True:
+                buf = src.read(512)
+                if not buf:
+                    break
+                dst.write(buf)
+
         log.info("SYS", "Rollback Success: Backup restored")
         print("[BOOT] SUCCESS: Backup Restored. Rebooting...")
         
@@ -453,19 +475,14 @@ def run_ghost_mode():
     """
     log.crit("SYS", "ENTERING GHOST MODE (INDEPENDENT)")
     print("\n[BOOT] !!! ENTERING GHOST MODE !!!")
-    print("[BOOT] Functionality: SOS Blink, OTA Receiver, Reset, Exit to REPL.")
+    print("[BOOT] Functionality: SOS Blink, OTA Receiver, Reset, Exit to Main App / REPL.")
     
     # Re-assert safety lockout
     perform_safety_lockout()
     
     # Init Hardware for Ghost
     uart = machine.UART(0, 115200, tx=machine.Pin(0), rx=machine.Pin(1))
-    my_id = GHOST_DEVICE_ID
-
-    try:
-        import json
-        with open('config.json', 'r') as f: my_id = json.load(f)['system']['device_id']
-    except: pass
+    my_id = get_device_id()
     
     parser = GhostParser(my_id)
     ota_mgr = GhostOTAManager()
@@ -482,21 +499,39 @@ def run_ghost_mode():
             if result and isinstance(result, tuple) and result[0] != "NAK":
                 tgt, src, seq, m_type, m_pay = result
                 
-                # --- COMMAND: RESET / EXIT ---
+                # --- COMMAND: RESET / EXIT / REPL (0x10) ---
                 if m_type == 0x10: 
-                    if b"RESET" in m_pay:
+                    if b"RESET" in m_pay or b"RST" in m_pay:
                         uart.write(ghost_frame_packet(src, my_id, seq, 0x20, b"RST"))
                         time.sleep(0.5); machine.reset()
                     
                     elif b"EXIT" in m_pay:
+                        # Reset lives and boot attempts so normal boot succeeds
+                        write_int_file(LIVES_FILE, MAX_LIVES)
+                        write_int_file(BOOT_ATTEMPTS_FILE, 0)
                         uart.write(ghost_frame_packet(src, my_id, seq, 0x20, b"EXIT_OK"))
+                        print("[BOOT] Exiting Ghost Mode -> Rebooting to Main App")
+                        time.sleep(0.5); machine.reset()
+
+                    elif b"CLEAR" in m_pay or b"CLR" in m_pay or b"CLR_LIVES" in m_pay:
+                        write_int_file(LIVES_FILE, MAX_LIVES)
+                        write_int_file(BOOT_ATTEMPTS_FILE, 0)
+                        uart.write(ghost_frame_packet(src, my_id, seq, 0x20, b"CLEARED"))
+
+                    elif b"REPL" in m_pay:
+                        uart.write(ghost_frame_packet(src, my_id, seq, 0x20, b"REPL_OK"))
                         print("[BOOT] Exiting Ghost Mode -> REPL")
                         if led: led.off()
                         return # Returns to main(), which drops to REPL
                         
+                # --- COMMAND: HARD RESET (0x14) ---
+                elif m_type == 0x14:
+                    uart.write(ghost_frame_packet(src, my_id, seq, 0x20, b"RST"))
+                    time.sleep(0.5); machine.reset()
+
                 # --- COMMAND: STATUS (0x11) ---
                 elif m_type == 0x11: 
-                    uart.write(ghost_frame_packet(src, my_id, seq, 0x41, b"S=GHOST,ERR=NO_APP"))
+                    uart.write(ghost_frame_packet(src, my_id, seq, 0x41, b"ST=GHOST,S=GHOST,ERR=NO_APP"))
                 
                 # --- OTA START (0x50) ---
                 elif m_type == 0x50:
@@ -562,10 +597,11 @@ def main():
         lives = 0
     else:
         lives = read_int_file(LIVES_FILE, default_val=MAX_LIVES)
-        if lives == 0:
+        if lives <= 0:
             # Check if file exists but is 0 (death) vs missing (first boot)
             if LIVES_FILE not in os.listdir():
-                 lives = MAX_LIVES
+                lives = MAX_LIVES
+                write_int_file(LIVES_FILE, MAX_LIVES)
 
     log.info("SYS", f"Lives: {lives}/{MAX_LIVES}")
     print(f"[BOOT] LIVES: {lives}/{MAX_LIVES}")
@@ -578,24 +614,32 @@ def main():
         attempts = read_int_file(BOOT_ATTEMPTS_FILE, default_val=0)
         log.info("SYS", f"Boot Attempts: {attempts}")
         
+        # If previous boot failed to achieve stability (attempts > 0):
+        if attempts > 0:
+            lives = max(0, lives - 1)
+            write_int_file(LIVES_FILE, lives)
+            log.warn("SYS", f"Previous boot unstable. Lives reduced to {lives}/{MAX_LIVES}")
+
         if attempts >= MAX_BOOT_ATTEMPTS:
             # We have failed to boot 'app.py' too many times.
             # Try to restore backup.
+            log.crit("SYS", f"Boot loop detected ({attempts} attempts). Attempting rollback...")
             if perform_rollback():
                 # Rollback resets machine, so we stop here
                 return
             else:
-                # Rollback failed (no backup). Proceed to Ghost Mode logic logic below.
-                log.crit("SYS", "Rollback Failed. Deducting life.")
+                # Rollback failed (no backup). Proceed to Ghost Mode logic below.
+                log.crit("SYS", "Rollback Failed or No Backup. Entering Ghost Mode.")
+                run_ghost_mode()
+                return
+
+        if lives <= 0:
+            log.crit("SYS", "0 Lives Left. Entering Ghost Mode.")
+            run_ghost_mode()
+            return
         
-        # Increment attempts counter
+        # Increment attempts counter (cleared by app.py once stability grace period passes)
         write_int_file(BOOT_ATTEMPTS_FILE, attempts + 1)
-        
-        # [Spec 1.0] Life Deduction Logic
-        # We assume the app MIGHT crash. So we deduct a life NOW.
-        # If the app runs stable for 30s (in app.py), it will refill the lives to 9
-        # AND reset boot_attempts to 0.
-        write_int_file(LIVES_FILE, lives - 1)
         log.info("SYS", "Launching App")
         
         # [Spec 3.3] Soft Reboot Hygiene (Expanded)

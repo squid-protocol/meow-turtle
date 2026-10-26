@@ -166,8 +166,9 @@ class TelemetryRouter:
                 limb = GLOBAL_TWIN.limbs.get(source_id)
                 if limb:
                     # Sync the hardware reality into the Digital Twin
-                    if "ST" in parsed:
-                        limb.remote_state = parsed["ST"]
+                    state_val = parsed.get("ST") or parsed.get("S")
+                    if state_val:
+                        limb.remote_state = state_val
                     if "V" in parsed:
                         limb.voltage = float(parsed["V"])
                     if "VM" in parsed:
