@@ -10,7 +10,45 @@ the dedicated Programmable I/O hardware, ensuring 0% CPU overhead and
 deterministic edge detection critical for "Time as Distance" synchronization.
 """
 
-import rp2
+try:
+    import rp2
+except ImportError:
+    # Host-side mock for testing / linting outside MicroPython
+    class _MockRP2:
+        class PIO:
+            SHIFT_RIGHT = 1
+            JOIN_RX = 1
+            OUT_LOW = 0
+
+        @staticmethod
+        def asm_pio(**kwargs):
+            def decorator(f):
+                return f
+            return decorator
+
+    rp2 = _MockRP2()
+
+# Static analysis and host-side stub definitions for PIO assembler pseudo-instructions
+try:
+    from typing import TYPE_CHECKING
+except ImportError:
+    TYPE_CHECKING = False
+
+if TYPE_CHECKING or not hasattr(rp2, "StateMachine"):
+    def mov(*args): pass
+    def invert(*args): pass
+    null = None
+    x = None
+    isr = None
+    pin = None
+    x_dec = None
+    noblock = None
+    def wrap_target(): pass
+    def wrap(): pass
+    def wait(*args): pass
+    def jmp(*args): pass
+    def label(*args): pass
+    def push(*args): pass
 
 # --- PIO PROGRAMS ---
 
