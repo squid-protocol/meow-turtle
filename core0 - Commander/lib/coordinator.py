@@ -606,12 +606,16 @@ class SystemCoordinator:
                 GLOBAL_TWIN.host.disk_percent = disk.percent
 
                 # 3. Thermals (RPi5 Broadcom Sysfs)
-                try:
-                    with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
-                        # Convert millidegrees to degrees
-                        GLOBAL_TWIN.host.temp = int(f.read()) / 1000
-                except (FileNotFoundError, PermissionError):
-                    pass
+                def _read_thermal():
+                    try:
+                        with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+                            return int(f.read().strip()) / 1000.0
+                    except (FileNotFoundError, PermissionError, ValueError):
+                        return None
+
+                temp = await asyncio.to_thread(_read_thermal)
+                if temp is not None:
+                    GLOBAL_TWIN.host.temp = temp
 
                 # Push update frequency: 0.2Hz (Every 5 seconds)
                 await asyncio.sleep(5.0)
