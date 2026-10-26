@@ -112,6 +112,8 @@ class JobManager:
                 return False
 
             logger.info("[Job] Ignition Phase: Starting kinetic stream...")
+            # Allow hardware fleet time to transition into FLOW without false Split-Brain triggers
+            self.coord.safety.trigger_recovery_grace(5.0)
             await self.coord.send_physical(3, meowprotocol.MSG_TYPE_CMD, "FLOW")
             await self.coord.send_physical(2, meowprotocol.MSG_TYPE_CMD, "FLOW")
             await asyncio.sleep(0.5)

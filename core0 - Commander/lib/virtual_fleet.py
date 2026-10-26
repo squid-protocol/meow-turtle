@@ -147,6 +147,8 @@ class VirtualPicoController(PicoController):
         # 1. STOP (0x00)
         if mtype == meowprotocol.MSG_TYPE_CMD_STOP:
             self.sim_state = ms.STATE_ERROR
+            if self.model:
+                self.model.remote_state = ms.STATE_ERROR
             SHARED_PHYSICS["conveyor_speed"] = 0.0
             self.sim_conveyor_speed = 0.0
             self._send_sim_packet(source, seq, meowprotocol.MSG_TYPE_ACK, str(seq))
@@ -156,14 +158,20 @@ class VirtualPicoController(PicoController):
             cmd = clean_payload.strip()
             if cmd == "IDLE":
                 self.sim_state = ms.STATE_IDLE
+                if self.model:
+                    self.model.remote_state = ms.STATE_IDLE
                 SHARED_PHYSICS["conveyor_speed"] = 0.0
                 self.sim_conveyor_speed = 0.0
             elif cmd == "FLOW":
                 self.sim_state = ms.STATE_FLOW
+                if self.model:
+                    self.model.remote_state = ms.STATE_FLOW
                 SHARED_PHYSICS["conveyor_speed"] = 0.8
                 self.sim_conveyor_speed = 0.8
             elif cmd == "RESET":
                 self.sim_state = ms.STATE_BOOT
+                if self.model:
+                    self.model.remote_state = ms.STATE_BOOT
                 SHARED_PHYSICS["conveyor_speed"] = 0.0
                 self.sim_conveyor_speed = 0.0
                 asyncio.create_task(self._delayed_state_change(ms.STATE_IDLE, 1.5))

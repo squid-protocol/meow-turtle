@@ -513,6 +513,16 @@ class SystemCoordinator:
 
         # [Spec 15.4] Thermal Guard: Use pulse for solenoids to prevent burnout.
         if norm_name.lower().startswith("sol") and float(val) > 0.0:
+            key = (pid, norm_name)
+            now = time.time()
+            if now - self.safety._solenoid_cooldowns.get(key, 0.0) < 2.0:
+                self._notify(
+                    f"Solenoid {norm_name} in cooldown (2s duty cycle)", type="warning"
+                )
+                return
+
+            self.safety._solenoid_cooldowns[key] = now
+
             # Inline the pulse logic to guarantee execution
             async def safe_pulse():
                 await self.send_physical(

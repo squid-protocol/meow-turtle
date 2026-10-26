@@ -80,7 +80,7 @@ class SafetyManager:
     # --------------------------------------------------------------------------
     # RECOVERY & ALARM INTERLOCKS
     # --------------------------------------------------------------------------
-    def trigger_recovery_grace(self):
+    def trigger_recovery_grace(self, duration=None):
         """
         [Spec 15.3] Inhibits STATE_ERROR transitions for a brief window post-reset.
 
@@ -88,8 +88,9 @@ class SafetyManager:
         without the watchdog immediately re-triggering due to transient
         initialization delays.
         """
-        self._grace_period_end = time.time() + self.RECOVERY_GRACE_S
-        logger.info(f"[Safety] Recovery Grace Active for {self.RECOVERY_GRACE_S}s.")
+        secs = duration if duration is not None else self.RECOVERY_GRACE_S
+        self._grace_period_end = time.time() + secs
+        logger.info(f"[Safety] Recovery Grace Active for {secs}s.")
 
     @property
     def in_grace_period(self):
@@ -360,8 +361,8 @@ class SafetyManager:
                             GLOBAL_TWIN.set_state(ms.STATE_ERROR)
 
                     # Judgement D: State Cohesion (Split-Brain Prevention)
-                    # If the Brain is running but a Pico falls back to a dormant state.
-                    if GLOBAL_TWIN.host_state in [ms.STATE_FLOW, ms.STATE_ARMING]:
+                    # If the Brain is actively sorting (FLOW) but a Pico drops back to a dormant state.
+                    if GLOBAL_TWIN.host_state == ms.STATE_FLOW:
                         if limb.remote_state in [
                             ms.STATE_BOOT,
                             ms.STATE_IDLE,

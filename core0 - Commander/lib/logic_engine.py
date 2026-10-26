@@ -270,6 +270,10 @@ class LogicEngine:
         """
         [Spec 11.3] Vision result ingestion from Synapse Bus.
         """
+        if not isinstance(result, dict):
+            return
+        if "ts" not in result:
+            result["ts"] = time.time()
         self.part_identified.append(result)
         await self.reconcile_queues()
 
@@ -278,18 +282,46 @@ class LogicEngine:
         The Marriage Process. Matches the oldest physical location with the
         oldest vision ID, and dispatches the compiled command to Pico 3.
         """
-        # We need AT LEAST ONE physical location and ONE vision ID to make a match
-        if len(self.part_located) > 0 and len(self.part_identified) > 0:
-            # The newest physical location gets the oldest vision ID
+        now = time.time()
+        # Prune stale physical locations (> 15s old)
+        while self.part_located and (now - self.part_located[0].get("ts", now)) > 15.0:
+            stale = self.part_located.popleft()
+            self.stats["vision_sync_errors"] += 1
+            logger.warning(
+                f"[Logic] Dropped stale physical part at pulse {stale.get('pulse')}"
+            )
+
+        # Prune stale vision identifications (> 15s old)
+        while (
+            self.part_identified
+            and (now - self.part_identified[0].get("ts", now)) > 15.0
+        ):
+            self.part_identified.popleft()
+            self.stats["vision_sync_errors"] += 1
+            logger.warning("[Logic] Dropped stale vision classification")
+
+        # Drain matched pairs from both queues
+        while len(self.part_located) > 0 and len(self.part_identified) > 0:
             physical_data = self.part_located.popleft()
             vision_data = self.part_identified.popleft()
 
-            target_bin = vision_data.get("target_bin", 10)
-            impulse = vision_data.get("impulse", 1.0)
-            start_pulse = physical_data["pulse"]
+            try:
+                target_bin = int(vision_data.get("target_bin", 10))
+                if target_bin < 1 or target_bin > 10:
+                    target_bin = 10
+            except (ValueError, TypeError):
+                target_bin = 10
+
+            try:
+                impulse = float(vision_data.get("impulse", 1.0))
+                impulse = max(0.1, min(1.0, impulse))
+            except (ValueError, TypeError):
+                impulse = 1.0
+
+            start_pulse = int(physical_data.get("pulse", 0))
 
             # [Spec 16.3] Position-Fused Sort Command
-            payload = f"ACT:SORT:bin={target_bin}:at={start_pulse}:str={impulse}"
+            payload = f"ACT:SORT:bin={target_bin}:at={start_pulse}:str={impulse:.2f}"
 
             if GLOBAL_TWIN.host_state == ms.STATE_FLOW:
                 await self.coord.send_physical(3, meowprotocol.MSG_TYPE_CMD, payload)
@@ -298,7 +330,7 @@ class LogicEngine:
                     f"[Logic] Synapse Match: Bin {target_bin} for part at Pulse {start_pulse}"
                 )
 
-    def reset_logic(self):
+    def reset_logic(self, reset_stats=False):
         """
         [Spec 15.3] Clears memory and tracking state to recover from system errors.
         """
@@ -307,4 +339,11 @@ class LogicEngine:
         self.pending_sort.clear()
         for pid in self.sighted_ids:
             self.sighted_ids[pid].clear()
+        if reset_stats:
+            self.stats = {
+                "parts_detected": 0,
+                "parts_sorted": 0,
+                "vision_sync_errors": 0,
+                "wipes_confirmed": 0,
+            }
         logger.info("[Logic] Logic Engine state purged.")
