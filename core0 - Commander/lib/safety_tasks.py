@@ -92,6 +92,10 @@ class SafetyManager:
         self._grace_period_end = time.time() + secs
         logger.info(f"[Safety] Recovery Grace Active for {secs}s.")
 
+    def clear_recovery_grace(self):
+        """Terminates the recovery grace window immediately."""
+        self._grace_period_end = 0.0
+
     @property
     def in_grace_period(self):
         """Checks if the system is currently within the post-reset safety window."""
@@ -109,9 +113,14 @@ class SafetyManager:
 
         :return: Boolean indicating if arming is permitted.
         """
-        # 1. Ghost / Offline Detection
+        # 1. Ghost / Offline / Error State Detection
         for pid, limb in GLOBAL_TWIN.limbs.items():
-            if limb.remote_state in [ms.STATE_OFFLINE, ms.STATE_GHOST]:
+            if limb.remote_state in [
+                ms.STATE_OFFLINE,
+                ms.STATE_GHOST,
+                ms.STATE_ERROR,
+                ms.STATE_BOOT,
+            ]:
                 logger.error(
                     f"[Safety] ARMING BLOCKED: P{pid} ({limb.name}) is {limb.remote_state}."
                 )
@@ -202,13 +211,10 @@ class SafetyManager:
                     current_state == ms.STATE_ERROR
                     and self._last_host_state != ms.STATE_ERROR
                 ):
-                    if self.in_grace_period:
-                        GLOBAL_TWIN.set_state(ms.STATE_BOOT)
-                    else:
-                        logger.critical(
-                            "[Safety] CRITICAL: Fault detected. Executing Broadcast Stop."
-                        )
-                        await self.coord.broadcast_stop()
+                    logger.critical(
+                        "[Safety] CRITICAL: Fault detected. Executing Broadcast Stop."
+                    )
+                    await self.coord.broadcast_stop()
 
                 self._last_host_state = current_state
                 await asyncio.sleep(1.0 / self.OBSERVER_HERTZ)
@@ -232,10 +238,11 @@ class SafetyManager:
                     ms.ACT_FAULT_THERMAL,
                 ]:
                     if not self.in_grace_period:
-                        logger.critical(
-                            f"[Safety] HW OVERRIDE: {limb.name} reports {act_name} is {act.verification_state}!"
-                        )
-                        GLOBAL_TWIN.set_state(ms.STATE_ERROR)
+                        if GLOBAL_TWIN.host_state != ms.STATE_ERROR:
+                            logger.critical(
+                                f"[Safety] HW OVERRIDE: {limb.name} reports {act_name} is {act.verification_state}!"
+                            )
+                            GLOBAL_TWIN.set_state(ms.STATE_ERROR)
                         return
 
     async def _verify_motion(self):

@@ -109,6 +109,7 @@ class JobManager:
                     type="negative",
                 )
                 GLOBAL_TWIN.set_state(ms.STATE_ERROR)
+                await self.coord.broadcast_stop()
                 return False
 
             logger.info("[Job] Ignition Phase: Starting kinetic stream...")
@@ -290,12 +291,17 @@ class JobManager:
 
     async def _verify_hardware_readiness(self, pending_acks):
         """[Spec 4.3.6.2 Phase 2] Verifies receipt of configuration parameters."""
-        if not pending_acks:
-            return True
-
-        remaining_acks = set(pending_acks)
+        remaining_acks = set(pending_acks) if pending_acks else set()
         timeout_at = time.time() + 3.0
         while time.time() < timeout_at:
+            # Fleet State Cohesion: All limbs MUST be IDLE/READY during handshake
+            for limb in GLOBAL_TWIN.limbs.values():
+                if limb.remote_state not in [ms.STATE_IDLE, ms.STATE_READY]:
+                    logger.error(
+                        f"[Job] Arming Aborted: Pico {limb.id} is in {limb.remote_state}, expected IDLE."
+                    )
+                    return False
+
             for pid, seq in list(remaining_acks):
                 limb = GLOBAL_TWIN.limbs.get(pid)
                 ctrl = (
@@ -311,14 +317,6 @@ class JobManager:
             if not remaining_acks:
                 logger.info("[Job] Atomic Handshake Verified. Fleet Ready.")
                 return True
-
-            for limb in GLOBAL_TWIN.limbs.values():
-                # Strict Inclusion: Limbs MUST be IDLE to accept an arming sequence
-                if limb.remote_state not in [ms.STATE_IDLE, ms.STATE_READY]:
-                    logger.error(
-                        f"[Job] Arming Aborted: Pico {limb.id} is in {limb.remote_state}, expected IDLE."
-                    )
-                    return False
 
             await asyncio.sleep(0.05)
 

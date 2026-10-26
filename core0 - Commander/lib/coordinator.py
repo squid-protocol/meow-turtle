@@ -188,6 +188,7 @@ class SystemCoordinator:
             asyncio.create_task(self.alarm_check_loop())  # Evaluative Health (1Hz)
 
             GLOBAL_TWIN.set_state(ms.STATE_IDLE)
+            self.safety.clear_recovery_grace()
             logger.info("[Hub] Bootstrap Complete. Global State: IDLE")
 
         except Exception as e:
@@ -360,6 +361,7 @@ class SystemCoordinator:
             if ready:
                 logger.info("[Hub] Fleet Recovered. Global State: IDLE")
                 GLOBAL_TWIN.set_state(ms.STATE_IDLE)
+                self.safety.clear_recovery_grace()
                 return
 
             await asyncio.sleep(0.5)
