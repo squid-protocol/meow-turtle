@@ -270,3 +270,6 @@ class PacketParser:
             self.buffer = b""
 
         return packets
+
+    # Protocol symmetry alias for MicroPython parse_stream
+    parse_stream = parse

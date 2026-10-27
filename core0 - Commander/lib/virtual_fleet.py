@@ -377,5 +377,10 @@ class VirtualPicoController(PicoController):
         self.connected = False
         if self._sim_task:
             self._sim_task.cancel()
+        if self.reader and not self.reader.at_eof():
+            try:
+                self.reader.feed_eof()
+            except Exception:
+                pass
         if self.writer:
             self.writer.close()

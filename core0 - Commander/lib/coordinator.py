@@ -55,13 +55,14 @@ class SystemCoordinator:
     - [Rectification 3.B] Dynamic Limb Registration.
     """
 
-    def __init__(self, config_ports, simulate=False):
+    def __init__(self, config_ports, simulate=False, controller_cls=None):
         """
         Initializes the central orchestrator and populates the Digital Twin.
 
         Args:
             config_ports (dict): Mapping of Port IDs to device paths.
             simulate (bool): Whether to run in virtual fleet simulation mode.
+            controller_cls: Custom controller class for co-simulation.
         """
         # 1. PRIMARY COMMUNICATION PIPES
         # Capped internal queues to provide backpressure and prevent OOM memory bombs
@@ -78,7 +79,9 @@ class SystemCoordinator:
         self.running = True
         self.config_ports = config_ports
         self.simulate = simulate
+        self.controller_cls = controller_cls
         self.fleet = None
+        self._bg_tasks = []
 
         # [Rectification 3.B] Dynamic Limb Registration
         # This resolves the Static Hardcoding in digital_twin.py.
@@ -141,6 +144,7 @@ class SystemCoordinator:
                 self.warning_queue,
                 self,
                 simulate=self.simulate,
+                controller_cls=self.controller_cls,
             )
             await self.fleet.start()
 
@@ -176,16 +180,16 @@ class SystemCoordinator:
 
             # Step 5: Launch Specialized Domain Tasks
             # Monitoring tasks (Host, Log requests, Network, Deduplication)
-            asyncio.create_task(self.host_health_monitor())
-            asyncio.create_task(self.log_request_watchdog())
-            asyncio.create_task(self.network_health_aggregator())
-            asyncio.create_task(self.dedupe_cache_refresher())
+            self._bg_tasks.append(asyncio.create_task(self.host_health_monitor()))
+            self._bg_tasks.append(asyncio.create_task(self.log_request_watchdog()))
+            self._bg_tasks.append(asyncio.create_task(self.network_health_aggregator()))
+            self._bg_tasks.append(asyncio.create_task(self.dedupe_cache_refresher()))
 
             # High-Frequency Domain Loops
-            asyncio.create_task(self.logic.run_loop())
-            asyncio.create_task(self.safety.monitor_loop())
-            asyncio.create_task(self.safety.watchdog_task())
-            asyncio.create_task(self.alarm_check_loop())  # Evaluative Health (1Hz)
+            self._bg_tasks.append(asyncio.create_task(self.logic.run_loop()))
+            self._bg_tasks.append(asyncio.create_task(self.safety.monitor_loop()))
+            self._bg_tasks.append(asyncio.create_task(self.safety.watchdog_task()))
+            self._bg_tasks.append(asyncio.create_task(self.alarm_check_loop()))  # Evaluative Health (1Hz)
 
             GLOBAL_TWIN.set_state(ms.STATE_IDLE)
             self.safety.clear_recovery_grace()
@@ -685,9 +689,22 @@ class SystemCoordinator:
         """Clean shutdown of the Coordinator lifecycle."""
         logger.info("[Hub] Coordinator Shutdown Initiated.")
         self.running = False
+        for task in self._bg_tasks:
+            task.cancel()
         if hasattr(self, "safety") and self.safety:
             self.safety.running = False
         if hasattr(self, "logic") and self.logic:
             self.logic.running = False
+            if hasattr(self.logic, "stop"):
+                self.logic.stop()
         if self.fleet and hasattr(self.fleet, "stop"):
             await self.fleet.stop()
+        try:
+            if hasattr(self, "to_brain") and self.to_brain:
+                self.to_brain.close()
+                self.to_brain.cancel_join_thread()
+            if hasattr(self, "from_brain") and self.from_brain:
+                self.from_brain.close()
+                self.from_brain.cancel_join_thread()
+        except Exception:
+            pass

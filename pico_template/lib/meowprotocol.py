@@ -268,3 +268,6 @@ class PacketParser:
             # Catch-all for unexpected parsing crashes
             log.error("NET", f"Parser Crash: {e}")
             return None
+
+    # Protocol symmetry alias for host-side parse
+    parse = parse_stream

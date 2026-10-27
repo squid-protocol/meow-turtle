@@ -253,6 +253,13 @@ class PicoController:
             try:
                 # 4KB buffer drain per pass
                 data = await self.reader.read(4096)
+                if not data:
+                    self.connected = False
+                    if not self.running:
+                        break
+                    await asyncio.sleep(0.05)
+                    continue
+
                 if data:
                     packets = self.parser.parse(data)
 
@@ -383,6 +390,11 @@ class PicoController:
         """Stops background read loops and closes transport."""
         self.running = False
         self.connected = False
+        if self.reader and not self.reader.at_eof():
+            try:
+                self.reader.feed_eof()
+            except Exception:
+                pass
         if self.writer:
             try:
                 self.writer.close()
@@ -405,7 +417,7 @@ class Switchboard:
     """
 
     def __init__(
-        self, port_map, logic_queue, warning_queue, coordinator, simulate=False
+        self, port_map, logic_queue, warning_queue, coordinator, simulate=False, controller_cls=None
     ):
         """
         Initializes the fleet manager and instantiates controllers for each limb.
@@ -415,11 +427,18 @@ class Switchboard:
         :param warning_queue: Destination for UI warnings.
         :param coordinator: Reference to the SystemCoordinator.
         :param simulate: Enable virtual hardware loopback simulation.
+        :param controller_cls: Custom controller class (e.g. for co-simulation).
         """
         self.coord = coordinator
         self.simulate = simulate
+        self.controller_cls = controller_cls
         self.controllers = {}
-        if self.simulate:
+        if self.controller_cls:
+            for pid, port in port_map.items():
+                self.controllers[pid] = self.controller_cls(
+                    port, 115200, pid, logic_queue, coordinator
+                )
+        elif self.simulate:
             from lib.virtual_fleet import VirtualPicoController
 
             for pid, port in port_map.items():
@@ -434,6 +453,7 @@ class Switchboard:
 
         self.running = True
         self.last_sync_time = time.time()
+        self._background_tasks = []
 
     async def start(self):
         """
@@ -442,9 +462,9 @@ class Switchboard:
         """
         for ctrl in self.controllers.values():
             await ctrl.connect()
-            asyncio.create_task(ctrl.read_loop())
+            self._background_tasks.append(asyncio.create_task(ctrl.read_loop()))
 
-        asyncio.create_task(self.polling_loop())
+        self._background_tasks.append(asyncio.create_task(self.polling_loop()))
         logger.info("[Switchboard] Fleet Commander Online (v6.4.1).")
 
     async def polling_loop(self):
@@ -537,6 +557,8 @@ class Switchboard:
     async def stop(self):
         """Teardown method to safely shut down polling and close limb transports."""
         self.running = False
+        for task in self._background_tasks:
+            task.cancel()
         for ctrl in self.controllers.values():
             if hasattr(ctrl, "close"):
                 ctrl.close()

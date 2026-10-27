@@ -59,6 +59,7 @@ class LogicEngine:
 
         self.zmq_context = zmq.asyncio.Context()
         self.vision_socket = self.zmq_context.socket(zmq.SUB)
+        self.vision_socket.setsockopt(zmq.LINGER, 0)
         self.vision_socket.connect(
             "tcp://127.0.0.1:5555"
         )  # Core 1 will publish to this port
@@ -346,4 +347,18 @@ class LogicEngine:
                 "vision_sync_errors": 0,
                 "wipes_confirmed": 0,
             }
+
+    def stop(self):
+        """Cleanly releases ZeroMQ resources with 0 linger."""
+        self.running = False
+        try:
+            if hasattr(self, "vision_socket") and self.vision_socket:
+                self.vision_socket.close(linger=0)
+            if hasattr(self, "zmq_context") and self.zmq_context:
+                self.zmq_context.term()
+        except Exception:
+            pass
+
+    def __del__(self):
+        self.stop()
         logger.info("[Logic] Logic Engine state purged.")

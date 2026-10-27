@@ -188,6 +188,23 @@ def install():
     sys.modules["machine"] = mock_machine
     sys.modules["rp2"] = mock_rp2
 
+    # Standard MicroPython 'u' alias modules
+    import binascii
+    import os
+    import json
+    import gc
+
+    sys.modules["ubinascii"] = binascii
+    sys.modules["uos"] = os
+    sys.modules["ujson"] = json
+    sys.modules["utime"] = time
+
+    # MicroPython gc shims
+    if not hasattr(gc, "mem_free"):
+        gc.mem_free = lambda: 1048576
+    if not hasattr(gc, "mem_alloc"):
+        gc.mem_alloc = lambda: 524288
+
     # Patch time module with MicroPython tick extensions
     time.ticks_ms = ticks_ms
     time.ticks_us = ticks_us
@@ -199,11 +216,16 @@ def install():
     # Ensure lib module paths include pico_template/lib
     import os
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    pico_lib = os.path.join(base_dir, "pico_template", "lib")
+    pico_dir = os.path.join(base_dir, "pico_template")
+    pico_lib = os.path.join(pico_dir, "lib")
     core0_dir = os.path.join(base_dir, "core0 - Commander")
 
     if core0_dir not in sys.path:
         sys.path.insert(0, core0_dir)
+    if pico_dir not in sys.path:
+        sys.path.insert(0, pico_dir)
+    if pico_lib not in sys.path:
+        sys.path.insert(0, pico_lib)
 
     try:
         import lib
